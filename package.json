@@ -1,0 +1,23 @@
+{
+  "name": "a-plus-forms",
+  "version": "0.0.0",
+  "description": "A+ forms. Would use again",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/MadRabbit/a-plus-forms.git"
+  },
+  "keywords": [
+    "forms",
+    "react"
+  ],
+  "author": "Nikolay Nemshilov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MadRabbit/a-plus-forms/issues"
+  },
+  "homepage": "https://github.com/MadRabbit/a-plus-forms#readme"
+}
