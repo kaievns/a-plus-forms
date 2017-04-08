@@ -1,7 +1,7 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import TextInput from '../src/input';
+import { TextInput } from '../../src';
 
 describe('<TextInput />', () => {
   it('renders a text input', () => {

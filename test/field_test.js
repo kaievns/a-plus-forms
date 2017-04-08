@@ -1,7 +1,7 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import field from '../src/field';
+import { field } from '../src';
 
 @field()
 class Input extends React.Component {
@@ -15,7 +15,7 @@ describe('<input />', () => {
   it('renders input with decorations', () => {
     const render = mount(<Input name="test" label="Some label" />);
     expect(render.html()).to.eql(
-      '<div><label>Some label</label><div><input value=""></div></div>'
+      '<div><label>Some label</label><div><input></div></div>'
     );
   });
 
@@ -30,17 +30,17 @@ describe('<input />', () => {
     expect(render.html()).to.eql(
       '<div class="field">' +
         '<div class="label">Some label</div>' +
-        '<div class="input"><input value=""></div>' +
+        '<div class="input"><input></div>' +
       '</div>'
     );
   });
 
   it('allows to disable a layout', () => {
     const render = mount(<Input layout={null} />);
-    expect(render.html()).to.eql('<input value="">');
+    expect(render.html()).to.eql('<input>');
 
     const render2 = mount(<Input layout={false} />);
-    expect(render2.html()).to.eql('<input value="">');
+    expect(render2.html()).to.eql('<input>');
   });
 
   it('allows to set the current value of the field', () => {

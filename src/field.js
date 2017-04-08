@@ -40,8 +40,8 @@ const fieldify = (Input: Object, options?: Object): Object =>
     }
 
     render() {
-      const { label, value = '', layout: Layout = DefaultLayout } = this.props;
-      const input = <Input value={value} onChange={this.onChangeHandler} />;
+      const { label, value, name, onChange, layout: Layout = DefaultLayout, ...rest } = this.props;
+      const input = <Input value={value} onChange={this.onChangeHandler} {...rest} />;
 
       if (!Layout) return input;
 
