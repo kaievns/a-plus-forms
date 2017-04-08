@@ -6,7 +6,23 @@ describe('<input />', () => {
   it('renders input with decorations', () => {
     const render = mount(<Input name="test" label="Some label" />);
     expect(render.html()).to.eql(
-      '<div><label>Some label</label><div><input type="text" value="" name="test"></div></div>'
+      '<div><label>Some label</label><div><input type="text" value=""></div></div>'
+    );
+  });
+
+  it('allows to specify another layout', () => {
+    const MyLayout = ({ label, input }) =>
+      <div className="field">
+        <div className="label">{label}</div>
+        <div className="input">{input}</div>
+      </div>;
+
+    const render = mount(<Input label="Some label" layout={MyLayout} />);
+    expect(render.html()).to.eql(
+      '<div class="field">' +
+        '<div class="label">Some label</div>' +
+        '<div class="input"><input type="text" value=""></div>' +
+      '</div>'
     );
   });
 });
