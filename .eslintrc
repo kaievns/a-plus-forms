@@ -1,0 +1,14 @@
+{
+  "parser": "babel-eslint",
+  "extends": "shortlyster",
+  "plugins": [
+    "react"
+  ],
+  "env": {
+    "mocha": true,
+    "browser": true
+  },
+  "globals": {
+    "expect": true
+  }
+}
