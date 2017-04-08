@@ -1,6 +1,8 @@
-const { expect } = require('chai');
+const chai = require('chai');
+chai.use(require('chai-enzyme')());
+chai.use(require('sinon-chai'));
 
-global.expect = expect;
+global.expect = chai.expect;
 
 const jsdom = require('jsdom');
 

@@ -1,11 +1,13 @@
 import React from 'react';
+import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import field from '../src/field';
 
 @field()
 class Input extends React.Component {
   render() {
-    return <input {...this.props} />
+    const { onChange, ...rest } = this.props;
+    return <input {...rest} onChange={e => onChange(`test: ${e.target.value}`)} />;
   }
 }
 
@@ -50,5 +52,14 @@ describe('<input />', () => {
     const render = mount(<Input layout={null} value="Nikolay" />);
     const [field] = render;
     expect(field.value).to.eql("Nikolay");
+  });
+
+  it('tracks the value changes', () => {
+    const onChange = spy();
+    const render = mount(<Input onChange={onChange} />);
+    render.find('input').simulate('change', { target: { value: 'new value' } });
+    expect(onChange).to.have.been.calledWith('test: new value');
+    const [field] = render;
+    expect(field.value).to.eql('test: new value');
   });
 });
