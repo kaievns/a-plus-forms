@@ -15,10 +15,20 @@ type FieldProps = {
 
 const fieldify = (Input: Object, options?: Object): Object =>
   class Field extends React.Component {
+    state = { value: undefined, touched: false }
     props: FieldProps
 
+    componentWillMount() {
+      const { value } = this.props;
+      this.setState({ value });
+    }
+
+    get value() {
+      return this.state.value;
+    }
+
     render() {
-      const { label, value, onChange = noop, layout: Layout = DefaultLayout } = this.props;
+      const { label, value = '', onChange = noop, layout: Layout = DefaultLayout } = this.props;
       const input = <Input value={value} onChange={onChange} />;
 
       if (!Layout) return input;
