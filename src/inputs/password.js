@@ -6,7 +6,7 @@ import field from '../field';
 @field()
 export default class PasswordInput extends React.Component {
   props: {
-    value?: ?string,
+    value?: string,
     onChange: Function
   }
 

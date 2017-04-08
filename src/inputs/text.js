@@ -6,7 +6,7 @@ import field from '../field';
 export default class TextInput extends React.Component {
   props: {
     type?: string,
-    value?: ?string,
+    value?: string,
     onChange: Function
   }
 
