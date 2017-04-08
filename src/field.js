@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import Layout from './layout';
+import DefaultLayout from './layout';
 
 const noop = () => {};
 
@@ -10,7 +10,7 @@ type FieldProps = {
   onChange?: Function,
   label?: string,
   error?: string,
-  layout?: Object
+  layout?: Object | null | false
 };
 
 const fieldify = (Input: Object, options?: Object): Object =>
@@ -18,10 +18,12 @@ const fieldify = (Input: Object, options?: Object): Object =>
     props: FieldProps
 
     render() {
-      const { label, value, onChange = noop, layout: CurrentLayout = Layout } = this.props;
+      const { label, value, onChange = noop, layout: Layout = DefaultLayout } = this.props;
       const input = <Input value={value} onChange={onChange} />;
 
-      return <CurrentLayout label={label} input={input} />;
+      if (!Layout) return input;
+
+      return <Layout label={label} input={input} />;
     }
   };
 

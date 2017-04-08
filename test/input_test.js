@@ -25,4 +25,12 @@ describe('<input />', () => {
       '</div>'
     );
   });
+
+  it('allows to disable a layout', () => {
+    const render = mount(<Input layout={null} />);
+    expect(render.html()).to.eql('<input type="text" value="">');
+
+    const render2 = mount(<Input layout={false} />);
+    expect(render2.html()).to.eql('<input type="text" value="">');
+  });
 });
