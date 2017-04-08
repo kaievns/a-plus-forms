@@ -13,7 +13,7 @@ type FieldProps = {
   layout?: Object | null | false
 };
 
-const fieldify = (Input: Object, options?: Object): Object =>
+const fieldify = (Input: Object, options: Object): Object =>
   class Field extends React.Component {
     state = { value: undefined, touched: false }
     props: FieldProps
@@ -39,9 +39,18 @@ const fieldify = (Input: Object, options?: Object): Object =>
       onChange(value);
     }
 
+    getCurrentLayout() {
+      if ('layout' in options) return options.layout;
+
+      const { layout: CurrentLayout = DefaultLayout } = this.props;
+
+      return CurrentLayout;
+    }
+
     render() {
-      const { label, value, name, onChange, layout: Layout = DefaultLayout, ...rest } = this.props;
+      const { label, value, name, onChange, layout, ...rest } = this.props;
       const input = <Input value={value} onChange={this.onChangeHandler} {...rest} />;
+      const Layout = this.getCurrentLayout();
 
       if (!Layout) return input;
 
@@ -49,4 +58,4 @@ const fieldify = (Input: Object, options?: Object): Object =>
     }
   };
 
-export default (options?: Object) => (Input: Object) => fieldify(Input, options);
+export default (options?: Object) => (Input: Object) => fieldify(Input, options || {});
