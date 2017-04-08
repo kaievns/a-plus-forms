@@ -1,0 +1,13 @@
+[ignore]
+.*/test/.*
+
+[include]
+src/.*
+
+[libs]
+interfaces/
+
+[options]
+esproposal.class_static_fields=enable
+esproposal.decorators=ignore
+unsafe.enable_getters_and_setters=true

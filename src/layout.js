@@ -1,6 +1,13 @@
+/* @flow */
 import React from 'react';
 
-export default ({ input, label, error }) =>
+type LayoutProps = {
+  input: any,
+  label?: string,
+  error?: string
+};
+
+export default ({ input, label, error }: LayoutProps) =>
   <div>
     {label ? <label>{label}</label> : null}
     <div>{input}</div>
