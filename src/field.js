@@ -24,7 +24,7 @@ const fieldify = (Input: Object, options: Object): Object =>
     }
 
     componentWillReceiveProps(props: FieldProps) {
-      if ('value' in this.props) {
+      if ('value' in props) {
         this.setState({ value: this.props.value });
       }
     }
@@ -48,7 +48,7 @@ const fieldify = (Input: Object, options: Object): Object =>
     }
 
     render() {
-      const { label, value, name, onChange, layout, ...rest } = this.props;
+      const { label, value, name, onChange, layout, ...rest } = this.props; // eslint-disable-line
       const input = <Input value={value} onChange={this.onChangeHandler} {...rest} />;
       const Layout = this.getCurrentLayout();
 

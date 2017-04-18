@@ -16,8 +16,8 @@ export default class NumberInput extends React.Component {
       <Input
         {...rest}
         layout={null}
-        type='number'
-        value={`${value }`}
+        type="number"
+        value={`${value}`}
         onChange={v => onChange(parseFloat(v))}
       />
     );

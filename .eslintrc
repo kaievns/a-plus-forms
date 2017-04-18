@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "extends": "shortlyster",
   "plugins": [
-    "react"
+    "react",
+    "flowtype"
   ],
   "env": {
     "mocha": true,
@@ -10,5 +11,11 @@
   },
   "globals": {
     "expect": true
+  },
+  "rules": {
+    "import/no-extraneous-dependencies": "off",
+    "react/prefer-stateless-function": "off",
+    "react/jsx-filename-extension": "off",
+    "jsx-a11y/label-has-for": "off"
   }
 }

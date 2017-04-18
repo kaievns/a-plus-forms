@@ -11,6 +11,7 @@ export default class PasswordInput extends React.Component {
   }
 
   render() {
-    return <Input {...this.props} layout={null} type='password' />;
+    const { value, onChange } = this.props;
+    return <Input type="password" layout={null} value={value} onChange={onChange} />;
   }
 }

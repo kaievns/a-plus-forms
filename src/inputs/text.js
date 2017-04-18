@@ -11,7 +11,7 @@ export default class TextInput extends React.Component {
   }
 
   render() {
-    const { type='text', value='', onChange } = this.props;
+    const { type = 'text', value = '', onChange } = this.props;
     return <input type={type} value={value} onChange={e => onChange(e.target.value)} />;
   }
 }

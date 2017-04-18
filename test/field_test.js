@@ -5,6 +5,11 @@ import { field } from '../src';
 
 @field()
 class Input extends React.Component {
+  props: {
+    value?: string,
+    onChange: Function
+  }
+
   render() {
     const { onChange, ...rest } = this.props;
     return <input {...rest} onChange={e => onChange(`test: ${e.target.value}`)} />;
@@ -20,7 +25,7 @@ describe('<input />', () => {
   });
 
   it('allows to specify another layout', () => {
-    const MyLayout = ({ label, input }) =>
+    const MyLayout = ({ label, input }: Object) =>
       <div className="field">
         <div className="label">{label}</div>
         <div className="input">{input}</div>
@@ -51,7 +56,7 @@ describe('<input />', () => {
   it('allows to access the current value of the field', () => {
     const render = mount(<Input layout={null} value="Nikolay" />);
     const [field] = render;
-    expect(field.value).to.eql("Nikolay");
+    expect(field.value).to.eql('Nikolay');
   });
 
   it('tracks the value changes', () => {
