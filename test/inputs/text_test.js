@@ -23,4 +23,15 @@ describe('<TextInput />', () => {
 
     expect(onChange).to.have.been.calledWith('new value');
   });
+
+  it('trimms entered text for onChange but keeps it in the input', () => {
+    const onChange = spy();
+    const render = mount(<TextInput layout={null} onChange={onChange} />);
+    render.find('input[type="text"]').simulate('change', {
+      target: { value: '   nikolay rocks!   ' }
+    });
+
+    expect(onChange).to.have.been.calledWith('nikolay rocks!');
+    expect(render.html()).to.eql('<input type="text" value="   nikolay rocks!   ">');
+  });
 });
