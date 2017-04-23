@@ -1,10 +1,11 @@
 /* @flow */
 import React from 'react';
 import field from '../core/field';
-import Trimmer from '../utils/trimmer';
+import trimmer from '../utils/trimmer';
 import type { InputProps } from '../types';
 
 @field()
+@trimmer()
 export default class TextInput extends React.Component {
   props: InputProps & {
     type?: string
@@ -12,6 +13,6 @@ export default class TextInput extends React.Component {
 
   render() {
     const { type = 'text', ...rest } = this.props;
-    return <Trimmer {...rest}><input type={type} /></Trimmer>;
+    return <input type={type} {...rest} />;
   }
 }
