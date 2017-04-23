@@ -1,8 +1,8 @@
 # A+ Forms
 
 You know all those react forms frameworks. The ones that look great at the
-beginning, but in the morning you wish you didn't meet them. Well, meet A+ forms.
-A forms library that you would use again.
+beginning, but in the morning you wish you didn't meet them. Well, say hello to
+A+ forms. A forms library that you would use again.
 
 # W.I.P.
 
@@ -10,6 +10,6 @@ A forms library that you would use again.
 
 ## Copyright & License
 
-All source code in this repository is released under the terms of the ISC license.
+All source code in this repository released under the terms of the ISC license.
 
 Copyright (C) 2017 Nikolay Nemshilov

@@ -5,6 +5,7 @@ import DefaultLayout from './layout';
 const noop = () => {};
 
 type FieldProps = {
+  id?: string,
   name?: string,
   value?: any,
   onChange?: Function,
@@ -13,14 +14,16 @@ type FieldProps = {
   layout?: Object | null | false
 };
 
+let fieldsCounter = 0;
+
 const fieldify = (Input: Object, options: Object): Object =>
   class Field extends React.Component {
-    state = { value: undefined, touched: false }
+    state = { value: undefined, touched: false, id: undefined }
     props: FieldProps
 
     componentWillMount() {
-      const { value } = this.props;
-      this.setState({ value });
+      const { value, id = `a-plus-form-${fieldsCounter++}` } = this.props;
+      this.setState({ value, id });
     }
 
     componentWillReceiveProps(props: FieldProps) {
@@ -48,8 +51,8 @@ const fieldify = (Input: Object, options: Object): Object =>
     }
 
     render() {
-      const { label, value, name, onChange, layout, ...rest } = this.props; // eslint-disable-line
-      const input = <Input value={value} onChange={this.onChangeHandler} {...rest} />;
+      const { label, onChange, layout, ...rest } = this.props; // eslint-disable-line
+      const input = <Input {...rest} onChange={this.onChangeHandler} />;
       const Layout = this.getCurrentLayout();
 
       if (!Layout) return input;
