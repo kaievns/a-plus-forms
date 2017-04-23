@@ -10,16 +10,16 @@ type InputEvent = {
 
 @field()
 export default class Slider extends React.Component {
+  onChange = (event: InputEvent) => {
+    this.props.onChange(parseFloat(event.target.value));
+  }
+
   props: {
     min?: number,
     max?: number,
     step?: number,
     value: ?number,
     onChange: Function
-  }
-
-  changeHandler = (event: InputEvent) => {
-    this.props.onChange(parseFloat(event.target.value));
   }
 
   render() {
@@ -31,8 +31,8 @@ export default class Slider extends React.Component {
         max={max}
         step={step}
         value={value}
-        onChange={this.changeHandler}
-        onMouseUp={this.changeHandler}
+        onChange={this.onChange}
+        onMouseUp={this.onChange}
       />
     );
   }

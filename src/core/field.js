@@ -3,7 +3,8 @@ import React from 'react';
 import DefaultLayout from './layout';
 
 type Options = {
-  layout?: null | false | Object
+  layout?: null | false | Object,
+  bypass?: Array<string>
 };
 
 type FieldProps = {
@@ -22,6 +23,7 @@ let fieldsCounter = 0;
 const fieldify = (Input: Object, options: Options): Object =>
   class Field extends React.Component {
     static defaultProps = {
+      layout: DefaultLayout,
       onChange: () => {}
     }
 
@@ -47,28 +49,39 @@ const fieldify = (Input: Object, options: Options): Object =>
       this.props.onChange(value);
     }
 
-    onChangeHandler = (value: any) => {
+    onChange = (value: any) => {
       this.value = value;
     }
 
-    getCurrentLayout() {
-      if ('layout' in options) return options.layout;
+    inputProps() {
+      const { label, onChange, layout, value, defaultValue, ...rest } = this.props; // eslint-disable-line
+      const { bypass = [] } = options;
 
-      const { layout: CurrentLayout = DefaultLayout } = this.props;
+      bypass.forEach((name) => { rest[name] = this.props[name]; });
 
-      return CurrentLayout;
+      return {
+        ...rest,
+        value: this.state.value,
+        onChange: this.onChange
+      };
+    }
+
+    layoutProps() {
+      const { bypass = [] } = options;
+      return ['label'].filter(n => bypass.indexOf(n) === -1)
+        .reduce((props, name) => Object.assign(props, { [name]: this.props[name] }), {});
     }
 
     props: FieldProps
 
     render() {
       const { label, onChange, layout, value, defaultValue, ...rest } = this.props; // eslint-disable-line
-      const input = <Input {...rest} value={this.state.value} onChange={this.onChangeHandler} />;
-      const Layout = this.getCurrentLayout();
+      const input = <Input {...this.inputProps()} />;
+      const Layout = 'layout' in options ? options.layout : this.props.layout;
 
       if (!Layout) return input;
 
-      return <Layout label={label} input={input} />;
+      return <Layout {...this.layoutProps()} input={input} />;
     }
   };
 

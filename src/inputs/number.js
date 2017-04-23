@@ -5,20 +5,24 @@ import field from '../core/field';
 
 @field()
 export default class NumberInput extends React.Component {
+  onChange = (value: string) => {
+    this.props.onChange(parseFloat(value));
+  }
+
   props: {
     value?: number,
     onChange: Function
   }
 
   render() {
-    const { onChange, value = 0, ...rest } = this.props;
+    const { value = 0 } = this.props;
+
     return (
       <Input
-        {...rest}
         layout={null}
         type="number"
         value={`${value}`}
-        onChange={v => onChange(parseFloat(v))}
+        onChange={this.onChange}
       />
     );
   }
