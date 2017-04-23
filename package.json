@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha",
-    "lint": "eslint src test",
+    "lint": "eslint src test && flow",
     "precommit": "npm run lint",
     "prepush": "npm run test"
   },
