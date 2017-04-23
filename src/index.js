@@ -8,3 +8,4 @@ export HiddenInput from './inputs/hidden';
 export Textarea from './inputs/textarea';
 export Checkbox from './inputs/checkbox';
 export Slider from './inputs/slider';
+export Select from './inputs/select';
