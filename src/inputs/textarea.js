@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react';
-import field from '../field';
+import field from '../core/field';
 
 @field()
 export default class Textarea extends React.Component {

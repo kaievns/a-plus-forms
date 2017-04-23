@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react';
 import Input from './text';
-import field from '../field';
+import field from '../core/field';
 
 @field()
 export default class NumberInput extends React.Component {

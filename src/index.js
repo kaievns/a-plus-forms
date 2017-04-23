@@ -1,4 +1,4 @@
-export field from './field';
+export field from './core/field';
 
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';
