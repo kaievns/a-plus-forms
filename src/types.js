@@ -27,6 +27,6 @@ export type InputEvent = {
 
 export type SelectOption = {
   label: string,
-  value: any,
+  value: string,
   disabled?: boolean
 };

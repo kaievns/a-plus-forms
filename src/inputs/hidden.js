@@ -12,7 +12,6 @@ export default class HiddenInput extends React.Component {
   props: InputProps
 
   render() {
-    const { value = '' } = this.props;
-    return <input type="hidden" value={value} onChange={this.onChange} />;
+    return <input type="hidden" value={this.props.value} onChange={this.onChange} />;
   }
 }

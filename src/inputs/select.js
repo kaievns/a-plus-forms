@@ -1,9 +1,11 @@
 /* @flow */
 import React from 'react';
 import field from '../core/field';
+import optionizer from '../utils/optionizer';
 import type { InputProps, InputEvent, SelectOption } from '../types';
 
 @field()
+@optionizer()
 export default class Select extends React.Component {
   onChange = (event: InputEvent) => {
     this.props.onChange(event.target.value);
