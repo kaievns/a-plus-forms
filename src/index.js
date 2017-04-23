@@ -9,3 +9,4 @@ export Textarea from './inputs/textarea';
 export Checkbox from './inputs/checkbox';
 export Slider from './inputs/slider';
 export Select from './inputs/select';
+export Radios from './inputs/radios';

@@ -15,7 +15,7 @@ type InputEvent = {
 };
 
 @field()
-export default class Select extends React.Component {
+export default class Radios extends React.Component {
   onChange = (event: InputEvent) => {
     this.props.onChange(event.target.value);
   }
@@ -27,14 +27,17 @@ export default class Select extends React.Component {
   }
 
   render() {
-    const { value, options = [], ...rest } = this.props;
+    const { value: currentValue, options = [] } = this.props;
 
     return (
-      <select {...rest} value={value} onChange={this.onChange}>
+      <div>
         {options.map(({ label, value, disabled }, i) =>
-          <option key={i} value={value} disabled={disabled}>{label}</option>
+          <label key={i} disabled={disabled}>
+            <input type="radio" value={value} onChange={this.onChange} checked={value === currentValue} />
+            <span>{label}</span>
+          </label>
         )}
-      </select>
+      </div>
     );
   }
 }
