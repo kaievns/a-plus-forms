@@ -19,6 +19,6 @@ export default class Validator {
   errorsFor(data: Object): ?string {
     if (this.valid(data)) return null;
 
-    return this.validator.errors.map(e => e.message).join(', ');
+    return this.valid.errors.map(e => e.message).join(', ');
   }
 }

@@ -4,7 +4,10 @@
   "description": "A+ forms. Would use again",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "eslint src test",
+    "precommit": "npm run lint",
+    "prepush": "npm run test"
   },
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
     "eslint-plugin-flowtype": "^2.30.4",
     "flow-bin": "^0.44.2",
     "flow-runtime": "^0.10.0",
+    "husky": "^0.13.3",
     "jsdom": "^9.12.0",
     "mocha": "^3.2.0",
     "react": "^15.4.2",
