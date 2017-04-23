@@ -1,17 +1,6 @@
 /* @flow */
 import React from 'react';
-
-type InputProps = {
-  value?: string,
-  onChange: Function,
-  children?: Object
-};
-
-type InputEvent = {
-  target: {
-    value: string
-  }
-};
+import type { InputProps, InputEvent } from '../types';
 
 export default class Timmer extends React.Component {
   componentWillMount() {
@@ -33,8 +22,11 @@ export default class Timmer extends React.Component {
     }
   }
 
-  props: InputProps
   rawValue = ''
+
+  props: InputProps & {
+    children?: Object
+  }
 
   render() {
     return this.props.children && React.cloneElement(this.props.children, {

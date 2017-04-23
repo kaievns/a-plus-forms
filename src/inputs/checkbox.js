@@ -1,24 +1,18 @@
 /* @flow */
 import React from 'react';
 import field from '../core/field';
-
-type CheckboxEvent = {
-  target: {
-    checked?: boolean
-  }
-};
+import type { InputProps, InputEvent } from '../types';
 
 @field({ bypass: ['label'] })
 export default class Checkbox extends React.Component {
-  onChange = (event: CheckboxEvent) => {
+  onChange = (event: InputEvent) => {
     this.props.onChange(!!event.target.checked);
   }
 
-  props: {
+  props: InputProps & {
     label?: string,
     value?: boolean,
-    checked?: boolean,
-    onChange: Function
+    checked?: boolean
   }
 
   render() {

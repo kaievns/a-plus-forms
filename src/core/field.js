@@ -1,26 +1,11 @@
 /* @flow */
 import React from 'react';
 import DefaultLayout from './layout';
-
-type Options = {
-  layout?: null | false | Object,
-  bypass?: Array<string>
-};
-
-type FieldProps = {
-  id?: string,
-  name?: string,
-  value?: any,
-  onChange: Function,
-  defaultValue?: any,
-  label?: string,
-  error?: string,
-  layout?: Object | null | false
-};
+import type { FieldProps, FieldOptions } from '../types';
 
 let fieldsCounter = 0;
 
-const fieldify = (Input: Object, options: Options): Object =>
+const fieldify = (Input: Object, options: FieldOptions): Object =>
   class Field extends React.Component {
     static defaultProps = {
       layout: DefaultLayout,
@@ -85,4 +70,4 @@ const fieldify = (Input: Object, options: Options): Object =>
     }
   };
 
-export default (options?: Options) => (Input: Object) => fieldify(Input, options || {});
+export default (options?: FieldOptions) => (Input: Object) => fieldify(Input, options || {});

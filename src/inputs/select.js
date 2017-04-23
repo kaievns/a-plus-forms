@@ -1,18 +1,7 @@
 /* @flow */
 import React from 'react';
 import field from '../core/field';
-
-type Option = {
-  label: string,
-  value: any,
-  disabled?: boolean
-};
-
-type InputEvent = {
-  target: {
-    value: string
-  }
-};
+import type { InputProps, InputEvent, SelectOption } from '../types';
 
 @field()
 export default class Select extends React.Component {
@@ -20,10 +9,8 @@ export default class Select extends React.Component {
     this.props.onChange(event.target.value);
   }
 
-  props: {
-    value?: any,
-    onChange: Function,
-    options?: Array<Option>
+  props: InputProps & {
+    options?: Array<SelectOption>
   }
 
   render() {

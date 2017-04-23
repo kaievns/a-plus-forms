@@ -2,13 +2,12 @@
 import React from 'react';
 import field from '../core/field';
 import Trimmer from '../utils/trimmer';
+import type { InputProps } from '../types';
 
 @field()
 export default class TextInput extends React.Component {
-  props: {
-    type?: string,
-    value?: string,
-    onChange: Function
+  props: InputProps & {
+    type?: string
   }
 
   render() {

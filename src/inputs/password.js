@@ -2,13 +2,11 @@
 import React from 'react';
 import Input from './text';
 import field from '../core/field';
+import type { InputProps } from '../types';
 
 @field()
 export default class PasswordInput extends React.Component {
-  props: {
-    value?: string,
-    onChange: Function
-  }
+  props: InputProps
 
   render() {
     const { value, onChange } = this.props;

@@ -1,12 +1,7 @@
 /* @flow */
 import React from 'react';
 import field from '../core/field';
-
-type InputEvent = {
-  target: {
-    value: string
-  }
-};
+import type { InputProps, InputEvent } from '../types';
 
 @field({ layout: false })
 export default class HiddenInput extends React.Component {
@@ -14,10 +9,7 @@ export default class HiddenInput extends React.Component {
     this.props.onChange(event.target.value);
   }
 
-  props: {
-    value?: string,
-    onChange: Function
-  }
+  props: InputProps
 
   render() {
     const { value = '' } = this.props;
