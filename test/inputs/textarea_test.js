@@ -23,4 +23,15 @@ describe('<Textarea />', () => {
 
     expect(onChange).to.have.been.calledWith('new value');
   });
+
+  it('trimms entered text for onChange but keeps it in the input', () => {
+    const onChange = spy();
+    const render = mount(<Textarea layout={null} onChange={onChange} />);
+    render.find('textarea').simulate('change', {
+      target: { value: '   nikolay rocks!   ' }
+    });
+
+    expect(onChange).to.have.been.calledWith('nikolay rocks!');
+    expect(render.html()).to.eql('<textarea>   nikolay rocks!   </textarea>');
+  });
 });
