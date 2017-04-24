@@ -56,7 +56,7 @@ export default () =>
       }
 
       render() {
-        const { value, options = [] } = this.props;
+        const { value, options = [], ...rest } = this.props;
         const currentOption = options.reduce((current, option) =>
           option === value || (option && option.value === value) ? option : current
         , null);
@@ -65,6 +65,13 @@ export default () =>
         const pseudoEntry = pseudoOptions[currentIndex];
         const pseudoValue = pseudoEntry && pseudoEntry.value;
 
-        return <Input value={pseudoValue} onChange={this.onChange} options={pseudoOptions} />;
+        return (
+          <Input
+            {...rest}
+            value={pseudoValue}
+            onChange={this.onChange}
+            options={pseudoOptions}
+          />
+        );
       }
     };

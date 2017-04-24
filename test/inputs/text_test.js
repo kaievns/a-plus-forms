@@ -34,4 +34,19 @@ describe('<TextInput />', () => {
     expect(onChange).to.have.been.calledWith('nikolay rocks!');
     expect(render.html()).to.eql('<input type="text" value="   nikolay rocks!   ">');
   });
+
+  it('understands the `name` prop', () => {
+    const render = mount(<TextInput layout={null} name="username" />);
+    expect(render.html()).to.eql('<input type="text" name="username" value="">');
+  });
+
+  it('understands the `placeholder` prop', () => {
+    const render = mount(<TextInput layout={null} placeholder="Please..." />);
+    expect(render.html()).to.eql('<input type="text" placeholder="Please..." value="">');
+  });
+
+  it('understands the `disabled` prop', () => {
+    const render = mount(<TextInput layout={null} disabled />);
+    expect(render.html()).to.eql('<input type="text" disabled="" value="">');
+  });
 });

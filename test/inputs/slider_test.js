@@ -18,6 +18,20 @@ describe('<Slider />', () => {
     );
   });
 
+  it('understands the `name` prop', () => {
+    const render = mount(<Slider layout={null} name="size" />);
+    expect(render.html()).to.eql(
+      '<input type="range" step="1" min="0" max="10" name="size" value="0">'
+    );
+  });
+
+  it('understands the `disabled` prop', () => {
+    const render = mount(<Slider layout={null} disabled />);
+    expect(render.html()).to.eql(
+      '<input type="range" step="1" min="0" max="10" disabled="" value="0">'
+    );
+  });
+
   it('spits back numbers as the value changes', () => {
     const onChange = spy();
     const render = mount(<Slider onChange={onChange} />);

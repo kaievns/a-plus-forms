@@ -34,4 +34,19 @@ describe('<Textarea />', () => {
     expect(onChange).to.have.been.calledWith('nikolay rocks!');
     expect(render.html()).to.eql('<textarea>   nikolay rocks!   </textarea>');
   });
+
+  it('understands the `name` prop', () => {
+    const render = mount(<Textarea layout={null} name="username" />);
+    expect(render.html()).to.eql('<textarea name="username"></textarea>');
+  });
+
+  it('understands the `placeholder` prop', () => {
+    const render = mount(<Textarea layout={null} placeholder="Please..." />);
+    expect(render.html()).to.eql('<textarea placeholder="Please..."></textarea>');
+  });
+
+  it('understands the `disabled` prop', () => {
+    const render = mount(<Textarea layout={null} disabled />);
+    expect(render.html()).to.eql('<textarea disabled=""></textarea>');
+  });
 });

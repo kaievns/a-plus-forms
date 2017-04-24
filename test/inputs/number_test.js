@@ -22,4 +22,19 @@ describe('<NumberInput />', () => {
     });
     expect(onChange).to.have.been.calledWith(12.3);
   });
+
+  it('understands the `name` prop', () => {
+    const render = mount(<NumberInput layout={null} name="qty" />);
+    expect(render.html()).to.eql('<input type="number" name="qty" value="0">');
+  });
+
+  it('understands the `placeholder` prop', () => {
+    const render = mount(<NumberInput layout={null} placeholder="Please..." />);
+    expect(render.html()).to.eql('<input type="number" placeholder="Please..." value="0">');
+  });
+
+  it('understands the `disabled` prop', () => {
+    const render = mount(<NumberInput layout={null} disabled />);
+    expect(render.html()).to.eql('<input type="number" disabled="" value="0">');
+  });
 });

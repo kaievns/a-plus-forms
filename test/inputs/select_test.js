@@ -63,6 +63,21 @@ describe('<Select />', () => {
     expect(onChange).to.have.been.calledWith(options[1]);
   });
 
+  it('understands the `name` prop', () => {
+    const render = mount(<Select layout={null} name="size" />);
+    expect(render.html()).to.eql('<select name="size"></select>');
+  });
+
+  it('understands the `placeholder` prop', () => {
+    const render = mount(<Select layout={null} placeholder="Please..." />);
+    expect(render.html()).to.eql('<select placeholder="Please..."></select>');
+  });
+
+  it('understands the `disabled` prop', () => {
+    const render = mount(<Select layout={null} disabled />);
+    expect(render.html()).to.eql('<select disabled=""></select>');
+  });
+
   it('shows correct selected value', () => {
     const render = mount(<Select layout={null} options={options} value="one" />);
     expect(render.find('select').nodes[0].value).to.eql('one');

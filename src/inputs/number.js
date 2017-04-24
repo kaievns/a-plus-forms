@@ -15,12 +15,13 @@ export default class NumberInput extends React.Component {
   }
 
   render() {
-    const { value = 0 } = this.props;
+    const { value = 0, ...rest } = this.props;
 
     return (
       <Input
-        layout={null}
+        {...rest}
         type="number"
+        layout={null}
         value={`${value}`}
         onChange={this.onChange}
       />

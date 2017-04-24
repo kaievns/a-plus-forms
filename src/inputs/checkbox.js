@@ -16,12 +16,20 @@ export default class Checkbox extends React.Component {
   }
 
   render() {
-    const { value, checked, label } = this.props;
+    const { value, checked, label, disabled, ...rest } = this.props;
     const isChecked = (value !== undefined ? value : checked) === true;
-    const input = <input type="checkbox" checked={isChecked} onChange={this.onChange} />;
+    const input = (
+      <input
+        {...rest}
+        type="checkbox"
+        checked={isChecked}
+        onChange={this.onChange}
+        disabled={disabled}
+      />
+    );
 
     if (!label) return input;
 
-    return <label>{input}{label && <span>{label}</span>}</label>;
+    return <label disabled={disabled}>{input}{label && <span>{label}</span>}</label>;
   }
 }

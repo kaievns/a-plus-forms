@@ -17,10 +17,11 @@ export default class Slider extends React.Component {
   }
 
   render() {
-    const { min = 0, max = 10, step = 1, value = 0 } = this.props;
+    const { min = 0, max = 10, step = 1, value = 0, ...rest } = this.props;
 
     return (
       <input
+        {...rest}
         type="range"
         min={min}
         max={max}

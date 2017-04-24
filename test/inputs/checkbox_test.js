@@ -23,4 +23,16 @@ describe('<Checkbox />', () => {
     const render = mount(<Checkbox layout={null} checked />);
     expect(render.find('input[type="checkbox"]').props()).to.include({ checked: true });
   });
+
+  it('understands the `name` prop', () => {
+    const render = mount(<Checkbox layout={null} name="agreed" />);
+    expect(render.html()).to.eql('<input type="checkbox" name="agreed">');
+  });
+
+  it('understand the `disabled` prop', () => {
+    const render = mount(<Checkbox layout={null} label="Agreed?" disabled />);
+    expect(render.html()).to.eql(
+      '<label disabled=""><input type="checkbox" disabled=""><span>Agreed?</span></label>'
+    );
+  });
 });

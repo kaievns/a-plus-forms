@@ -9,7 +9,6 @@ export default class EmailInput extends React.Component {
   props: InputProps
 
   render() {
-    const { value, onChange } = this.props;
-    return <Input type="email" layout={null} value={value} onChange={onChange} />;
+    return <Input {...this.props} type="email" layout={null} />;
   }
 }

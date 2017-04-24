@@ -16,13 +16,19 @@ export default class Radios extends React.Component {
   }
 
   render() {
-    const { value: currentValue, options = [] } = this.props;
+    const { value: currentValue, options = [], name } = this.props;
 
     return (
       <div>
         {options.map(({ label, value, disabled }, i) =>
           <label key={i} disabled={disabled}>
-            <input type="radio" value={value} onChange={this.onChange} checked={value === currentValue} />
+            <input
+              type="radio"
+              name={name}
+              value={value}
+              onChange={this.onChange}
+              checked={value === currentValue}
+            />
             <span>{label}</span>
           </label>
         )}

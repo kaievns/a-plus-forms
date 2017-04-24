@@ -15,8 +15,12 @@ export type FieldOptions = {
 };
 
 export type InputProps = {
+  id?: string,
+  name?: string,
   value?: string,
-  onChange: Function
+  onChange: Function,
+  placeholder?: string,
+  disabled?: boolean
 };
 
 export type InputEvent = {
