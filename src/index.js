@@ -1,5 +1,7 @@
 export field from './core/field';
 
+export Form from './core/form';
+
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';
 export NumberInput from './inputs/number';

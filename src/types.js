@@ -1,3 +1,8 @@
+export type FormProps = {
+  onSubmit?: Function,
+  children: Object
+};
+
 export type FieldProps = {
   id?: string,
   name?: string,
