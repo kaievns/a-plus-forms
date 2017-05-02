@@ -4,8 +4,8 @@ chai.use(require('sinon-chai'));
 
 global.expect = chai.expect;
 
-const jsdom = require('jsdom');
+const { JSDOM } = require('jsdom');
 
-global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
-global.window = document.defaultView;
-global.navigator = window.navigator;
+const { window } = new JSDOM('<!doctype html><html><body></body></html>');
+global.window = window;
+global.document = window.document;

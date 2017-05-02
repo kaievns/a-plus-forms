@@ -36,18 +36,18 @@
     "eslint": "^3.8.1",
     "eslint-config-shortlyster": "^2.2.0",
     "eslint-plugin-flowtype": "^2.32.1",
-    "flow-bin": "^0.44.2",
-    "flow-runtime": "^0.10.0",
+    "flow-bin": "^0.45.0",
+    "flow-runtime": "^0.11.1",
     "husky": "^0.13.3",
-    "jsdom": "^9.12.0",
-    "mocha": "^3.2.0",
+    "jsdom": "^10.1.0",
+    "mocha": "^3.3.0",
     "react": "^15.4.2",
     "react-addons-test-utils": "^15.4.2",
     "react-dom": "^15.4.2",
-    "sinon": "^2.1.0",
-    "sinon-chai": "^2.9.0"
+    "sinon": "^2.2.0",
+    "sinon-chai": "^2.10.0"
   },
   "dependencies": {
-    "ajv": "^5.0.0"
+    "ajv": "^5.0.1"
   }
 }
