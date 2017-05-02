@@ -41,13 +41,16 @@
     "husky": "^0.13.3",
     "jsdom": "^10.1.0",
     "mocha": "^3.3.0",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
+    "react": "^15.5.4",
+    "react-addons-test-utils": "^15.5.1",
     "react-dom": "^15.4.2",
     "sinon": "^2.2.0",
     "sinon-chai": "^2.10.0"
   },
   "dependencies": {
     "ajv": "^5.0.1"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.5.8"
   }
 }

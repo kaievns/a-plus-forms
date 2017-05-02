@@ -1,28 +1,47 @@
 /* @flow */
 import React from 'react';
+import PropTypes from 'prop-types';
 import DefaultLayout from './layout';
 import type { FieldProps, FieldOptions } from '../types';
 
 let fieldsCounter = 0;
 
-const fieldify = (Input: Object, options: FieldOptions): Object =>
+export default (options: FieldOptions = {}) => (Input: Object): Object =>
+
   class Field extends React.Component {
     static defaultProps = {
       layout: DefaultLayout,
       onChange: () => {}
     }
 
+    static contextTypes = {
+      registerField: PropTypes.func,
+      unRegisterField: PropTypes.func
+    }
+
     state = { value: undefined, touched: false, id: undefined }
 
     componentWillMount() {
-      const { value, defaultValue, id = `a-plus-form-${fieldsCounter++}` } = this.props;
+      const { value, defaultValue, name, id = `a-plus-form-${fieldsCounter++}` } = this.props;
       this.setState({ value: defaultValue !== undefined ? defaultValue : value, id });
+
+      const { registerField } = this.context;
+      if (name && registerField) { registerField(this); }
+    }
+
+    componentWillUnmount() {
+      const { unRegisterField } = this.context;
+      if (unRegisterField) { unRegisterField(this); }
     }
 
     componentWillReceiveProps(props: FieldProps) {
       if ('value' in props) {
         this.setState({ value: this.props.value });
       }
+    }
+
+    get name() {
+      return this.props.name;
     }
 
     get value() {
@@ -69,5 +88,3 @@ const fieldify = (Input: Object, options: FieldOptions): Object =>
       return <Layout {...this.layoutProps()} input={input} />;
     }
   };
-
-export default (options?: FieldOptions) => (Input: Object) => fieldify(Input, options || {});
