@@ -4,7 +4,7 @@ import type { InputProps, InputEvent } from '../types';
 
 export default () =>
   (TextInput: Object) =>
-    class Timmer extends React.Component {
+    class Trimmer extends React.Component {
       componentWillMount() {
         this.rawValue = this.props.value || '';
       }

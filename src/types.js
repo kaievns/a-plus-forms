@@ -1,5 +1,6 @@
 export type FormProps = {
   onSubmit?: Function,
+  defaultValue?: ?Object,
   children: Object
 };
 

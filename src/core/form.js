@@ -22,9 +22,14 @@ export default class Form extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const { defaultValue } = this.props;
+    if (defaultValue) { this.value = defaultValue; }
+  }
+
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
-    this.props.onSubmit({});
+    this.props.onSubmit(this.value);
   }
 
   fields: Array<Field> = []
@@ -42,6 +47,13 @@ export default class Form extends React.Component {
     return this.fields.reduce((data, field) =>
       Object.assign(data, { [field.name]: field.value })
     , {});
+  }
+
+  set value(data: Object) {
+    Object.keys(data).forEach(name => {
+      const field = this.fields.find(field => field.name === name);
+      if (field) field.value = data[name];
+    });
   }
 
   props: FormProps

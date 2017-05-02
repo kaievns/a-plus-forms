@@ -1,4 +1,5 @@
 import React from 'react';
+import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { PasswordInput } from '../../src';
 
@@ -21,5 +22,14 @@ describe('<PasswordInput />', () => {
   it('understands the `disabled` prop', () => {
     const render = mount(<PasswordInput layout={null} disabled />);
     expect(render.html()).to.eql('<input type="password" disabled="" value="">');
+  });
+
+  it.skip('does not trim the data', () => {
+    const onChange = spy();
+    const render = mount(<PasswordInput onChange={onChange} />);
+    render.find('input[type="password"]').simulate('change', {
+      target: { value: ' asdf ' }
+    });
+    expect(onChange).to.have.been.calledWith(' asf ');
   });
 });
