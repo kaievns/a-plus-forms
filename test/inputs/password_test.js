@@ -24,12 +24,12 @@ describe('<PasswordInput />', () => {
     expect(render.html()).to.eql('<input type="password" disabled="" value="">');
   });
 
-  it.skip('does not trim the data', () => {
+  it('does not trim the data', () => {
     const onChange = spy();
     const render = mount(<PasswordInput onChange={onChange} />);
     render.find('input[type="password"]').simulate('change', {
       target: { value: ' asdf ' }
     });
-    expect(onChange).to.have.been.calledWith(' asf ');
+    expect(onChange).to.have.been.calledWith(' asdf ');
   });
 });
