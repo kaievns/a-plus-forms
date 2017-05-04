@@ -1,13 +1,16 @@
 /* @flow */
 import React from 'react';
 import PropTypes from 'prop-types';
+import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
 type Field = Object; // fixme...
 
 export default class Form extends React.Component {
   static defaultProps = {
-    onSubmit: () => {}
+    onSubmit: () => {},
+    onError: () => {},
+    validate: () => {}
   }
 
   static childContextTypes = {
@@ -22,16 +25,33 @@ export default class Form extends React.Component {
     };
   }
 
+  componentWillMount() {
+    const { validate } = this.props;
+    this.validator.update({ validate });
+  }
+
   componentDidMount() {
     const { defaultValue } = this.props;
     if (defaultValue) { this.value = defaultValue; }
   }
 
-  onSubmit = (event: InputEvent) => {
-    event.preventDefault();
-    this.props.onSubmit(this.value);
+  componentWillReceiveProps(props: FormProps) {
+    const { validate } = props;
+    this.validator.update({ validate });
   }
 
+  onSubmit = (event: InputEvent) => {
+    event.preventDefault();
+    const data = this.value;
+    const errors = this.validator.errorsFor(data);
+    if (errors) {
+      this.props.onError(errors);
+    } else {
+      this.props.onSubmit(data);
+    }
+  }
+
+  validator = new Validator()
   fields: Array<Field> = []
 
   registerField = (field: Field) => {

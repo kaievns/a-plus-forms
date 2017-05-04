@@ -17,6 +17,7 @@
     "react/prefer-stateless-function": "off",
     "react/jsx-filename-extension": "off",
     "jsx-a11y/label-has-for": "off",
+    "no-unused-expressions": "off",
     "no-confusing-arrow": "off",
     "arrow-parens": "off",
     "no-plusplus": "off"

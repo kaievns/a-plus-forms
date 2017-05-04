@@ -25,7 +25,7 @@ export default class Validator {
     this.customValidator = validate;
   }
 
-  errorsFor(data: Object): ?string {
+  errorsFor(data: Object): ?Object {
     const customErrors = this.customValidator(data);
     const schemaErrors = this.valid(data) ? null : humanize(this.valid.errors);
 

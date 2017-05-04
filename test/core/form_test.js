@@ -73,4 +73,41 @@ describe('<Form />', () => {
       password: 'Ba(k0n!'
     });
   });
+
+  it('allows to provide a validation function', () => {
+    const onError = spy();
+    const onSubmit = spy();
+    const validate = data => !data.username && { username: 'must be present' };
+    const render = mount(
+      <Form onSubmit={onSubmit} validate={validate} onError={onError}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(onError).to.have.been.calledWith({ username: 'must be present' });
+    expect(onSubmit).to.not.have.been.called;
+  });
+
+  it('allows to pass validation with valid data', () => {
+    const onError = spy();
+    const onSubmit = spy();
+    const validate = data => !data.username && { username: 'must be present' };
+    const render = mount(
+      <Form onSubmit={onSubmit} validate={validate} onError={onError}>
+        <TextInput name="username" value="nikolay" />
+        <PasswordInput name="password" value="Ba(k0n!" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(onError).to.not.have.been.called;
+    expect(onSubmit).to.have.been.calledWith({
+      username: 'nikolay',
+      password: 'Ba(k0n!'
+    });
+  });
 });
