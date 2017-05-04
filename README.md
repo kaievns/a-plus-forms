@@ -1,8 +1,8 @@
 # A+ Forms
 
-You know all those react forms frameworks. The ones that look great at the
-beginning, but in the morning you wish you didn't meet them. Well, say hello to
-A+ forms. A forms library that you would use again.
+You know all those react form frameworks. The ones that look great at the
+beginning, but in the morning you wish you didn't meet them. Well, allow me to
+introduce you to the `A+ forms`. A forms library that you would use again.
 
 # W.I.P.
 
