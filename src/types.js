@@ -1,8 +1,12 @@
+/* @flow */
+import React from 'react';
+
 export type FormProps = {
-  onSubmit?: Function,
+  onSubmit: Function,
+  value?: ?Object,
   defaultValue?: ?Object,
-  validate?: Function,
-  onError?: Function,
+  validate: Function,
+  onError: Function,
   children: Object
 };
 
@@ -32,8 +36,10 @@ export type InputProps = {
 };
 
 export type InputEvent = {
+  preventDefault: Function,
   target : {
-    value: string
+    value: string,
+    checked?: boolean
   }
 };
 
@@ -42,3 +48,11 @@ export type SelectOption = {
   value: string,
   disabled?: boolean
 };
+
+export type JSONSchema = {
+  type: 'object' | 'array' | 'string' | 'boolean' | 'number',
+  properties?: { [string]: JSONSchema },
+  required?: Array<string>
+};
+
+export type Component = Class<React.Component<*, *, *>> | Function; // eslint-disable-line

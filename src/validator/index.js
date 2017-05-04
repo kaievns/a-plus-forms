@@ -1,12 +1,7 @@
 /* @flow */
 import Ajv from 'ajv';
 import humanize from './humanizer';
-
-type JSONSchema = {
-  type: 'object' | 'array' | 'string' | 'boolean' | 'number',
-  properties?: Object,
-  required?: Array<string>
-};
+import type { JSONSchema } from '../types';
 
 const EMPTY_SCHEMA = { type: 'object' };
 

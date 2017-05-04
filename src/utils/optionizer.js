@@ -1,14 +1,12 @@
 /* @flow */
 import React from 'react';
-import type { InputProps, SelectOption } from '../types';
+import type { InputProps, SelectOption, Component } from '../types';
 
-type LabelValueOption = {
-  label: string,
-  value: string
-};
+type LabelValueOption = SelectOption;
 
 type NamedOption = {
-  name: string
+  name: string,
+  disabled?: boolean
 };
 
 type StringOption = string;
@@ -17,7 +15,7 @@ type NumberOption = number;
 type AnyOption = LabelValueOption | NamedOption | StringOption | NumberOption;
 
 export default () =>
-  (Input: Object) =>
+  (Input: Component) =>
     class Optionizer extends React.Component {
       onChange = (pseudoValue: string) => {
         const { options = [], onChange } = this.props;
@@ -25,7 +23,7 @@ export default () =>
           option.value === pseudoValue ? options[index] : current
         , null);
 
-        if (option.label && option.value !== undefined) {
+        if (option && option.label && option.value !== undefined) {
           onChange(option.value);
         } else {
           onChange(option);
@@ -36,15 +34,15 @@ export default () =>
         const { options = [] } = this.props;
 
         return options.map((option, index) => {
-          if (typeof option === 'string') {
-            return { label: option, value: option };
-          } else if (option.label && option.value !== undefined) {
-            return option;
-          } else if (option.name) {
+          if (typeof option === 'object' && typeof option.label === 'string' && typeof option.value === 'string') {
+            return { label: option.label, value: option.value, disabled: option.disabled };
+          } else if (typeof option === 'object' && typeof option.name === 'string') {
             return { label: option.name, value: `v-${index}`, disabled: option.disabled };
+          } else if (typeof option === 'string') {
+            return { label: option, value: option };
           }
 
-          return { label: `${option}`, value: `v-${index}` };
+          return { label: JSON.stringify(option), value: `v-${index}` };
         });
       }
 
@@ -57,10 +55,10 @@ export default () =>
 
       render() {
         const { value, options = [], ...rest } = this.props;
-        const currentOption = options.reduce((current, option) =>
-          option === value || (option && option.value === value) ? option : current
-        , null);
-        const currentIndex = options.indexOf(currentOption);
+        const currentOption = options.find(option =>
+          (option.label && option.value === value) || option === value
+        );
+        const currentIndex = currentOption ? options.indexOf(currentOption) : -1;
         const pseudoOptions = this.convertedOptions();
         const pseudoEntry = pseudoOptions[currentIndex];
         const pseudoValue = pseudoEntry && pseudoEntry.value;

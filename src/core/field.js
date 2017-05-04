@@ -2,11 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DefaultLayout from './layout';
-import type { FieldProps, FieldOptions } from '../types';
+import type { FieldProps, FieldOptions, Component } from '../types';
 
 let fieldsCounter = 0;
 
-export default (options: FieldOptions = {}) => (Input: Object): Object =>
+export default (options: FieldOptions = {}) => (Input: Component): Object =>
 
   class Field extends React.Component {
     static defaultProps = {
