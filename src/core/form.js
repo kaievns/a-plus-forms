@@ -26,8 +26,7 @@ export default class Form extends React.Component {
   }
 
   componentWillMount() {
-    const { validate } = this.props;
-    this.validator.update({ validate });
+    this.updateValidator(this.props);
   }
 
   componentDidMount() {
@@ -36,8 +35,7 @@ export default class Form extends React.Component {
   }
 
   componentWillReceiveProps(props: FormProps) {
-    const { validate } = props;
-    this.validator.update({ validate });
+    this.updateValidator(props);
   }
 
   onSubmit = (event: InputEvent) => {
@@ -49,6 +47,10 @@ export default class Form extends React.Component {
     } else {
       this.props.onSubmit(data);
     }
+  }
+
+  updateValidator({ validate, schema }: FormProps) {
+    this.validator.update({ validate, schema });
   }
 
   validator = new Validator()

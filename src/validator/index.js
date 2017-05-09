@@ -12,12 +12,18 @@ export default class Validator {
   customValidator = () => {}
 
   constructor(schema: JSONSchema = EMPTY_SCHEMA) {
-    this.schema = schema;
-    this.valid = new Ajv({ allErrors: true }).compile(schema);
+    this.update({ validate: () => {}, schema });
   }
 
-  update({ validate }: { validate: Function }) {
+  update({ validate, schema }: { validate: Function, schema?: JSONSchema }) {
     this.customValidator = validate;
+
+    if (schema) {
+      this.schema = schema;
+      this.valid = new Ajv({ allErrors: true }).compile(schema);
+    } else {
+      this.valid = () => true;
+    }
   }
 
   errorsFor(data: Object): ?Object {

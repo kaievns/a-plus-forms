@@ -110,4 +110,30 @@ describe('<Form />', () => {
       password: 'Ba(k0n!'
     });
   });
+
+  it('allows to specify a JSON schema as a form schema', () => {
+    const onError = spy();
+    const onSubmit = spy();
+    const schema = {
+      properties: {
+        username: { type: 'string', format: 'email' },
+        password: { type: 'string' }
+      },
+      required: ['username', 'password']
+    };
+    const render = mount(
+      <Form schema={schema} onSubmit={onSubmit} onError={onError}>
+        <TextInput name="username" value="non-email" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(onSubmit).to.not.have.been.called;
+    expect(onError).to.have.been.calledWith({
+      password: "should have required property 'password'",
+      username: 'should match format "email"'
+    });
+  });
 });
