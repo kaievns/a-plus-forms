@@ -21,8 +21,8 @@ describe('Validator', () => {
     it('returns some errors if the data is borked', () => {
       const badData = { email: 'blah!' };
       expect(validator.errorsFor(badData)).to.eql({
-        email: 'should match format "email"',
-        password: `should have required property 'password'`
+        email: 'must be a valid email',
+        password: 'is required'
       });
     });
 

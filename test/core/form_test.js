@@ -132,8 +132,8 @@ describe('<Form />', () => {
 
     expect(onSubmit).to.not.have.been.called;
     expect(onError).to.have.been.calledWith({
-      password: "should have required property 'password'",
-      username: 'should match format "email"'
+      username: 'must be a valid email',
+      password: 'is required'
     });
   });
 });
