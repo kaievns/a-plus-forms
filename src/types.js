@@ -14,6 +14,9 @@ export type FormProps = {
   defaultValue?: ?Object,
   validate: Function,
   schema?: JSONSchema,
+  preValidate: Function,
+  preSubmit: Function,
+  postSubmit: Function,
   onError: Function,
   children: Object
 };

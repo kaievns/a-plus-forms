@@ -10,7 +10,10 @@ export default class Form extends React.Component {
   static defaultProps = {
     onSubmit: () => {},
     onError: () => {},
-    validate: () => {}
+    validate: () => {},
+    preValidate: data => data,
+    preSubmit: data => data,
+    postSubmit: () => {}
   }
 
   static childContextTypes = {
@@ -40,13 +43,25 @@ export default class Form extends React.Component {
 
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
-    const data = this.value;
-    const errors = this.validator.errorsFor(data);
-    if (errors) {
-      this.props.onError(errors);
-    } else {
+
+    if (this.valid()) {
+      const data = this.props.preSubmit(this.value);
+
       this.props.onSubmit(data);
+      this.props.postSubmit(data);
     }
+  }
+
+  valid(): boolean {
+    const data = this.props.preValidate(this.value);
+    const errors = this.validator.errorsFor(data);
+
+    if (errors) {
+      this.props.onError(errors, data);
+      return false;
+    }
+
+    return true;
   }
 
   updateValidator({ validate, schema }: FormProps) {
