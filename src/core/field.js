@@ -15,8 +15,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Object =>
     }
 
     static contextTypes = {
-      registerField: PropTypes.func,
-      unRegisterField: PropTypes.func
+      formState: PropTypes.object
     }
 
     state = { value: undefined, touched: false, id: undefined }
@@ -25,13 +24,13 @@ export default (options: FieldOptions = {}) => (Input: Component): Object =>
       const { value, defaultValue, name, id = `a-plus-form-${fieldsCounter++}` } = this.props;
       this.setState({ value: defaultValue !== undefined ? defaultValue : value, id });
 
-      const { registerField } = this.context;
-      if (name && registerField) { registerField(this); }
+      const { formState } = this.context;
+      if (name && formState) { formState.register(this); }
     }
 
     componentWillUnmount() {
-      const { unRegisterField } = this.context;
-      if (unRegisterField) { unRegisterField(this); }
+      const { formState } = this.context;
+      if (formState) { formState.unregister(this); }
     }
 
     componentWillReceiveProps(props: FieldProps) {

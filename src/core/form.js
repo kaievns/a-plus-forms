@@ -1,10 +1,8 @@
 /* @flow */
 import React from 'react';
-import PropTypes from 'prop-types';
+import StateProvider from './state';
 import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
-
-type Field = Object; // fixme...
 
 export default class Form extends React.Component {
   static defaultProps = {
@@ -14,18 +12,6 @@ export default class Form extends React.Component {
     preValidate: data => data,
     preSubmit: data => data,
     postSubmit: () => {}
-  }
-
-  static childContextTypes = {
-    registerField: PropTypes.func,
-    unRegisterField: PropTypes.func
-  }
-
-  getChildContext() {
-    return {
-      registerField: this.registerField,
-      unRegisterField: this.unRegisterField
-    };
   }
 
   componentWillMount() {
@@ -52,6 +38,8 @@ export default class Form extends React.Component {
     }
   }
 
+  stateProvider = React.createElement(StateProvider)
+
   valid(): boolean {
     const data = this.props.preValidate(this.value);
     const errors = this.validator.errorsFor(data);
@@ -69,28 +57,13 @@ export default class Form extends React.Component {
   }
 
   validator = new Validator()
-  fields: Array<Field> = []
-
-  registerField = (field: Field) => {
-    this.fields.push(field);
-  }
-
-  unRegisterField = (field: Field) => {
-    const index = this.fields.indexOf(field);
-    this.fields.splice(index, 1);
-  }
 
   get value(): Object {
-    return this.fields.reduce((data, field) =>
-      Object.assign(data, { [field.name]: field.value })
-    , {});
+    return this.stateProvider.value;
   }
 
   set value(data: Object) {
-    Object.keys(data).forEach(name => {
-      const field = this.fields.find(field => field.name === name);
-      if (field) field.value = data[name];
-    });
+    this.stateProvider.value = data;
   }
 
   props: FormProps
@@ -99,9 +72,11 @@ export default class Form extends React.Component {
     const { children } = this.props;
 
     return (
-      <form onSubmit={this.onSubmit} noValidate>
-        {children}
-      </form>
+      <StateProvider ref={n => (this.stateProvider = n)}>
+        <form onSubmit={this.onSubmit} noValidate>
+          {children}
+        </form>
+      </StateProvider>
     );
   }
 }
