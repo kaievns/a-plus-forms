@@ -9,7 +9,7 @@ export default class Validator {
   schema: JSONSchema
   valid: Function
 
-  customValidator = () => {}
+  customValidator = (arg: Object) => null; // eslint-disable-line
 
   constructor(schema: JSONSchema = EMPTY_SCHEMA) {
     this.update({ validate: () => {}, schema });
