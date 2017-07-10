@@ -6,7 +6,7 @@ import type { FieldProps, FieldOptions, Component } from '../types';
 
 let fieldsCounter = 0;
 
-export default (options: FieldOptions = {}) => (Input: Component): Object =>
+export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
   class Field extends React.Component {
     static defaultProps = {

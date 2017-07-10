@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { StateProvider, TextInput, PasswordInput } from '../../src';
 
 describe('<StateProvider />', () => {
-  it('allows to access the fields values', () => {
+  it.skip('allows to access the fields values', () => {
     const render = mount(
       <StateProvider>
         <div>

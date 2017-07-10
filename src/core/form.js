@@ -1,9 +1,11 @@
 /* @flow */
 import React from 'react';
-import StateProvider from './state';
+import PropTypes from 'prop-types';
+import state from './state';
 import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
+@state()
 export default class Form extends React.Component {
   static defaultProps = {
     onSubmit: () => {},
@@ -12,6 +14,10 @@ export default class Form extends React.Component {
     preValidate: data => data,
     preSubmit: data => data,
     postSubmit: () => {}
+  }
+
+  static contextTypes = {
+    formState: PropTypes.object
   }
 
   componentWillMount() {
@@ -38,8 +44,6 @@ export default class Form extends React.Component {
     }
   }
 
-  stateProvider = React.createElement(StateProvider)
-
   valid(): boolean {
     const data = this.props.preValidate(this.value);
     const errors = this.validator.errorsFor(data);
@@ -59,11 +63,11 @@ export default class Form extends React.Component {
   validator = new Validator()
 
   get value(): Object {
-    return this.stateProvider.value;
+    return this.context.formState.value;
   }
 
   set value(data: Object) {
-    this.stateProvider.value = data;
+    this.context.formState.value = data;
   }
 
   props: FormProps
@@ -72,11 +76,9 @@ export default class Form extends React.Component {
     const { children } = this.props;
 
     return (
-      <StateProvider ref={n => (this.stateProvider = n)}>
-        <form onSubmit={this.onSubmit} noValidate>
-          {children}
-        </form>
-      </StateProvider>
+      <form onSubmit={this.onSubmit} noValidate>
+        {children}
+      </form>
     );
   }
 }
