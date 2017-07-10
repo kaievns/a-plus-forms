@@ -24,11 +24,6 @@ export default class Form extends React.Component {
     this.updateValidator(this.props);
   }
 
-  componentDidMount() {
-    const { defaultValue } = this.props;
-    if (defaultValue) { this.value = defaultValue; }
-  }
-
   componentWillReceiveProps(props: FormProps) {
     this.updateValidator(props);
   }

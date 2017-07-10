@@ -1,10 +1,14 @@
 /* @flow */
 import React from 'react';
 import PropTypes from 'prop-types';
-import type { FieldProps as Field, Component } from '../types';
+import type { Valuable, Component } from '../types';
 
 export default () => (Input: Component): Component =>
   class StateProvider extends React.Component {
+    static defaultProps = {
+      onChange: () => {}
+    }
+
     static childContextTypes = {
       formState: PropTypes.object
     }
@@ -15,13 +19,19 @@ export default () => (Input: Component): Component =>
       return { formState: this };
     }
 
-    fields: Array<Field> = []
+    componentDidMount() {
+      if ('defaultValue' in this.props) {
+        this.value = this.props.defaultValue || {};
+      }
+    }
 
-    register(field: Field) {
+    fields: Array<Valuable> = []
+
+    register(field: Valuable) {
       this.fields.push(field);
     }
 
-    unregister(field: Field) {
+    unregister(field: Valuable) {
       this.fields.splice(this.fields.indexOf(field), 1);
     }
 
@@ -37,6 +47,8 @@ export default () => (Input: Component): Component =>
         if (field) field.value = data[name];
       });
     }
+
+    props: Valuable
 
     render() {
       return <Input {...this.props} />;
