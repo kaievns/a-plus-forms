@@ -64,3 +64,8 @@ export type SelectOption = {
 };
 
 export type Component = Class<React.Component<*, *, *>> | Function; // eslint-disable-line
+
+export type Element = {
+  setState: Function,
+  state?: Object
+};

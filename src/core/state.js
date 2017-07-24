@@ -1,7 +1,54 @@
 /* @flow */
 import React from 'react';
 import PropTypes from 'prop-types';
-import type { Valuable, Component } from '../types';
+import type { Valuable, Component, Element } from '../types';
+
+// a generic input field state strategy
+class ReactStateStrategy {
+  state: Object
+  component: Object
+
+  constructor(component: Object) {
+    this.component = component;
+    this.component.state = { value: undefined };
+  }
+
+  get value(): any {
+    return this.component.state.value;
+  }
+
+  set value(value: any) {
+    console.log('setting value', value);
+    this.component.setState({ value });
+    console.log(this.component.state);
+  }
+}
+
+// a compount input state strategy
+class CompoundStateStrategy {
+  fields: Array<Valuable> = []
+
+  register(field: Valuable) {
+    this.fields.push(field);
+  }
+
+  unregister(field: Valuable) {
+    this.fields.splice(this.fields.indexOf(field), 1);
+  }
+
+  get value(): Object {
+    return this.fields.reduce((data, field) =>
+      Object.assign(data, field.name ? { [field.name]: field.value } : {})
+    , {});
+  }
+
+  set value(data: any) {
+    Object.keys(data).forEach(name => {
+      const field = this.fields.find(field => field.name === name);
+      if (field) field.value = data[name];
+    });
+  }
+}
 
 export default () => (Input: Component): Component =>
   class StateProvider extends React.Component {
@@ -9,48 +56,84 @@ export default () => (Input: Component): Component =>
       onChange: () => {}
     }
 
-    static childContextTypes = {
-      formState: PropTypes.object
+    static contextTypes = {
+      APFState: PropTypes.object
     }
 
-    state = { value: undefined, touched: false }
+    static childContextTypes = {
+      APFState: PropTypes.object
+    }
+
+    stateStrategy: ReactStateStrategy | CompoundStateStrategy
+
+    constructor() {
+      super();
+      this.stateStrategy = new ReactStateStrategy(this);
+    }
 
     getChildContext() {
-      return { formState: this };
+      return { APFState: this };
     }
 
-    componentDidMount() {
-      if ('defaultValue' in this.props) {
-        this.value = this.props.defaultValue || {};
+    componentWillMount() {
+      if (this.name && this.context.APFState) {
+        this.context.APFState.register(this);
+      }
+
+      if ('value' in this.props) {
+        this.value = this.props.value;
+      } else if ('defaultValue' in this.props) {
+        this.value = this.props.defaultValue;
       }
     }
 
-    fields: Array<Valuable> = []
+    componentWillUnmount() {
+      if (this.context.APFState) {
+        this.context.APFState.unregister(this);
+      }
+    }
+
+    componentWillReceiveProps(props: Valuable) {
+      if ('value' in props) {
+        this.value = this.props.value;
+      }
+    }
 
     register(field: Valuable) {
-      this.fields.push(field);
+      if (!(this.stateStrategy instanceof CompoundStateStrategy)) {
+        this.stateStrategy = new CompoundStateStrategy();
+      }
+
+      this.stateStrategy.register(field);
     }
 
     unregister(field: Valuable) {
-      this.fields.splice(this.fields.indexOf(field), 1);
+      if (this.stateStrategy instanceof CompoundStateStrategy) {
+        this.stateStrategy.unregister(field);
+      }
     }
 
-    get value(): Object {
-      return this.fields.reduce((data, field) =>
-        Object.assign(data, field.name ? { [field.name]: field.value } : {})
-      , {});
+    get name() {
+      return this.props.name;
     }
 
-    set value(data: Object) {
-      Object.keys(data).forEach(name => {
-        const field = this.fields.find(field => field.name === name);
-        if (field) field.value = data[name];
-      });
+    get value(): any {
+      return this.stateStrategy.value;
+    }
+
+    set value(value: any) {
+      this.stateStrategy.value = value;
+    }
+
+    onChange = (value: any) => {
+      this.value = value;
+      console.log('onchange', { value }, this.value, this.state);
+      this.props.onChange(this.value);
     }
 
     props: Valuable
 
     render() {
-      return <Input {...this.props} />;
+      return <Input {...this.props} value={this.value} onChange={this.onChange} />;
     }
   };

@@ -1,11 +1,13 @@
 /* @flow */
 import React from 'react';
 import PropTypes from 'prop-types';
-import state from './state';
+import field from './field';
 import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
-@state()
+// just an empty field container to hold the form state
+const StateContainer = field({ layout: null })((p: Object) => p.children);
+
 export default class Form extends React.Component {
   static defaultProps = {
     onSubmit: () => {},
@@ -13,11 +15,8 @@ export default class Form extends React.Component {
     validate: () => {},
     preValidate: data => data,
     preSubmit: data => data,
-    postSubmit: () => {}
-  }
-
-  static contextTypes = {
-    formState: PropTypes.object
+    postSubmit: () => {},
+    defaultValue: {}
   }
 
   componentWillMount() {
@@ -58,21 +57,23 @@ export default class Form extends React.Component {
   validator = new Validator()
 
   get value(): Object {
-    return this.context.formState.value;
+    return this.refs.state.value;
   }
 
   set value(data: Object) {
-    this.context.formState.value = data;
+    this.refs.state.value = data;
   }
 
   props: FormProps
 
   render() {
-    const { children } = this.props;
+    const { children, defaultValue } = this.props;
 
     return (
       <form onSubmit={this.onSubmit} noValidate>
-        {children}
+        <StateContainer defaultValue={defaultValue} ref="state">
+          {children}
+        </StateContainer>
       </form>
     );
   }

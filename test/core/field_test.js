@@ -16,7 +16,7 @@ class Input extends React.Component {
   }
 }
 
-describe('field', () => {
+describe.only('field', () => {
   describe('rendering options', () => {
     it('renders input with decorations', () => {
       const render = mount(<Input name="test" label="Some label" />);
