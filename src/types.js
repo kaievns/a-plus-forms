@@ -69,3 +69,9 @@ export type Element = {
   setState: Function,
   state?: Object
 };
+
+export type LayoutProps = {
+  input: any,
+  label?: string,
+  error?: string
+};

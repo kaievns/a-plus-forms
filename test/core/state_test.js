@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { field, TextInput, PasswordInput } from '../../src';
 
-describe.only('state provider', () => {
+describe.skip('state provider', () => {
   describe('regular value inputs', () => {
     const [input] = mount(<TextInput />).nodes;
 
