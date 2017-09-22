@@ -71,9 +71,7 @@ export default class Form extends React.Component {
 
     return (
       <form onSubmit={this.onSubmit} noValidate>
-        <StateContainer defaultValue={defaultValue} ref="state">
-          {children}
-        </StateContainer>
+        <StateContainer {...{ defaultValue, children }} ref="state" />
       </form>
     );
   }

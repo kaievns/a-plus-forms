@@ -62,8 +62,7 @@ describe.only('field', () => {
     });
 
     it('allows to access the current value of the field', () => {
-      const render = mount(<Input value="Nikolay" />);
-      const [field] = render;
+      const [field] = mount(<Input value="Nikolay" />);
       expect(field.value).to.eql('Nikolay');
     });
 
@@ -72,8 +71,7 @@ describe.only('field', () => {
       const render = mount(<Input onChange={onChange} />);
       render.find('input').simulate('change', { target: { value: 'new value' } });
       expect(onChange).to.have.been.calledWith('test: new value');
-      const [field] = render;
-      expect(field.value).to.eql('test: new value');
+      expect(render.nodes[0].value).to.eql('test: new value');
     });
 
     it('allows to set a value on an instance', () => {

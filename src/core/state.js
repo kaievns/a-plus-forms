@@ -18,9 +18,9 @@ class ReactStateStrategy {
   }
 
   set value(value: any) {
-    console.log('setting value', value);
     this.component.setState({ value });
-    console.log(this.component.state);
+    // HACK shortcutting the async setState, to make the new value available right away
+    Object.assign(this.component.state, { value });
   }
 }
 
@@ -123,17 +123,17 @@ export default () => (Input: Component): Component =>
 
     set value(value: any) {
       this.stateStrategy.value = value;
+      this.props.onChange(this.value);
     }
 
     onChange = (value: any) => {
       this.value = value;
-      console.log('onchange', { value }, this.value, this.state);
-      this.props.onChange(this.value);
     }
 
     props: Valuable
 
     render() {
-      return <Input {...this.props} value={this.value} onChange={this.onChange} />;
+      const { value, defaultValue, ...rest } = this.props; // eslint-disable-line
+      return <Input {...rest} value={this.value} onChange={this.onChange} />;
     }
   };

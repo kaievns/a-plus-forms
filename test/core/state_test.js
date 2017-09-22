@@ -2,13 +2,10 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { field, TextInput, PasswordInput } from '../../src';
 
-describe('state provider', () => {
-  let input;
-  before(() => {
-    input = mount(<TextInput />).nodes[0];
-  });
+describe.only('state provider', () => {
+  describe('regular value inputs', () => {
+    const [input] = mount(<TextInput />).nodes;
 
-  describe('scalar value inputs', () => {
     it('does not have any value out of the box', () => {
       expect(input.value).to.equal(undefined);
     });
@@ -19,7 +16,7 @@ describe('state provider', () => {
     });
   });
 
-  describe('nested values', () => {
+  describe('compount value inputs', () => {
     @field()
     class CompoundInput extends React.Component {
       render() {
@@ -31,13 +28,9 @@ describe('state provider', () => {
         );
       }
     }
-    let input;
-    let render;
 
-    before(() => {
-      render = mount(<CompoundInput />);
-      input = render.nodes[0];
-    });
+    const render = mount(<CompoundInput />);
+    const [input] = render.nodes;
 
     it('has empty values by default', () => {
       expect(input.value).to.eql({
