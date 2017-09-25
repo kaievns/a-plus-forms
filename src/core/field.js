@@ -55,7 +55,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     register(field: Valuable) {
       if (!(this.stateStrategy instanceof CompoundStateStrategy)) {
-        this.stateStrategy = new CompoundStateStrategy();
+        const oldValue = this.stateStrategy.value;
+        this.stateStrategy = new CompoundStateStrategy(oldValue);
       }
 
       this.stateStrategy.register(field);
@@ -77,7 +78,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     set value(value: any) {
       this.stateStrategy.value = value;
-      this.props.onChange(this.value);
+      this.props.onChange(value);
     }
 
     onChange = (value: any) => {
@@ -117,11 +118,25 @@ class ReactStateStrategy {
 }
 
 // a compount input state strategy
+// NOTE: the compund strategy receives the oldValues object
+//       from the original field, because initially they use
+//       a react state strategy and then got converted into
+//       compound values when sub-fields start to register
 class CompoundStateStrategy {
   fields: Array<Valuable> = []
+  oldValues: Object = {}
+
+  constructor(oldValues) {
+    this.oldValues = { ...oldValues };
+  }
 
   register(field: Valuable) {
     this.fields.push(field);
+
+    if (field.name && field.name in this.oldValues) {
+      field.value = this.oldValues[field.name];
+      delete this.oldValues[field.name];
+    }
   }
 
   unregister(field: Valuable) {
@@ -135,7 +150,7 @@ class CompoundStateStrategy {
   }
 
   set value(data: any) {
-    Object.keys(data).forEach(name => {
+    Object.keys(data || {}).forEach(name => {
       const field = this.fields.find(field => field.name === name);
       if (field) field.value = data[name];
     });

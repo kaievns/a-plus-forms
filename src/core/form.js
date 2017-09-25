@@ -6,11 +6,12 @@ import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
 // just an empty field container to hold the form state
-const StateContainer = field({ layout: null })((p: Object) => p.children);
+const StateContainer = field({ layout: null })(({ children }: Object) => children);
 
 export default class Form extends React.Component {
   static defaultProps = {
     onSubmit: () => {},
+    onChange: () => {},
     onError: () => {},
     validate: () => {},
     preValidate: data => data,
@@ -30,7 +31,7 @@ export default class Form extends React.Component {
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
 
-    if (this.valid()) {
+    if (this.isValid()) {
       const data = this.props.preSubmit(this.value);
 
       this.props.onSubmit(data);
@@ -38,7 +39,7 @@ export default class Form extends React.Component {
     }
   }
 
-  valid(): boolean {
+  isValid(): boolean {
     const data = this.props.preValidate(this.value);
     const errors = this.validator.errorsFor(data);
 
@@ -67,12 +68,14 @@ export default class Form extends React.Component {
   props: FormProps
 
   render() {
-    const { children, defaultValue } = this.props;
+    const { children, defaultValue, onChange } = this.props;
 
     return (
-      <form onSubmit={this.onSubmit} noValidate>
-        <StateContainer {...{ defaultValue, children }} ref="state" />
-      </form>
+      <StateContainer defaultValue={defaultValue} onChange={onChange} ref="state">
+        <form onSubmit={this.onSubmit} noValidate>
+          {children}
+        </form>
+      </StateContainer>
     );
   }
 }
