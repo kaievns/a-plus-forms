@@ -86,7 +86,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
       Object.assign(props, { value: this.value, onChange: this.onChange });
 
-      return <Layout input={Input} props={props} options={options} />;
+      return <Layout input={Input} props={props} layout={options.layout} />;
     }
   };
 
