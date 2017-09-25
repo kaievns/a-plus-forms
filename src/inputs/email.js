@@ -9,7 +9,6 @@ export default class EmailInput extends React.Component {
   props: InputProps
 
   render() {
-    console.log({ props: this.props });
     return <Input {...this.props} type="email" layout={null} />;
   }
 }

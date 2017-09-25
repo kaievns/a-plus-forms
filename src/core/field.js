@@ -62,8 +62,10 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     set value(value: any) {
-      this.stateStrategy.value = value;
-      this.props.onChange(value);
+      if (this.stateStrategy.value !== value) {
+        this.stateStrategy.value = value;
+        this.props.onChange(value);
+      }
     }
 
     onChange = (value: any) => {
@@ -97,8 +99,6 @@ class ReactStateStrategy {
 
   set value(value: any) {
     this.component.setState({ value });
-    // HACK shortcutting the async setState, to make the new value available right away
-    Object.assign(this.component.state, { value });
   }
 }
 
@@ -133,7 +133,7 @@ class NestedStateStrategy {
 
   set value(data: any) {
     if (this.fields.length === 0) {
-      this.seedValues = { ...data };
+      this.seedValues = { ...data }; // stashing the initial value
     }
 
     Object.keys(data || {}).forEach(name => {
