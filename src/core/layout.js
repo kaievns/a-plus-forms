@@ -10,41 +10,43 @@ const DefaultLayout = ({ input, label, error }: LayoutProps) =>
     {error ? <small>error</small> : null}
   </div>;
 
+// calculates the actual Input props
+const inputProps = (props: FieldProps): Object => {
+  const { label, layout, ...rest } = props; // eslint-disable-line
+  return rest;
+};
+
+// calculates the actual layout props
+const layoutProps = (props: FieldProps): Object => (
+  { label: props.label }
+);
+
+// selects the right layout
+const chooseLayout = (props: FieldProps, layout: Component | null | false): ?Component => {
+  const Layout = layout !== undefined
+    ? layout : 'layout' in props
+    ? props.layout : DefaultLayout;
+
+  return Layout || null;
+};
+
 /**
  * Handles the layouting part of the fields
  */
 export default class extends React.Component {
-  inputProps(): Object {
-    const { props: { label, layout, ...rest } } = this.props; // eslint-disable-line
-    return rest;
-  }
-
-  layoutProps(): Object {
-    return ['label']
-      .reduce((props, name) => {
-        if (name in this.props.props) {
-          props[name] = (this.props.props: Object)[name];
-        }
-
-        return props;
-      }, {});
-  }
-
   props: {
     input: Component,
-    layout: ?Component | false,
+    layout: Component | null | false,
     props: FieldProps
   }
 
   render() {
     const { input: Input, props, layout } = this.props;
-    const input = <Input {...this.inputProps()} />;
-    const Layout = layout !== undefined
-      ? layout : 'layout' in props
-      ? props.layout : DefaultLayout;
+    const input = <Input {...inputProps(props)} />;
+    const Layout = chooseLayout(props, layout);
 
     if (!Layout) return input;
 
-    return <Layout {...this.layoutProps()} input={input} />;
+    return <Layout {...layoutProps(props)} input={input} />;
   }
 }
