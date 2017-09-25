@@ -15,9 +15,10 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       APFState: PropTypes.object
     }
 
-    static childContextTypes = options.nested ? {
-      APFState: PropTypes.object
-    } : undefined;
+    static childContextTypes = {
+      APFState: PropTypes.object, // nested field anchor
+      APFProps: PropTypes.object  // original field props
+    };
 
     stateStrategy: ReactStateStrategy | NestedStateStrategy
 
@@ -28,7 +29,12 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       this.stateStrategy = new StateStrategy(this);
     }
 
-    getChildContext = options.nested ? () => ({ APFState: this }) : () => {};
+    getChildContext() {
+      return {
+        APFProps: this.props,
+        APFState: options.nested && this
+      };
+    }
 
     componentWillMount() {
       if (this.context.APFState) {

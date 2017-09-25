@@ -15,18 +15,12 @@ const DefaultLayout = ({ input, label, error }: LayoutProps) =>
  */
 export default class extends React.Component {
   inputProps(): Object {
-    const { props: { label, layout, ...rest }, options: { bypass = [] } } = this.props; // eslint-disable-line
-
-    bypass.forEach((name) => { rest[name] = this.props.props[name]; });
-
+    const { props: { label, layout, ...rest } } = this.props; // eslint-disable-line
     return rest;
   }
 
   layoutProps(): Object {
-    const { options: { bypass = [] } } = this.props;
-
     return ['label']
-      .filter(n => !bypass.includes(n))
       .reduce((props, name) => {
         if (name in this.props.props) {
           props[name] = (this.props.props: Object)[name];
