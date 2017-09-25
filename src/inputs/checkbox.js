@@ -1,22 +1,24 @@
 /* @flow */
 import React from 'react';
+import PropTypes from 'prop-types';
 import field from '../core/field';
 import type { InputProps, InputEvent } from '../types';
 
-@field({ bypass: ['label'] })
+@field()
 export default class Checkbox extends React.Component {
+  static contextTypes = {
+    APFProps: PropTypes.object
+  }
+
   onChange = (event: InputEvent) => {
     this.props.onChange(!!event.target.checked);
   }
 
-  props: InputProps & {
-    label?: string,
-    value?: boolean,
-    checked?: boolean
-  }
+  props: InputProps
 
   render() {
-    const { value, checked, label, disabled, ...rest } = this.props;
+    const { value, disabled, ...rest } = this.props;
+    const { checked, label } = this.context.APFProps || {};
     const isChecked = (value !== undefined ? value : checked) === true;
     const input = (
       <input

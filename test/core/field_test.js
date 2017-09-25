@@ -1,7 +1,8 @@
+/* eslint react/no-multi-comp: off */
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import { field } from '../../src';
+import { field, TextInput, PasswordInput } from '../../src';
 
 @field()
 class Input extends React.Component {
@@ -13,6 +14,18 @@ class Input extends React.Component {
   render() {
     const { onChange, value = '', ...rest } = this.props;
     return <input {...rest} value={value} onChange={e => onChange(`test: ${e.target.value}`)} />;
+  }
+}
+
+@field({ nested: true })
+class NestedInput extends React.Component {
+  render() {
+    return (
+      <div>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </div>
+    );
   }
 }
 
@@ -62,8 +75,7 @@ describe('field', () => {
     });
 
     it('allows to access the current value of the field', () => {
-      const render = mount(<Input value="Nikolay" />);
-      const [field] = render;
+      const [field] = mount(<Input value="Nikolay" />);
       expect(field.value).to.eql('Nikolay');
     });
 
@@ -72,8 +84,7 @@ describe('field', () => {
       const render = mount(<Input onChange={onChange} />);
       render.find('input').simulate('change', { target: { value: 'new value' } });
       expect(onChange).to.have.been.calledWith('test: new value');
-      const [field] = render;
-      expect(field.value).to.eql('test: new value');
+      expect(render.nodes[0].value).to.eql('test: new value');
     });
 
     it('allows to set a value on an instance', () => {
@@ -84,6 +95,38 @@ describe('field', () => {
       expect(field.value).to.eql('Nikolay');
       expect(onChange).to.have.been.calledWith('Nikolay');
       expect(render.html()).to.eql('<input value="Nikolay">');
+    });
+  });
+
+  describe('nested fields', () => {
+    const render = mount(<NestedInput />);
+    const [input] = render.nodes;
+
+    it('has empty values by default', () => {
+      expect(input.value).to.eql({
+        username: undefined,
+        password: undefined
+      });
+    });
+
+    it('picks up changes in the sub-fields', () => {
+      render.find('input[name="username"]').simulate('change', {
+        target: { value: 'nikolay' }
+      });
+
+      expect(input.value).to.eql({
+        username: 'nikolay',
+        password: undefined
+      });
+
+      render.find('input[name="password"]').simulate('change', {
+        target: { value: 'Ba(k0n!' }
+      });
+
+      expect(input.value).to.eql({
+        username: 'nikolay',
+        password: 'Ba(k0n!'
+      });
     });
   });
 });

@@ -1,42 +1,62 @@
 /* @flow */
+/* eslint no-use-before-define: off */
 import React from 'react';
 import PropTypes from 'prop-types';
-import DefaultLayout from './layout';
-import type { FieldProps, FieldOptions, Component } from '../types';
+import Layout from './layout';
+import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
-let fieldsCounter = 0;
-
-export default (options: FieldOptions = {}) => (Input: Component): Object =>
-
+export default (options: FieldOptions = {}) => (Input: Component): Component =>
   class Field extends React.Component {
     static defaultProps = {
-      layout: DefaultLayout,
       onChange: () => {}
     }
 
     static contextTypes = {
-      registerField: PropTypes.func,
-      unRegisterField: PropTypes.func
+      APFState: PropTypes.object
     }
 
-    state = { value: undefined, touched: false, id: undefined }
+    static childContextTypes = {
+      APFState: PropTypes.object, // nested field anchor
+      APFProps: PropTypes.object  // original field props
+    };
+
+    stateStrategy: ReactStateStrategy | NestedStateStrategy
+
+    constructor() {
+      super();
+
+      const StateStrategy = options.nested ? NestedStateStrategy : ReactStateStrategy;
+      this.stateStrategy = new StateStrategy(this);
+    }
+
+    getChildContext() {
+      return {
+        APFProps: this.props,
+        APFState: options.nested && this
+      };
+    }
 
     componentWillMount() {
-      const { value, defaultValue, name, id = `a-plus-form-${fieldsCounter++}` } = this.props;
-      this.setState({ value: defaultValue !== undefined ? defaultValue : value, id });
+      if (this.context.APFState) {
+        this.context.APFState.stateStrategy.register(this);
+      }
 
-      const { registerField } = this.context;
-      if (name && registerField) { registerField(this); }
+      if ('value' in this.props) {
+        this.value = this.props.value;
+      } else if ('defaultValue' in this.props) {
+        this.value = this.props.defaultValue;
+      }
     }
 
     componentWillUnmount() {
-      const { unRegisterField } = this.context;
-      if (unRegisterField) { unRegisterField(this); }
+      if (this.context.APFState) {
+        this.context.APFState.stateStrategy.unregister(this);
+      }
     }
 
-    componentWillReceiveProps(props: FieldProps) {
+    componentWillReceiveProps(props: Valuable) {
       if ('value' in props) {
-        this.setState({ value: this.props.value });
+        this.value = this.props.value;
       }
     }
 
@@ -44,47 +64,93 @@ export default (options: FieldOptions = {}) => (Input: Component): Object =>
       return this.props.name;
     }
 
-    get value() {
-      return this.state.value;
+    get value(): any {
+      return this.stateStrategy.value;
     }
 
     set value(value: any) {
-      this.setState({ value });
-      this.props.onChange(value);
+      if (this.stateStrategy.value !== value) {
+        this.stateStrategy.value = value;
+        this.props.onChange(value);
+      }
     }
 
     onChange = (value: any) => {
       this.value = value;
     }
 
-    inputProps() {
-      const { label, onChange, layout, value, defaultValue, ...rest } = this.props; // eslint-disable-line
-      const { bypass = [] } = options;
-
-      bypass.forEach((name) => { rest[name] = this.props[name]; });
-
-      return {
-        ...rest,
-        value: this.state.value,
-        onChange: this.onChange
-      };
-    }
-
-    layoutProps() {
-      const { bypass = [] } = options;
-      return ['label'].filter(n => bypass.indexOf(n) === -1)
-        .reduce((props, name) => Object.assign(props, { [name]: this.props[name] }), {});
-    }
-
     props: FieldProps
 
     render() {
-      const { label, onChange, layout, value, defaultValue, ...rest } = this.props; // eslint-disable-line
-      const input = <Input {...this.inputProps()} />;
-      const Layout = 'layout' in options ? options.layout : this.props.layout;
+      const { defaultValue, ...props } = this.props; // eslint-disable-line
 
-      if (!Layout) return input;
+      Object.assign(props, { value: this.value, onChange: this.onChange });
 
-      return <Layout {...this.layoutProps()} input={input} />;
+      return <Layout input={Input} props={props} layout={options.layout} />;
     }
   };
+
+// a generic input field state strategy
+class ReactStateStrategy {
+  state: Object
+  component: Object
+
+  constructor(component: Object) {
+    this.component = component;
+    this.component.state = { value: undefined };
+  }
+
+  get value(): any {
+    return this.component.state.value;
+  }
+
+  set value(value: any) {
+    this.component.setState({ value });
+  }
+}
+
+// a compount input state strategy
+// NOTE: a nested field can receive initial values _before_ sub-fields
+//       start to register. which, will create a un-sync situation
+//       to solve the problem, nested field strategy saves any incoming values
+//       in the `seedValues` property and then pipes them into fields as they
+//       register
+class NestedStateStrategy {
+  fields: Array<Valuable> = []
+  seedValues: Object = {}
+  component: Object
+
+  constructor(component: Object) {
+    this.component = component;
+  }
+
+  register(field: Valuable) {
+    this.fields.push(field);
+
+    if (field.name && field.name in this.seedValues) {
+      field.value = this.seedValues[field.name];
+      delete this.seedValues[field.name];
+    }
+  }
+
+  unregister(field: Valuable) {
+    this.fields.splice(this.fields.indexOf(field), 1);
+  }
+
+  get value(): Object {
+    return this.fields.reduce((data, field) =>
+      Object.assign(data, field.name ? { [field.name]: field.value } : {})
+    , {});
+  }
+
+  set value(data: any) {
+    if (this.fields.length === 0) {
+      this.seedValues = { ...data }; // stashing the initial value
+    }
+
+    Object.keys(data || {}).forEach(name => {
+      const field = this.fields.find(field => field.name === name);
+      if (field) field.value = data[name];
+    });
+  }
+}

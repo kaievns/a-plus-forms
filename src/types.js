@@ -8,7 +8,14 @@ export type JSONSchema = {
   required?: Array<string>
 };
 
-export type FormProps = {
+export type Valuable = {
+  name?: string,
+  value?: any,
+  defaultValue?: any,
+  onChange: Function
+};
+
+export type FormProps = Valuable & {
   onSubmit: Function,
   value?: ?Object,
   defaultValue?: ?Object,
@@ -21,12 +28,8 @@ export type FormProps = {
   children: Object
 };
 
-export type FieldProps = {
+export type FieldProps = Valuable & {
   id?: string,
-  name?: string,
-  value?: any,
-  onChange: Function,
-  defaultValue?: any,
   label?: string,
   error?: string,
   layout?: Object | null | false
@@ -34,7 +37,7 @@ export type FieldProps = {
 
 export type FieldOptions = {
   layout?: null | false | Object,
-  bypass?: Array<string>
+  nested?: boolean
 };
 
 export type InputProps = {
@@ -61,3 +64,14 @@ export type SelectOption = {
 };
 
 export type Component = Class<React.Component<*, *, *>> | Function; // eslint-disable-line
+
+export type Element = {
+  setState: Function,
+  state?: Object
+};
+
+export type LayoutProps = {
+  input: any,
+  label?: string,
+  error?: string
+};

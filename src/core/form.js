@@ -1,40 +1,29 @@
 /* @flow */
+/* eslint react/no-string-refs: off */
 import React from 'react';
-import PropTypes from 'prop-types';
+import field from './field';
 import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
-type Field = Object; // fixme...
+// just an empty field container to hold the form state
+const StateContainer = field({ layout: null, nested: true })(
+  ({ children }: Object) => children
+);
 
 export default class Form extends React.Component {
   static defaultProps = {
     onSubmit: () => {},
+    onChange: () => {},
     onError: () => {},
     validate: () => {},
     preValidate: data => data,
     preSubmit: data => data,
-    postSubmit: () => {}
-  }
-
-  static childContextTypes = {
-    registerField: PropTypes.func,
-    unRegisterField: PropTypes.func
-  }
-
-  getChildContext() {
-    return {
-      registerField: this.registerField,
-      unRegisterField: this.unRegisterField
-    };
+    postSubmit: () => {},
+    defaultValue: {}
   }
 
   componentWillMount() {
     this.updateValidator(this.props);
-  }
-
-  componentDidMount() {
-    const { defaultValue } = this.props;
-    if (defaultValue) { this.value = defaultValue; }
   }
 
   componentWillReceiveProps(props: FormProps) {
@@ -44,7 +33,7 @@ export default class Form extends React.Component {
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
 
-    if (this.valid()) {
+    if (this.isValid()) {
       const data = this.props.preSubmit(this.value);
 
       this.props.onSubmit(data);
@@ -52,7 +41,7 @@ export default class Form extends React.Component {
     }
   }
 
-  valid(): boolean {
+  isValid(): boolean {
     const data = this.props.preValidate(this.value);
     const errors = this.validator.errorsFor(data);
 
@@ -69,39 +58,26 @@ export default class Form extends React.Component {
   }
 
   validator = new Validator()
-  fields: Array<Field> = []
-
-  registerField = (field: Field) => {
-    this.fields.push(field);
-  }
-
-  unRegisterField = (field: Field) => {
-    const index = this.fields.indexOf(field);
-    this.fields.splice(index, 1);
-  }
 
   get value(): Object {
-    return this.fields.reduce((data, field) =>
-      Object.assign(data, { [field.name]: field.value })
-    , {});
+    return this.refs.state.value;
   }
 
   set value(data: Object) {
-    Object.keys(data).forEach(name => {
-      const field = this.fields.find(field => field.name === name);
-      if (field) field.value = data[name];
-    });
+    this.refs.state.value = data;
   }
 
   props: FormProps
 
   render() {
-    const { children } = this.props;
+    const { children, defaultValue, onChange } = this.props;
 
     return (
-      <form onSubmit={this.onSubmit} noValidate>
-        {children}
-      </form>
+      <StateContainer defaultValue={defaultValue} onChange={onChange} ref="state">
+        <form onSubmit={this.onSubmit} noValidate>
+          {children}
+        </form>
+      </StateContainer>
     );
   }
 }
