@@ -1,3 +1,4 @@
+/* eslint react/no-multi-comp: off */
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
@@ -13,6 +14,18 @@ class Input extends React.Component {
   render() {
     const { onChange, value = '', ...rest } = this.props;
     return <input {...rest} value={value} onChange={e => onChange(`test: ${e.target.value}`)} />;
+  }
+}
+
+@field({ nested: true })
+class NestedInput extends React.Component {
+  render() {
+    return (
+      <div>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </div>
+    );
   }
 }
 
@@ -86,18 +99,6 @@ describe('field', () => {
   });
 
   describe('nested fields', () => {
-    @field({ nested: true })
-    class NestedInput extends React.Component {
-      render() {
-        return (
-          <div>
-            <TextInput name="username" />
-            <PasswordInput name="password" />
-          </div>
-        );
-      }
-    }
-
     const render = mount(<NestedInput />);
     const [input] = render.nodes;
 

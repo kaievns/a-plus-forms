@@ -1,6 +1,6 @@
 /* @flow */
+/* eslint react/no-string-refs: off */
 import React from 'react';
-import PropTypes from 'prop-types';
 import field from './field';
 import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';

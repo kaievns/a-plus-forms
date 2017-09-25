@@ -1,6 +1,7 @@
 /* @flow */
+/* eslint no-nested-ternary: off */
 import React from 'react';
-import type { LayoutProps, Component } from '../types';
+import type { LayoutProps, Component, FieldOptions, FieldProps } from '../types';
 
 const DefaultLayout = ({ input, label, error }: LayoutProps) =>
   <div>
@@ -33,6 +34,12 @@ export default class extends React.Component {
 
         return props;
       }, {});
+  }
+
+  props: {
+    input: Component,
+    options: FieldOptions,
+    props: FieldProps
   }
 
   render() {
