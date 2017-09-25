@@ -85,9 +85,9 @@ describe('field', () => {
     });
   });
 
-  describe('compound fields', () => {
-    @field()
-    class CompoundInput extends React.Component {
+  describe('nested fields', () => {
+    @field({ nested: true })
+    class NestedInput extends React.Component {
       render() {
         return (
           <div>
@@ -98,7 +98,7 @@ describe('field', () => {
       }
     }
 
-    const render = mount(<CompoundInput />);
+    const render = mount(<NestedInput />);
     const [input] = render.nodes;
 
     it('has empty values by default', () => {

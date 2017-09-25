@@ -6,7 +6,9 @@ import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
 // just an empty field container to hold the form state
-const StateContainer = field({ layout: null })(({ children }: Object) => children);
+const StateContainer = field({ layout: null, nested: true })(
+  ({ children }: Object) => children
+);
 
 export default class Form extends React.Component {
   static defaultProps = {

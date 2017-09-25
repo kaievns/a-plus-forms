@@ -14,24 +14,24 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       APFState: PropTypes.object
     }
 
-    static childContextTypes = {
+    static childContextTypes = options.nested ? {
       APFState: PropTypes.object
-    }
+    } : undefined;
 
-    stateStrategy: ReactStateStrategy | CompoundStateStrategy
+    stateStrategy: ReactStateStrategy | NestedStateStrategy
 
     constructor() {
       super();
-      this.stateStrategy = new ReactStateStrategy(this);
+
+      const StateStrategy = options.nested ? NestedStateStrategy : ReactStateStrategy;
+      this.stateStrategy = new StateStrategy(this);
     }
 
-    getChildContext() {
-      return { APFState: this };
-    }
+    getChildContext = options.nested ? () => ({ APFState: this }) : undefined;
 
     componentWillMount() {
-      if (this.name && this.context.APFState) {
-        this.context.APFState.register(this);
+      if (this.context.APFState) {
+        this.context.APFState.stateStrategy.register(this);
       }
 
       if ('value' in this.props) {
@@ -43,28 +43,13 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     componentWillUnmount() {
       if (this.context.APFState) {
-        this.context.APFState.unregister(this);
+        this.context.APFState.stateStrategy.unregister(this);
       }
     }
 
     componentWillReceiveProps(props: Valuable) {
       if ('value' in props) {
         this.value = this.props.value;
-      }
-    }
-
-    register(field: Valuable) {
-      if (!(this.stateStrategy instanceof CompoundStateStrategy)) {
-        const oldValue = this.stateStrategy.value;
-        this.stateStrategy = new CompoundStateStrategy(oldValue);
-      }
-
-      this.stateStrategy.register(field);
-    }
-
-    unregister(field: Valuable) {
-      if (this.stateStrategy instanceof CompoundStateStrategy) {
-        this.stateStrategy.unregister(field);
       }
     }
 
@@ -118,24 +103,21 @@ class ReactStateStrategy {
 }
 
 // a compount input state strategy
-// NOTE: the compund strategy receives the oldValues object
-//       from the original field, because initially they use
-//       a react state strategy and then got converted into
-//       compound values when sub-fields start to register
-class CompoundStateStrategy {
+// NOTE: a nested field can receive initial values _before_ sub-fields
+//       start to register. which, will create a un-sync situation
+//       to solve the problem, nested field strategy saves any incoming values
+//       in the `seedValues` property and then pipes them into fields as they
+//       register
+class NestedStateStrategy {
   fields: Array<Valuable> = []
-  oldValues: Object = {}
-
-  constructor(oldValues) {
-    this.oldValues = { ...oldValues };
-  }
+  seedValues: Object = {}
 
   register(field: Valuable) {
     this.fields.push(field);
 
-    if (field.name && field.name in this.oldValues) {
-      field.value = this.oldValues[field.name];
-      delete this.oldValues[field.name];
+    if (field.name && field.name in this.seedValues) {
+      field.value = this.seedValues[field.name];
+      delete this.seedValues[field.name];
     }
   }
 
@@ -150,6 +132,10 @@ class CompoundStateStrategy {
   }
 
   set value(data: any) {
+    if (this.fields.length === 0) {
+      this.seedValues = { ...data };
+    }
+
     Object.keys(data || {}).forEach(name => {
       const field = this.fields.find(field => field.name === name);
       if (field) field.value = data[name];

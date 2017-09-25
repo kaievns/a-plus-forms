@@ -37,7 +37,8 @@ export type FieldProps = Valuable & {
 
 export type FieldOptions = {
   layout?: null | false | Object,
-  bypass?: Array<string>
+  bypass?: Array<string>,
+  nested?: boolean
 };
 
 export type InputProps = {
