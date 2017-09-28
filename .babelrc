@@ -2,5 +2,20 @@
   "presets": ["react", "stage-1", "flow-runtime",
     ["env", { "targets": { "node": "current" } }]
   ],
-  "plugins": ["transform-decorators-legacy"],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties"
+  ],
+  "env": {
+    "production": {
+      "presets": ["react", "stage-1",
+        ["env", { "browsers": ["last 1 versions"] }]
+      ],
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-class-properties",
+        "transform-flow-strip-types"
+      ]
+    }
+  }
 }
