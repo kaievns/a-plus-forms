@@ -1,14 +1,8 @@
 /* @flow */
 /* eslint no-nested-ternary: off */
 import React from 'react';
-import type { LayoutProps, Component, FieldProps } from '../types';
-
-const DefaultLayout = ({ input, label, error }: LayoutProps) =>
-  <div>
-    {label ? <label>{label}</label> : null}
-    <div>{input}</div>
-    {error ? <small>error</small> : null}
-  </div>;
+import type { Component, FieldProps } from '../types';
+import config from '../config';
 
 // calculates the actual Input props
 const inputProps = (props: FieldProps): Object => {
@@ -25,7 +19,7 @@ const layoutProps = (props: FieldProps): Object => (
 const chooseLayout = (props: FieldProps, layout: Component | null | false): ?Component => {
   const Layout = layout !== undefined
     ? layout : 'layout' in props
-    ? props.layout : DefaultLayout;
+    ? props.layout : config.defaultLayout;
 
   return Layout || null;
 };
