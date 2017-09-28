@@ -4,6 +4,7 @@ export Form from './core/form';
 
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';
+export SearchInput from './inputs/search';
 export NumberInput from './inputs/number';
 export PasswordInput from './inputs/password';
 export HiddenInput from './inputs/hidden';
