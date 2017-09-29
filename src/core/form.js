@@ -1,5 +1,4 @@
 /* @flow */
-/* eslint react/no-string-refs: off */
 import React from 'react';
 import field from './field';
 import Validator from '../validator';
@@ -58,22 +57,24 @@ export default class Form extends React.Component {
   }
 
   validator = new Validator()
+  stateContainer: Object
 
   get value(): Object {
-    return this.refs.state.value;
+    return this.stateContainer.value;
   }
 
   set value(data: Object) {
-    this.refs.state.value = data;
+    this.stateContainer.value = data;
   }
 
   props: FormProps
 
   render() {
     const { children, defaultValue, onChange } = this.props;
+    const setRef = e => { this.stateContainer = e; };
 
     return (
-      <StateContainer defaultValue={defaultValue} onChange={onChange} ref="state">
+      <StateContainer defaultValue={defaultValue} onChange={onChange} ref={setRef}>
         <form onSubmit={this.onSubmit} noValidate>
           {children}
         </form>
