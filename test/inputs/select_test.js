@@ -63,6 +63,20 @@ describe('<Select />', () => {
     expect(onChange).to.have.been.calledWith(options[1]);
   });
 
+  it('allows key -> value options', () => {
+    const onChange = spy();
+    const options = { x: 'Small', m: 'Medium', l: 'Large' };
+    const render = mount(<Select layout={null} options={options} onChange={onChange} />);
+    expect(render.html()).to.eql(
+      '<select><option value="x">Small</option><option value="m">Medium</option><option value="l">Large</option></select>'
+    );
+    render.find('select').simulate('change', {
+      target: { value: 'm' }
+    });
+
+    expect(onChange).to.have.been.calledWith('m');
+  });
+
   it('understands the `name` prop', () => {
     const render = mount(<Select layout={null} name="size" />);
     expect(render.html()).to.eql('<select name="size"></select>');

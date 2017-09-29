@@ -14,11 +14,14 @@ type NumberOption = number;
 
 type AnyOption = LabelValueOption | NamedOption | StringOption | NumberOption;
 
+type KeyValueOptions = Object;
+
 export default () =>
   (Input: Component) =>
     class Optionizer extends React.Component {
       onChange = (pseudoValue: string) => {
-        const { options = [], onChange } = this.props;
+        const { onChange } = this.props;
+        const options = this.normalizedOptions();
         const option = this.convertedOptions().reduce((current, option, index) =>
           option.value === pseudoValue ? options[index] : current
         , null);
@@ -30,10 +33,18 @@ export default () =>
         }
       }
 
-      convertedOptions(): Array<SelectOption> {
+      normalizedOptions(): Array<AnyOption> {
         const { options = [] } = this.props;
 
-        return options.map((option, index) => {
+        if (!Array.isArray(options)) {
+          return Object.keys(options).map(value => ({ value, label: options[value] }));
+        }
+
+        return options;
+      }
+
+      convertedOptions(): Array<SelectOption> {
+        return this.normalizedOptions().map((option, index) => {
           if (typeof option === 'object' && typeof option.label === 'string' && typeof option.value === 'string') {
             return { label: option.label, value: option.value, disabled: option.disabled };
           } else if (typeof option === 'object' && typeof option.name === 'string') {
@@ -50,11 +61,13 @@ export default () =>
 
       props: InputProps & {
         value?: any,
-        options: Array<AnyOption>
+        options: Array<AnyOption> | KeyValueOptions
       }
 
       render() {
-        const { value, options = [], ...rest } = this.props;
+        const { value, ...rest } = this.props;
+        const options = this.normalizedOptions();
+
         const currentOption = options.find(option =>
           (option.label && option.value === value) || option === value
         );
