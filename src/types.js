@@ -32,6 +32,7 @@ export type FieldProps = Valuable & {
   id?: string,
   label?: string,
   error?: string,
+  className?: string,
   layout?: Object | null | false
 };
 
@@ -45,6 +46,7 @@ export type InputProps = {
   name?: string,
   value?: string,
   onChange: Function,
+  className?: string,
   placeholder?: string,
   disabled?: boolean
 };

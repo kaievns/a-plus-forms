@@ -1,6 +1,7 @@
 export field from './core/field';
 
 export Form from './core/form';
+export { LayoutProvider } from './core/layout';
 
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';

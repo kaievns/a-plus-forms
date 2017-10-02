@@ -1,33 +1,77 @@
 /* @flow */
-/* eslint no-nested-ternary: off */
 import React from 'react';
+import PropTypes from 'prop-types';
 import type { Component, FieldProps } from '../types';
 import config from '../config';
 
-// calculates the actual Input props
-const inputProps = (props: FieldProps): Object => {
-  const { label, layout, ...rest } = props; // eslint-disable-line
-  return rest;
-};
+/**
+ * This is the standard interface to feed different field
+ * layouts into the forms in different contexts
+ */
+export class LayoutProvider extends React.Component {
+  static childContextTypes = {
+    APFPLayout: PropTypes.oneOfType([
+      PropTypes.func, PropTypes.object
+    ]).isRequired
+  };
 
-// calculates the actual layout props
-const layoutProps = (props: FieldProps): Object => (
-  { label: props.label }
-);
+  getChildContext() {
+    return { APFPLayout: this.props.layout };
+  }
 
-// selects the right layout
-const chooseLayout = (props: FieldProps, layout: Component | null | false): ?Component => {
-  const Layout = layout !== undefined
-    ? layout : 'layout' in props
-    ? props.layout : config.defaultLayout;
+  props: {
+    layout: Component,
+    children: PropTypes.element
+  }
 
-  return Layout || null;
-};
+  render() {
+    return this.props.children;
+  }
+}
 
 /**
- * Handles the layouting part of the fields
+ * This is the actual layout strategy component
  */
-export default class extends React.Component {
+export default class LayoutHandler extends React.Component {
+  static contextTypes = {
+    APFPLayout: PropTypes.any
+  }
+
+  /**
+   * Calculates the actual Input props
+   * an input receives all the props except the layout ones
+   */
+  inputProps(): Object {
+    const { props: { label, layout, ...rest } } = this.props; // eslint-disable-line
+    return rest;
+  }
+
+  /**
+   * Calculates the actual layout props
+   * a layout receives all the same props except id/className
+   * the class name goes into the input field by default
+   */
+  layoutProps(): Object {
+    const { props: { id, className, ...rest } } = this.props; // eslint-disable-line
+    return rest;
+  }
+
+  // selects the right layout
+  chooseLayout(): ?Component {
+    const { layout, props } = this.props;
+    const { APFPLayout } = this.context;
+
+    if ('layout' in props) {
+      return props.layout || null; // individual props layout
+    } else if (layout !== undefined) {
+      return layout || null; // the field options layout
+    } else if (APFPLayout) {
+      return APFPLayout; // the context layout
+    }
+
+    return config.defaultLayout;
+  }
+
   props: {
     input: Component,
     layout: Component | null | false,
@@ -35,12 +79,12 @@ export default class extends React.Component {
   }
 
   render() {
-    const { input: Input, props, layout } = this.props;
-    const input = <Input {...inputProps(props)} />;
-    const Layout = chooseLayout(props, layout);
+    const { input: Input } = this.props;
+    const input = <Input {...this.inputProps()} />;
+    const Layout = this.chooseLayout();
 
     if (!Layout) return input;
 
-    return <Layout {...layoutProps(props)} input={input} />;
+    return <Layout {...this.layoutProps()} input={input} />;
   }
 }
