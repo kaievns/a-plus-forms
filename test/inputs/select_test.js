@@ -77,6 +77,33 @@ describe('<Select />', () => {
     expect(onChange).to.have.been.calledWith('m');
   });
 
+  it('supposrts the `multiple` prop and mutli-selects', () => {
+    const onChange = spy();
+    const options = { x: 'Small', m: 'Medium', l: 'Large' };
+    const render = mount(<Select layout={null} options={options} onChange={onChange} multiple />);
+    expect(render.html()).to.eql(
+      '<select multiple=""><option value="x">Small</option><option value="m">Medium</option><option value="l">Large</option></select>'
+    );
+
+    // simulating a multi-select
+    render.find('option').nodes[1].selected = true;
+    render.find('option').nodes[2].selected = true;
+
+    render.find('select').simulate('change');
+
+    expect(onChange).to.have.been.calledWith(['m', 'l']);
+  });
+
+  it('sends back an empty array if a multi-select was changed to no options', () => {
+    const onChange = spy();
+    const options = { x: 'Small', m: 'Medium', l: 'Large' };
+    const render = mount(<Select layout={null} options={options} onChange={onChange} multiple />);
+
+    render.find('select').simulate('change');
+
+    expect(onChange).to.have.been.calledWith([]);
+  });
+
   it('understands the `name` prop', () => {
     const render = mount(<Select layout={null} name="size" />);
     expect(render.html()).to.eql('<select name="size"></select>');
