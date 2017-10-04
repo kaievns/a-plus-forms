@@ -1,6 +1,6 @@
 {
   "name": "a-plus-forms",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "A+ forms. Would use again",
   "files": [
     "dist"
@@ -12,7 +12,7 @@
     "build": "babel src --out-dir dist/",
     "precommit": "npm run lint",
     "prepush": "npm run test",
-    "prepublish": "npm run build"
+    "prepare": "NODE_ENV=production npm run build"
   },
   "repository": {
     "type": "git",
