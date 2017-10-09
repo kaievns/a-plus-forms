@@ -86,8 +86,8 @@ describe('<Select />', () => {
     );
 
     // simulating a multi-select
-    render.find('option').nodes[1].selected = true;
-    render.find('option').nodes[2].selected = true;
+    render.find('option').at(1).instance().selected = true;
+    render.find('option').at(2).instance().selected = true;
 
     render.find('select').simulate('change');
 
@@ -121,7 +121,7 @@ describe('<Select />', () => {
 
   it('shows correct selected value', () => {
     const render = mount(<Select layout={null} options={options} value="one" />);
-    expect(render.find('select').nodes[0].value).to.eql('one');
+    expect(render.find('select').at(0).instance().value).to.eql('one');
   });
 
   it('tracks change events', () => {

@@ -78,7 +78,7 @@ describe('field', () => {
     });
 
     it('allows to access the current value of the field', () => {
-      const [field] = mount(<Input value="Nikolay" />);
+      const field = mount(<Input value="Nikolay" />).at(0).instance();
       expect(field.value).to.eql('Nikolay');
     });
 
@@ -87,13 +87,13 @@ describe('field', () => {
       const render = mount(<Input onChange={onChange} />);
       render.find('input').simulate('change', { target: { value: 'new value' } });
       expect(onChange).to.have.been.calledWith('test: new value');
-      expect(render.nodes[0].value).to.eql('test: new value');
+      expect(render.at(0).instance().value).to.eql('test: new value');
     });
 
     it('allows to set a value on an instance', () => {
       const onChange = spy();
       const render = mount(<Input layout={null} onChange={onChange} />);
-      const [field] = render;
+      const field = render.at(0).instance();
       field.value = 'Nikolay';
       expect(field.value).to.eql('Nikolay');
       expect(onChange).to.have.been.calledWith('Nikolay');
@@ -103,7 +103,7 @@ describe('field', () => {
 
   describe('nested fields', () => {
     const render = mount(<NestedInput />);
-    const [input] = render.nodes;
+    const input = render.at(0).instance();
 
     it('has empty values by default', () => {
       expect(input.value).to.eql({

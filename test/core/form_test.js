@@ -32,7 +32,7 @@ describe('<Form />', () => {
       </Form>
     );
 
-    expect(render.nodes[0].value).to.eql({
+    expect(render.at(0).instance().value).to.eql({
       username: 'nikolay',
       password: 'Ba(k0n!'
     });
@@ -46,13 +46,13 @@ describe('<Form />', () => {
       </Form>
     );
 
-    render.nodes[0].value = {
+    render.at(0).instance().value = {
       username: 'nikolay',
       password: 'Ba(k0n!'
     };
 
-    expect(render.find(TextInput).nodes[0].value).to.eql('nikolay');
-    expect(render.find(PasswordInput).nodes[0].value).to.eql('Ba(k0n!');
+    expect(render.find(TextInput).at(0).instance().value).to.eql('nikolay');
+    expect(render.find(PasswordInput).at(0).instance().value).to.eql('Ba(k0n!');
   });
 
   it('allows to set the form initial values', () => {
@@ -64,11 +64,11 @@ describe('<Form />', () => {
       </Form>
     );
 
-    expect(render.nodes[0].value).to.eql(values);
+    expect(render.at(0).instance().value).to.eql(values);
 
-    render.find(PasswordInput).nodes[0].value = 'Ba(k0n!';
+    render.find(PasswordInput).at(0).instance().value = 'Ba(k0n!';
 
-    expect(render.nodes[0].value).to.eql({
+    expect(render.at(0).instance().value).to.eql({
       username: 'nikolay',
       password: 'Ba(k0n!'
     });
