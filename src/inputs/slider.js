@@ -3,17 +3,17 @@ import React from 'react';
 import field from '../core/field';
 import type { InputProps, InputEvent } from '../types';
 
+type SliderProps = InputProps & {
+  min?: number,
+  max?: number,
+  step?: number,
+  value: ?number
+};
+
 @field()
-export default class Slider extends React.Component {
+export default class Slider extends React.Component<SliderProps> {
   onChange = (event: InputEvent) => {
     this.props.onChange(parseFloat(event.target.value));
-  };
-
-  props: InputProps & {
-    min?: number,
-    max?: number,
-    step?: number,
-    value: ?number
   };
 
   render() {

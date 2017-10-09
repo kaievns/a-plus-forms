@@ -7,9 +7,7 @@ import type { InputProps } from '../types';
 
 @field()
 @trimmer()
-export default class Textarea extends React.Component {
-  props: InputProps;
-
+export default class Textarea extends React.Component<InputProps> {
   render() {
     return <textarea {...this.props} />;
   }

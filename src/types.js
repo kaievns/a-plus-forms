@@ -1,6 +1,8 @@
 /* @flow */
 import React from 'react';
 
+export type Component = Class<React.Component<*, *>> | Function; // eslint-disable-line
+
 export type JSONSchema = {
   type: 'object' | 'array' | 'string' | 'boolean' | 'number',
   properties?: { [string]: JSONSchema },
@@ -33,11 +35,11 @@ export type FieldProps = Valuable & {
   label?: string,
   error?: string,
   className?: string,
-  layout?: Object | null | false
+  layout?: Component | null | false
 };
 
 export type FieldOptions = {
-  layout?: null | false | Object,
+  layout?: Component | null | false,
   nested?: boolean
 };
 
@@ -64,8 +66,6 @@ export type SelectOption = {
   value: string,
   disabled?: boolean
 };
-
-export type Component = Class<React.Component<*, *, *>> | Function; // eslint-disable-line
 
 export type Element = {
   setState: Function,

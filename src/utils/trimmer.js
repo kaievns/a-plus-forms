@@ -3,7 +3,7 @@ import React from 'react';
 import type { InputProps, InputEvent } from '../types';
 
 export default () => (TextInput: Object) =>
-  class Trimmer extends React.Component {
+  class Trimmer extends React.Component<InputProps> {
     componentWillMount() {
       this.rawValue = this.props.value || '';
     }
@@ -24,8 +24,6 @@ export default () => (TextInput: Object) =>
     };
 
     rawValue = '';
-
-    props: InputProps;
 
     render() {
       return <TextInput {...this.props} value={this.rawValue} onChange={this.onChange} />;

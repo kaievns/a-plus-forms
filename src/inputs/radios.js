@@ -4,15 +4,15 @@ import field from '../core/field';
 import optionizer from '../utils/optionizer';
 import type { InputProps, InputEvent, SelectOption } from '../types';
 
+type RadiosProps = InputProps & {
+  options?: Array<SelectOption>
+};
+
 @field()
 @optionizer()
-export default class Radios extends React.Component {
+export default class Radios extends React.Component<RadiosProps> {
   onChange = (event: InputEvent) => {
     this.props.onChange(event.target.value);
-  };
-
-  props: InputProps & {
-    options?: Array<SelectOption>
   };
 
   render() {

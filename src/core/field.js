@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint no-use-before-define: off */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -6,7 +5,7 @@ import Layout from './layout';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component =>
-  class Field extends React.Component {
+  class Field extends React.Component<FieldProps> {
     static defaultProps = {
       onChange: () => {}
     };
@@ -78,8 +77,6 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     onChange = (value: any) => {
       this.value = value;
     };
-
-    props: FieldProps;
 
     render() {
       const { defaultValue, ...props } = this.props; // eslint-disable-line

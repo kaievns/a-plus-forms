@@ -4,11 +4,16 @@ import PropTypes from 'prop-types';
 import type { Component, FieldProps } from '../types';
 import config from '../config';
 
+type ProviderProps = {
+  layout: Component,
+  children: PropTypes.element
+};
+
 /**
  * This is the standard interface to feed different field
  * layouts into the forms in different contexts
  */
-export class LayoutProvider extends React.Component {
+export class LayoutProvider extends React.Component<ProviderProps> {
   static childContextTypes = {
     APFPLayout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
   };
@@ -17,20 +22,21 @@ export class LayoutProvider extends React.Component {
     return { APFPLayout: this.props.layout };
   }
 
-  props: {
-    layout: Component,
-    children: PropTypes.element
-  };
-
   render() {
     return this.props.children;
   }
 }
 
+type HandlerProps = {
+  input: Component,
+  layout: Component | null | false,
+  props: FieldProps
+};
+
 /**
  * This is the actual layout strategy component
  */
-export default class LayoutHandler extends React.Component {
+export default class LayoutHandler extends React.Component<HandlerProps> {
   static contextTypes = {
     APFPLayout: PropTypes.any
   };
@@ -69,12 +75,6 @@ export default class LayoutHandler extends React.Component {
 
     return config.defaultLayout;
   }
-
-  props: {
-    input: Component,
-    layout: Component | null | false,
-    props: FieldProps
-  };
 
   render() {
     const { input: Input } = this.props;

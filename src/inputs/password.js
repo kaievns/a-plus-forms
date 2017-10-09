@@ -4,12 +4,10 @@ import field from '../core/field';
 import type { InputProps, InputEvent } from '../types';
 
 @field()
-export default class PasswordInput extends React.Component {
+export default class PasswordInput extends React.Component<InputProps> {
   onChange = (event: InputEvent) => {
     this.props.onChange(event.target.value);
   };
-
-  props: InputProps;
 
   render() {
     const { value = '', ...rest } = this.props;

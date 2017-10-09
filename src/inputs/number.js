@@ -4,14 +4,14 @@ import Input from './text';
 import field from '../core/field';
 import type { InputProps } from '../types';
 
+type NumberInputProps = InputProps & {
+  value?: number
+};
+
 @field()
-export default class NumberInput extends React.Component {
+export default class NumberInput extends React.Component<NumberInputProps> {
   onChange = (value: string) => {
     this.props.onChange(parseFloat(value));
-  };
-
-  props: InputProps & {
-    value?: number
   };
 
   render() {

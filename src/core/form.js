@@ -1,4 +1,3 @@
-/* @flow */
 import React from 'react';
 import field from './field';
 import Validator from '../validator';
@@ -7,7 +6,7 @@ import type { FormProps, InputEvent } from '../types';
 // just an empty field container to hold the form state
 const StateContainer = field({ layout: null, nested: true })(({ children }: Object) => children);
 
-export default class Form extends React.Component {
+export default class Form extends React.Component<FormProps> {
   static defaultProps = {
     onSubmit: () => {},
     onChange: () => {},
@@ -64,8 +63,6 @@ export default class Form extends React.Component {
   set value(data: Object) {
     this.stateContainer.value = data;
   }
-
-  props: FormProps;
 
   render() {
     const { children, defaultValue, onChange } = this.props;

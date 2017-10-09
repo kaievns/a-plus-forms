@@ -1,4 +1,3 @@
-/* @flow */
 import React from 'react';
 import field from '../core/field';
 import optionizer from '../utils/optionizer';
@@ -8,9 +7,15 @@ type DOMElement = {
   querySelectorAll: Function
 };
 
+type SelectProps = InputProps & {
+  options?: Array<SelectOption>,
+  multiple?: boolean,
+  size?: number | string
+};
+
 @field()
 @optionizer()
-export default class Select extends React.Component {
+export default class Select extends React.Component<SelectProps> {
   onChange = (event: InputEvent) => {
     const { multiple, onChange } = this.props;
 
@@ -32,12 +37,6 @@ export default class Select extends React.Component {
 
   saveRef = (element: DOMElement) => {
     this.selectRef = element;
-  };
-
-  props: InputProps & {
-    options?: Array<SelectOption>,
-    multiple?: boolean,
-    size?: number | string
   };
 
   render() {

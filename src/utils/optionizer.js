@@ -49,9 +49,8 @@ type StateProps = {
 };
 
 export default () => (Input: Component) =>
-  class Optionizer extends React.Component {
-    props: OptionizedProps;
-    state: StateProps = { options: [] };
+  class Optionizer extends React.Component<OptionizedProps, StateProps> {
+    state = { options: [] };
     originalOptions: SupportedOptions = [];
 
     componentWillMount() {

@@ -5,7 +5,7 @@ import field from '../core/field';
 import type { InputProps, InputEvent } from '../types';
 
 @field()
-export default class Checkbox extends React.Component {
+export default class Checkbox extends React.Component<InputProps> {
   static contextTypes = {
     APFProps: PropTypes.object
   };
@@ -13,8 +13,6 @@ export default class Checkbox extends React.Component {
   onChange = (event: InputEvent) => {
     this.props.onChange(!!event.target.checked);
   };
-
-  props: InputProps;
 
   render() {
     const { value, disabled, ...rest } = this.props;
