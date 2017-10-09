@@ -53,7 +53,7 @@ export type InputProps = {
 
 export type InputEvent = {
   preventDefault: Function,
-  target : {
+  target: {
     value: string,
     checked?: boolean
   }

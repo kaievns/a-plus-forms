@@ -1,14 +1,13 @@
+/* @flow */
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { field, TextInput, PasswordInput } from '../../src';
+import type { InputProps } from '../../src/types';
 
 @field()
 class Input extends React.Component {
-  props: {
-    value?: string,
-    onChange: Function
-  }
+  props: InputProps;
 
   render() {
     const { onChange, value = '', ...rest } = this.props;
@@ -18,6 +17,8 @@ class Input extends React.Component {
 
 @field({ nested: true })
 class NestedInput extends React.Component {
+  props: InputProps;
+
   render() {
     return (
       <div>
@@ -39,30 +40,22 @@ describe('field', () => {
 
     it('renders the #id prop', () => {
       const render = mount(<Input id="my-input" />);
-      expect(render.html()).to.eql(
-        '<div><div><input id="my-input" value=""></div></div>'
-      );
+      expect(render.html()).to.eql('<div><div><input id="my-input" value=""></div></div>');
     });
 
     it('renders #className param', () => {
       const render = mount(<Input className="my-class" />);
-      expect(render.html()).to.eql(
-        '<div><div><input class="my-class" value=""></div></div>'
-      );
+      expect(render.html()).to.eql('<div><div><input class="my-class" value=""></div></div>');
     });
 
     it('renders #placeholder param', () => {
       const render = mount(<Input placeholder="My Value" />);
-      expect(render.html()).to.eql(
-        '<div><div><input placeholder="My Value" value=""></div></div>'
-      );
+      expect(render.html()).to.eql('<div><div><input placeholder="My Value" value=""></div></div>');
     });
 
     it('renders #disabled param', () => {
       const render = mount(<Input disabled />);
-      expect(render.html()).to.eql(
-        '<div><div><input disabled="" value=""></div></div>'
-      );
+      expect(render.html()).to.eql('<div><div><input disabled="" value=""></div></div>');
     });
   });
 
@@ -78,7 +71,9 @@ describe('field', () => {
     });
 
     it('allows to access the current value of the field', () => {
-      const field = mount(<Input value="Nikolay" />).at(0).instance();
+      const field = mount(<Input value="Nikolay" />)
+        .at(0)
+        .instance();
       expect(field.value).to.eql('Nikolay');
     });
 

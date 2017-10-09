@@ -1,9 +1,16 @@
 {
-  "parser": "babel-eslint",
-  "extends": "shortlyster",
   "plugins": [
     "react",
-    "flowtype"
+    "flowtype",
+    "prettier"
+  ],
+  "extends": [
+    "shortlyster",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
   ],
   "env": {
     "mocha": true,
@@ -16,11 +23,9 @@
     "import/no-extraneous-dependencies": "off",
     "react/prefer-stateless-function": "off",
     "react/jsx-filename-extension": "off",
-    "jsx-a11y/label-has-for": "off",
-    "no-unused-expressions": "off",
+    "react/no-array-index-key": "off",
     "react/no-multi-comp": "off",
-    "no-confusing-arrow": "off",
-    "arrow-parens": "off",
-    "no-plusplus": "off"
+    "react/sort-comp": "off",
+    "jsx-a11y/label-has-for": "off"
   }
 }

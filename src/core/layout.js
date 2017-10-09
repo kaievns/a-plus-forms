@@ -10,9 +10,7 @@ import config from '../config';
  */
 export class LayoutProvider extends React.Component {
   static childContextTypes = {
-    APFPLayout: PropTypes.oneOfType([
-      PropTypes.func, PropTypes.object
-    ]).isRequired
+    APFPLayout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
   };
 
   getChildContext() {
@@ -22,7 +20,7 @@ export class LayoutProvider extends React.Component {
   props: {
     layout: Component,
     children: PropTypes.element
-  }
+  };
 
   render() {
     return this.props.children;
@@ -35,7 +33,7 @@ export class LayoutProvider extends React.Component {
 export default class LayoutHandler extends React.Component {
   static contextTypes = {
     APFPLayout: PropTypes.any
-  }
+  };
 
   /**
    * Calculates the actual Input props
@@ -76,7 +74,7 @@ export default class LayoutHandler extends React.Component {
     input: Component,
     layout: Component | null | false,
     props: FieldProps
-  }
+  };
 
   render() {
     const { input: Input } = this.props;

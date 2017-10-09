@@ -8,13 +8,13 @@ import type { InputProps, InputEvent } from '../types';
 export default class Checkbox extends React.Component {
   static contextTypes = {
     APFProps: PropTypes.object
-  }
+  };
 
   onChange = (event: InputEvent) => {
     this.props.onChange(!!event.target.checked);
-  }
+  };
 
-  props: InputProps
+  props: InputProps;
 
   render() {
     const { value, disabled, ...rest } = this.props;
@@ -32,6 +32,11 @@ export default class Checkbox extends React.Component {
 
     if (!label) return input;
 
-    return <label disabled={disabled}>{input}{label && <span>{label}</span>}</label>;
+    return (
+      <label disabled={disabled}>
+        {input}
+        {label && <span>{label}</span>}
+      </label>
+    );
   }
 }

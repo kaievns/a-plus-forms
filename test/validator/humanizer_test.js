@@ -25,7 +25,11 @@ describe('Ajv errors humanizer', () => {
     required: ['name']
   };
 
-  const badData = { name: 'Super Nikolay', info: { age: 666, name: { last: false } }, email: 'blah!' };
+  const badData = {
+    name: 'Super Nikolay',
+    info: { age: 666, name: { last: false } },
+    email: 'blah!'
+  };
 
   it('converst the errors alright', () => {
     const validator = new Ajv({ allErrors: true }).compile(schema);

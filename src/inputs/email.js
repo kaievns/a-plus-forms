@@ -6,7 +6,7 @@ import type { InputProps } from '../types';
 
 @field()
 export default class EmailInput extends React.Component {
-  props: InputProps
+  props: InputProps;
 
   render() {
     return <Input {...this.props} type="email" layout={null} />;

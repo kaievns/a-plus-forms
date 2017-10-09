@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: off */
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
@@ -51,8 +52,18 @@ describe('<Form />', () => {
       password: 'Ba(k0n!'
     };
 
-    expect(render.find(TextInput).at(0).instance().value).to.eql('nikolay');
-    expect(render.find(PasswordInput).at(0).instance().value).to.eql('Ba(k0n!');
+    expect(
+      render
+        .find(TextInput)
+        .at(0)
+        .instance().value
+    ).to.eql('nikolay');
+    expect(
+      render
+        .find(PasswordInput)
+        .at(0)
+        .instance().value
+    ).to.eql('Ba(k0n!');
   });
 
   it('allows to set the form initial values', () => {
@@ -66,7 +77,11 @@ describe('<Form />', () => {
 
     expect(render.at(0).instance().value).to.eql(values);
 
-    render.find(PasswordInput).at(0).instance().value = 'Ba(k0n!';
+    render
+      .find(PasswordInput)
+      .at(0)
+      .instance().value =
+      'Ba(k0n!';
 
     expect(render.at(0).instance().value).to.eql({
       username: 'nikolay',

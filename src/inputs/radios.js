@@ -9,18 +9,18 @@ import type { InputProps, InputEvent, SelectOption } from '../types';
 export default class Radios extends React.Component {
   onChange = (event: InputEvent) => {
     this.props.onChange(event.target.value);
-  }
+  };
 
   props: InputProps & {
     options?: Array<SelectOption>
-  }
+  };
 
   render() {
     const { value: currentValue, options = [], name } = this.props;
 
     return (
       <div>
-        {options.map(({ label, value, disabled }, i) =>
+        {options.map(({ label, value, disabled }, i) => (
           <label key={i} disabled={disabled}>
             <input
               type="radio"
@@ -31,7 +31,7 @@ export default class Radios extends React.Component {
             />
             <span>{label}</span>
           </label>
-        )}
+        ))}
       </div>
     );
   }

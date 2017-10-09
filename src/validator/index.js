@@ -6,8 +6,8 @@ import type { JSONSchema } from '../types';
 const EMPTY_SCHEMA = { type: 'object' };
 
 export default class Validator {
-  schema: JSONSchema
-  valid: Function
+  schema: JSONSchema;
+  valid: Function;
 
   customValidator = (arg: Object) => null; // eslint-disable-line
 

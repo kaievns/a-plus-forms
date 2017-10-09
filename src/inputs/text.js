@@ -9,7 +9,7 @@ import type { InputProps } from '../types';
 export default class TextInput extends React.Component {
   props: InputProps & {
     type?: string
-  }
+  };
 
   render() {
     const { type = 'text', ...rest } = this.props;

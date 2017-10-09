@@ -48,91 +48,97 @@ type StateProps = {
   options: Array<LabelValueOption>
 };
 
-export default () =>
-  (Input: Component) =>
-    class Optionizer extends React.Component {
-      props: OptionizedProps
-      state: StateProps = { options: [] }
-      originalOptions: SupportedOptions = []
+export default () => (Input: Component) =>
+  class Optionizer extends React.Component {
+    props: OptionizedProps;
+    state: StateProps = { options: [] };
+    originalOptions: SupportedOptions = [];
 
-      componentWillMount() {
-        this.componentWillReceiveProps(this.props);
+    componentWillMount() {
+      this.componentWillReceiveProps(this.props);
+    }
+
+    componentWillReceiveProps(props: OptionizedProps) {
+      if (props.options !== this.originalOptions) {
+        this.setState({ options: this.buildPseudoOptions(props) });
+        this.originalOptions = props.options;
       }
+    }
 
-      componentWillReceiveProps(props: OptionizedProps) {
-        if (props.options !== this.originalOptions) {
-          this.setState({ options: this.buildPseudoOptions(props) });
-          this.originalOptions = props.options;
+    buildPseudoOptions(props: OptionizedProps): Array<LabelValueOption> {
+      return this.normalizedOptions(props).map((option, index) => {
+        if (
+          typeof option === 'object' &&
+          typeof option.label === 'string' &&
+          typeof option.value === 'string'
+        ) {
+          return { label: option.label, value: option.value, disabled: option.disabled };
+        } else if (typeof option === 'object' && typeof option.name === 'string') {
+          return { label: option.name, value: `v-${index}`, disabled: option.disabled };
+        } else if (typeof option === 'string') {
+          return { label: option, value: option };
         }
-      }
 
-      buildPseudoOptions(props: OptionizedProps): Array<LabelValueOption> {
-        return this.normalizedOptions(props).map((option, index) => {
-          if (typeof option === 'object' && typeof option.label === 'string' && typeof option.value === 'string') {
-            return { label: option.label, value: option.value, disabled: option.disabled };
-          } else if (typeof option === 'object' && typeof option.name === 'string') {
-            return { label: option.name, value: `v-${index}`, disabled: option.disabled };
-          } else if (typeof option === 'string') {
-            return { label: option, value: option };
-          }
+        return { label: JSON.stringify(option).substr(0, 32), value: `v-${index}` };
+      });
+    }
 
-          return { label: JSON.stringify(option).substr(0, 32), value: `v-${index}` };
-        });
-      }
+    normalizedOptions(props?: OptionizedProps): Array<AnyOption> {
+      const { options: originalOptions = [] } = props || this.props;
 
-      normalizedOptions(props?: OptionizedProps): Array<AnyOption> {
-        const { options: originalOptions = [] } = props || this.props;
+      return Array.isArray(originalOptions)
+        ? originalOptions
+        : Object.keys(originalOptions).map(value => ({ value, label: originalOptions[value] }));
+    }
 
-        return Array.isArray(originalOptions) ? originalOptions
-          : Object.keys(originalOptions).map(value => ({ value, label: originalOptions[value] }));
-      }
+    pseudoToOriginalValue(value: PseudoValue): any {
+      const options = this.normalizedOptions();
+      const option = this.state.options.reduce(
+        (current, option, index) => (option.value === value ? options[index] : current),
+        null
+      );
 
-      pseudoToOriginalValue(value: PseudoValue): any {
-        const options = this.normalizedOptions();
-        const option = this.state.options.reduce((current, option, index) =>
-          option.value === value ? options[index] : current
-        , null);
+      return option && option.label && option.value !== undefined ? option.value : option;
+    }
 
-        return option && option.label && option.value !== undefined ? option.value : option;
-      }
+    originalToPseudoValue(value: any): PseudoValue {
+      const options = this.normalizedOptions();
 
-      originalToPseudoValue(value: any): PseudoValue {
-        const options = this.normalizedOptions();
+      const currentOption = options.find(
+        option => (option.label && option.value === value) || option === value
+      );
+      const currentIndex = currentOption ? options.indexOf(currentOption) : -1;
+      const pseudoEntry = this.state.options[currentIndex];
+      const pseudoValue = pseudoEntry && pseudoEntry.value;
 
-        const currentOption = options.find(option =>
-          (option.label && option.value === value) || option === value
+      return pseudoValue;
+    }
+
+    onChange = (value: PseudoValue) => {
+      const { onChange, multiple } = this.props;
+
+      if (multiple) {
+        onChange(
+          (Array.isArray(value) ? value : []).map(value => this.pseudoToOriginalValue(value))
         );
-        const currentIndex = currentOption ? options.indexOf(currentOption) : -1;
-        const pseudoEntry = this.state.options[currentIndex];
-        const pseudoValue = pseudoEntry && pseudoEntry.value;
-
-        return pseudoValue;
-      }
-
-      onChange = (value: PseudoValue) => {
-        const { onChange, multiple } = this.props;
-
-        if (multiple) {
-          onChange((Array.isArray(value) ? value : [])
-            .map(value => this.pseudoToOriginalValue(value)));
-        } else {
-          onChange(this.pseudoToOriginalValue(value));
-        }
-      }
-
-      render() {
-        const { value, multiple } = this.props;
-        const pseudoValue = multiple
-          ? (Array.isArray(value) ? value : []).map(value => this.originalToPseudoValue(value))
-          : this.originalToPseudoValue(value);
-
-        return (
-          <Input
-            {...this.props}
-            value={pseudoValue}
-            options={this.state.options}
-            onChange={this.onChange}
-          />
-        );
+      } else {
+        onChange(this.pseudoToOriginalValue(value));
       }
     };
+
+    render() {
+      const { value, multiple } = this.props;
+      const pseudoValue = multiple
+        ? (Array.isArray(value) ? value : []).map(value => this.originalToPseudoValue(value))
+        : this.originalToPseudoValue(value);
+
+      return (
+        <Input
+          {...this.props}
+          value={pseudoValue}
+          options={this.state.options}
+          onChange={this.onChange}
+        />
+      );
+    }
+  };

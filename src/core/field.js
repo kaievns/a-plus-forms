@@ -9,18 +9,18 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
   class Field extends React.Component {
     static defaultProps = {
       onChange: () => {}
-    }
+    };
 
     static contextTypes = {
       APFState: PropTypes.object
-    }
+    };
 
     static childContextTypes = {
       APFState: PropTypes.object, // nested field anchor
-      APFProps: PropTypes.object  // original field props
+      APFProps: PropTypes.object // original field props
     };
 
-    stateStrategy: ReactStateStrategy | NestedStateStrategy
+    stateStrategy: ReactStateStrategy | NestedStateStrategy;
 
     constructor() {
       super();
@@ -77,9 +77,9 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     onChange = (value: any) => {
       this.value = value;
-    }
+    };
 
-    props: FieldProps
+    props: FieldProps;
 
     render() {
       const { defaultValue, ...props } = this.props; // eslint-disable-line
@@ -92,8 +92,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
 // a generic input field state strategy
 class ReactStateStrategy {
-  state: Object
-  component: Object
+  state: Object;
+  component: Object;
 
   constructor(component: Object) {
     this.component = component;
@@ -116,9 +116,9 @@ class ReactStateStrategy {
 //       in the `seedValues` property and then pipes them into fields as they
 //       register
 class NestedStateStrategy {
-  fields: Array<Valuable> = []
-  seedValues: Object = {}
-  component: Object
+  fields: Array<Valuable> = [];
+  seedValues: Object = {};
+  component: Object;
 
   constructor(component: Object) {
     this.component = component;
@@ -138,9 +138,10 @@ class NestedStateStrategy {
   }
 
   get value(): Object {
-    return this.fields.reduce((data, field) =>
-      Object.assign(data, field.name ? { [field.name]: field.value } : {})
-    , {});
+    return this.fields.reduce(
+      (data, field) => Object.assign(data, field.name ? { [field.name]: field.value } : {}),
+      {}
+    );
   }
 
   set value(data: any) {

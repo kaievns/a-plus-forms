@@ -4,10 +4,7 @@ import { mount } from 'enzyme';
 import { Radios } from '../../src';
 
 describe('<Radios />', () => {
-  const options = [
-    { label: 'One', value: 'one' },
-    { label: 'Two', value: 'two' }
-  ];
+  const options = [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
 
   it('renders correctly', () => {
     const render = mount(<Radios layout={null} options={options} />);
@@ -15,7 +12,7 @@ describe('<Radios />', () => {
       '<div>' +
         '<label><input type="radio" value="one"><span>One</span></label>' +
         '<label><input type="radio" value="two"><span>Two</span></label>' +
-      '</div>'
+        '</div>'
     );
   });
 
@@ -25,7 +22,7 @@ describe('<Radios />', () => {
       '<div>' +
         '<label><input type="radio" name="size" value="one"><span>One</span></label>' +
         '<label><input type="radio" name="size" value="two"><span>Two</span></label>' +
-      '</div>'
+        '</div>'
     );
   });
 
@@ -42,9 +39,12 @@ describe('<Radios />', () => {
       '<div>' +
         '<label><input type="radio" value="one"><span>one</span></label>' +
         '<label><input type="radio" value="two"><span>two</span></label>' +
-      '</div>'
+        '</div>'
     );
-    render.find('input[type="radio"]').at(1).simulate('change');
+    render
+      .find('input[type="radio"]')
+      .at(1)
+      .simulate('change');
 
     expect(onChange).to.have.been.calledWith('two');
   });
@@ -57,9 +57,12 @@ describe('<Radios />', () => {
       '<div>' +
         '<label><input type="radio" value="v-0"><span>1</span></label>' +
         '<label><input type="radio" value="v-1"><span>2</span></label>' +
-      '</div>'
+        '</div>'
     );
-    render.find('input[type="radio"]').at(1).simulate('change');
+    render
+      .find('input[type="radio"]')
+      .at(1)
+      .simulate('change');
 
     expect(onChange).to.have.been.calledWith(2);
   });
@@ -72,22 +75,33 @@ describe('<Radios />', () => {
       '<div>' +
         '<label><input type="radio" value="v-0"><span>One</span></label>' +
         '<label><input type="radio" value="v-1"><span>Two</span></label>' +
-      '</div>'
+        '</div>'
     );
-    render.find('input[type="radio"]').at(1).simulate('change');
+    render
+      .find('input[type="radio"]')
+      .at(1)
+      .simulate('change');
 
     expect(onChange).to.have.been.calledWith(options[1]);
   });
 
   it('shows correct selected value', () => {
     const render = mount(<Radios layout={null} options={options} value="one" />);
-    expect(render.find('input[type="radio"]').at(0).props()).to.include({ checked: true });
+    expect(
+      render
+        .find('input[type="radio"]')
+        .at(0)
+        .props()
+    ).to.include({ checked: true });
   });
 
   it('tracks change events', () => {
     const onChange = spy();
     const render = mount(<Radios options={options} onChange={onChange} />);
-    render.find('input[type="radio"]').at(0).simulate('change');
+    render
+      .find('input[type="radio"]')
+      .at(0)
+      .simulate('change');
 
     expect(onChange).to.have.been.calledWith('one');
   });

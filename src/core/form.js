@@ -5,9 +5,7 @@ import Validator from '../validator';
 import type { FormProps, InputEvent } from '../types';
 
 // just an empty field container to hold the form state
-const StateContainer = field({ layout: null, nested: true })(
-  ({ children }: Object) => children
-);
+const StateContainer = field({ layout: null, nested: true })(({ children }: Object) => children);
 
 export default class Form extends React.Component {
   static defaultProps = {
@@ -19,7 +17,7 @@ export default class Form extends React.Component {
     preSubmit: data => data,
     postSubmit: () => {},
     defaultValue: {}
-  }
+  };
 
   componentWillMount() {
     this.updateValidator(this.props);
@@ -38,7 +36,7 @@ export default class Form extends React.Component {
       this.props.onSubmit(data);
       this.props.postSubmit(data);
     }
-  }
+  };
 
   isValid(): boolean {
     const data = this.props.preValidate(this.value);
@@ -56,8 +54,8 @@ export default class Form extends React.Component {
     this.validator.update({ validate, schema });
   }
 
-  validator = new Validator()
-  stateContainer: Object
+  validator = new Validator();
+  stateContainer: Object;
 
   get value(): Object {
     return this.stateContainer.value;
@@ -67,11 +65,13 @@ export default class Form extends React.Component {
     this.stateContainer.value = data;
   }
 
-  props: FormProps
+  props: FormProps;
 
   render() {
     const { children, defaultValue, onChange } = this.props;
-    const setRef = e => { this.stateContainer = e; };
+    const setRef = e => {
+      this.stateContainer = e;
+    };
 
     return (
       <StateContainer defaultValue={defaultValue} onChange={onChange} ref={setRef}>

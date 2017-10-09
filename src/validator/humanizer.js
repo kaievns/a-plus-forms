@@ -29,11 +29,16 @@ function comparisonToStr(message) {
  */
 function humanReadable(keyword, message, path, missingProperty, type) {
   switch (keyword) {
-    case 'required': return 'is required';
-    case 'pattern': return /phone/.test(path) ? 'must be a valid phone number' : 'must match the pattern';
-    case 'format': return `must be a valid ${message.match(/"(.+?)"/)[1]}`;
-    case 'type': return `must be a ${type}`;
-    case 'enum': return 'is not on the list';
+    case 'required':
+      return 'is required';
+    case 'pattern':
+      return /phone/.test(path) ? 'must be a valid phone number' : 'must match the pattern';
+    case 'format':
+      return `must be a valid ${message.match(/"(.+?)"/)[1]}`;
+    case 'type':
+      return `must be a ${type}`;
+    case 'enum':
+      return 'is not on the list';
     case 'minLength': {
       const length = getNumFromStr(message);
       return `must be at least ${length} character${length === 1 ? '' : 's'} long`;

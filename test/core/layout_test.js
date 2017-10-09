@@ -1,3 +1,4 @@
+/* @flow */
 import React from 'react';
 import { mount } from 'enzyme';
 import { field, TextInput, LayoutProvider } from '../../src';
@@ -6,26 +7,36 @@ import type { InputProps, Element } from '../../src/types';
 class Layout1 extends React.Component {
   props: {
     input: Element
-  }
+  };
 
   render() {
-    return <div><s>Layout1</s>{this.props.input}</div>;
+    return (
+      <div>
+        <s>Layout1</s>
+        {this.props.input}
+      </div>
+    );
   }
 }
 
 class Layout2 extends React.Component {
   props: {
     input: Element
-  }
+  };
 
   render() {
-    return <div><s>Layout2</s>{this.props.input}</div>;
+    return (
+      <div>
+        <s>Layout2</s>
+        {this.props.input}
+      </div>
+    );
   }
 }
 
 @field({ layout: Layout1 })
 class Input extends React.Component {
-  props: InputProps
+  props: InputProps;
 
   render() {
     const { value = '', ...rest } = this.props;
@@ -64,7 +75,9 @@ describe('layouts handling', () => {
 
   it('falls back to the default layout if no layout value provided', () => {
     const render = mount(<TextInput label="Some label" />);
-    expect(render).to.have.exactly(1).descendants('DefaultLayout');
+    expect(render)
+      .to.have.exactly(1)
+      .descendants('DefaultLayout');
     expect(render.html()).to.eql(
       '<div><label>Some label</label><div><input type="text" value=""></div></div>'
     );

@@ -6,16 +6,12 @@ import { Slider } from '../../src';
 describe('<Slider />', () => {
   it('renders a slider component', () => {
     const render = mount(<Slider layout={null} value={2} />);
-    expect(render.html()).to.eql(
-      '<input type="range" step="1" min="0" max="10" value="2">'
-    );
+    expect(render.html()).to.eql('<input type="range" step="1" min="0" max="10" value="2">');
   });
 
   it('allows to specify custom stepping and range', () => {
     const render = mount(<Slider layout={null} min={0} max={2} step={0.2} />);
-    expect(render.html()).to.eql(
-      '<input type="range" step="0.2" min="0" max="2" value="0">'
-    );
+    expect(render.html()).to.eql('<input type="range" step="0.2" min="0" max="2" value="0">');
   });
 
   it('understands the `name` prop', () => {
