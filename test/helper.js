@@ -1,6 +1,4 @@
-require('babel-register')({
-  cache: true
-});
+require('babel-register')({ cache: true });
 
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
