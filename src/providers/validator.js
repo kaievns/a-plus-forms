@@ -10,7 +10,7 @@ type ProviderProps = {
 
 export default class ValidatorProvider extends React.Component<ProviderProps> {
   static childContextTypes = {
-    APFValidator: PropTypes.object.isRequired
+    APFValidator: PropTypes.func.isRequired
   };
 
   getChildContext() {

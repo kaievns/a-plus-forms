@@ -3,6 +3,7 @@ export field from './core/field';
 export Form from './core/form';
 
 export LayoutProvider from './providers/layout';
+export ValidatorProvider from './providers/validator';
 
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';

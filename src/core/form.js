@@ -9,7 +9,7 @@ const StateContainer = field({ layout: null, nested: true })(({ children }: Obje
 
 export default class Form extends React.Component<FormProps> {
   static contextTypes = {
-    APFValidator: PropTypes.object
+    APFValidator: PropTypes.func
   };
 
   static defaultProps = {

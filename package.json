@@ -10,7 +10,7 @@
     "test": "mocha",
     "lint": "eslint src test && flow",
     "build": "babel src --out-dir dist/",
-    "precommit": "npm run lint",
+    "precommit": "lint-staged",
     "prepush": "npm run test",
     "prepare": "NODE_ENV=production npm run build"
   },

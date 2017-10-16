@@ -2,7 +2,7 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import { Form, TextInput, PasswordInput } from '../../src';
+import { Form, TextInput, PasswordInput, ValidatorProvider } from '../../src';
 
 describe('<Form />', () => {
   it('renders a `form`', () => {
@@ -120,6 +120,68 @@ describe('<Form />', () => {
     render.find('form').simulate('submit');
 
     expect(onError).to.not.have.been.called;
+    expect(onSubmit).to.have.been.calledWith({
+      username: 'nikolay',
+      password: 'Ba(k0n!'
+    });
+  });
+
+  it('allows to use custom validators', () => {
+    const onError = spy();
+    const onSubmit = spy();
+    const schema = { some: 'schema' };
+
+    let validatorInstance;
+    let receivedData;
+
+    class CustomValidator {
+      constructor(schema) {
+        this.schema = schema;
+        validatorInstance = this;
+      }
+
+      /* eslint class-methods-use-this: off */
+      errorsFor(data) {
+        receivedData = data;
+
+        if (data.username !== 'nikolay') {
+          return { username: 'is terrible' };
+        }
+
+        return null;
+      }
+    }
+
+    const render = mount(
+      <ValidatorProvider validator={CustomValidator}>
+        <Form schema={schema} onError={onError} onSubmit={onSubmit}>
+          <TextInput name="username" value="not nikolay" />
+          <PasswordInput name="password" value="Ba(k0n!" />
+        </Form>
+      </ValidatorProvider>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(validatorInstance).to.be.instanceOf(CustomValidator);
+    expect(validatorInstance.schema).to.equal(schema);
+    expect(receivedData).to.eql({
+      username: 'not nikolay',
+      password: 'Ba(k0n!'
+    });
+
+    expect(onError).to.have.been.calledWith({
+      username: 'is terrible'
+    });
+    expect(onSubmit).to.not.have.been.called;
+
+    render
+      .find(TextInput)
+      .at(0)
+      .instance().value =
+      'nikolay';
+    render.find('form').simulate('submit');
+
     expect(onSubmit).to.have.been.calledWith({
       username: 'nikolay',
       password: 'Ba(k0n!'
