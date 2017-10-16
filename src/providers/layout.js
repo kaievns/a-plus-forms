@@ -14,11 +14,11 @@ type ProviderProps = {
  */
 export default class LayoutProvider extends React.Component<ProviderProps> {
   static childContextTypes = {
-    APFPLayout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
+    APFLayout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired
   };
 
   getChildContext() {
-    return { APFPLayout: this.props.layout };
+    return { APFLayout: this.props.layout };
   }
 
   render() {

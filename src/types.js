@@ -77,3 +77,9 @@ export type LayoutProps = {
   label?: string,
   error?: string
 };
+
+export type Validator = {
+  setSchema: Function,
+  addCriteria: Function,
+  errorsFor: Function
+};

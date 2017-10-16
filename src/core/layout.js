@@ -15,7 +15,7 @@ type HandlerProps = {
  */
 export default class LayoutHandler extends React.Component<HandlerProps> {
   static contextTypes = {
-    APFPLayout: PropTypes.any
+    APFLayout: PropTypes.any
   };
 
   /**
@@ -40,14 +40,14 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
   // selects the right layout
   chooseLayout(): ?Component {
     const { layout, props } = this.props;
-    const { APFPLayout } = this.context;
+    const { APFLayout } = this.context;
 
     if ('layout' in props) {
       return props.layout || null; // individual props layout
     } else if (layout !== undefined) {
       return layout || null; // the field options layout
-    } else if (APFPLayout) {
-      return APFPLayout; // the context layout
+    } else if (APFLayout) {
+      return APFLayout; // the context layout
     }
 
     return config.defaultLayout;
