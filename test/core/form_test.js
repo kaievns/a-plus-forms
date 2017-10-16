@@ -94,7 +94,7 @@ describe('<Form />', () => {
     const onSubmit = spy();
     const validate = data => !data.username && { username: 'must be present' };
     const render = mount(
-      <Form onSubmit={onSubmit} validate={validate} onError={onError}>
+      <Form onSubmit={onSubmit} schema={validate} onError={onError}>
         <TextInput name="username" />
         <PasswordInput name="password" />
       </Form>
@@ -111,7 +111,7 @@ describe('<Form />', () => {
     const onSubmit = spy();
     const validate = data => !data.username && { username: 'must be present' };
     const render = mount(
-      <Form onSubmit={onSubmit} validate={validate} onError={onError}>
+      <Form onSubmit={onSubmit} schema={validate} onError={onError}>
         <TextInput name="username" value="nikolay" />
         <PasswordInput name="password" value="Ba(k0n!" />
       </Form>
@@ -123,80 +123,6 @@ describe('<Form />', () => {
     expect(onSubmit).to.have.been.calledWith({
       username: 'nikolay',
       password: 'Ba(k0n!'
-    });
-  });
-
-  it('allows to specify a JSON schema as a form schema', () => {
-    const onError = spy();
-    const onSubmit = spy();
-    const schema = {
-      properties: {
-        username: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: ['username', 'password']
-    };
-    const render = mount(
-      <Form schema={schema} onSubmit={onSubmit} onError={onError}>
-        <TextInput name="username" value="non-email" />
-        <PasswordInput name="password" />
-      </Form>
-    );
-
-    render.find('form').simulate('submit');
-
-    expect(onSubmit).to.not.have.been.called;
-    expect(onError).to.have.been.calledWith({
-      username: 'must be a valid email',
-      password: 'is required'
-    });
-  });
-
-  it('allows to modify data before validation', () => {
-    const onError = spy();
-    const onSubmit = spy();
-    const schema = {
-      properties: {
-        username: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: ['username', 'password']
-    };
-    const preValidate = () => ({ username: 'nikolay@rocks.com', password: 'Ba(k0n!' });
-    const render = mount(
-      <Form schema={schema} onSubmit={onSubmit} onError={onError} preValidate={preValidate}>
-        <TextInput name="username" value="non-email" />
-        <PasswordInput name="password" />
-      </Form>
-    );
-
-    render.find('form').simulate('submit');
-
-    expect(onError).to.not.have.been.called;
-    expect(onSubmit).to.have.been.calledWith({
-      username: 'non-email',
-      password: undefined
-    });
-  });
-
-  it('allows pre and post submit hooks', () => {
-    const preSubmit = data => ({ ...data, csrf: 'hackery' });
-    const onSubmit = spy();
-    const postSubmit = spy();
-
-    const render = mount(
-      <Form onSubmit={onSubmit} preSubmit={preSubmit} postSubmit={postSubmit}>
-        <TextInput name="username" value="nikolay" />
-        <PasswordInput name="password" value="Ba(k0n!" />
-      </Form>
-    );
-
-    render.find('form').simulate('submit');
-
-    expect(onSubmit).to.have.been.calledWith({
-      username: 'nikolay',
-      password: 'Ba(k0n!',
-      csrf: 'hackery'
     });
   });
 });

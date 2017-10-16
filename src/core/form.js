@@ -1,59 +1,59 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import field from './field';
-import Validator from '../validator';
-import type { FormProps, InputEvent } from '../types';
+import config from '../config';
+import type { FormProps, InputEvent, Validator } from '../types';
 
 // just an empty field container to hold the form state
 const StateContainer = field({ layout: null, nested: true })(({ children }: Object) => children);
 
 export default class Form extends React.Component<FormProps> {
+  static contextTypes = {
+    APFValidator: PropTypes.object
+  };
+
   static defaultProps = {
     onSubmit: () => {},
     onChange: () => {},
     onError: () => {},
-    validate: () => {},
-    preValidate: data => data,
-    preSubmit: data => data,
-    postSubmit: () => {},
+    schema: () => {},
     defaultValue: {}
   };
 
+  validator: Validator;
+
   componentWillMount() {
-    this.updateValidator(this.props);
+    const { APFValidator } = this.context;
+    const { schema } = this.props;
+
+    this.validator = new (APFValidator || config.DefaultValidator)(schema);
   }
 
   componentWillReceiveProps(props: FormProps) {
-    this.updateValidator(props);
+    const { schema } = props;
+
+    this.validator.schema = schema;
   }
 
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
 
     if (this.isValid()) {
-      const data = this.props.preSubmit(this.value);
-
-      this.props.onSubmit(data);
-      this.props.postSubmit(data);
+      this.props.onSubmit(this.value);
     }
   };
 
   isValid(): boolean {
-    const data = this.props.preValidate(this.value);
-    const errors = this.validator.errorsFor(data);
+    const errors = this.validator.errorsFor(this.value);
 
     if (errors) {
-      this.props.onError(errors, data);
+      this.props.onError(errors, this.value);
       return false;
     }
 
     return true;
   }
 
-  updateValidator({ validate, schema }: FormProps) {
-    this.validator.update({ validate, schema });
-  }
-
-  validator = new Validator();
   stateContainer: Object;
 
   get value(): Object {

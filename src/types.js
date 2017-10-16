@@ -3,13 +3,6 @@ import React from 'react';
 
 export type Component = Class<React.Component<*, *>> | Function; // eslint-disable-line
 
-export type JSONSchema = {
-  type: 'object' | 'array' | 'string' | 'boolean' | 'number',
-  properties?: { [string]: JSONSchema },
-  items?: JSONSchema,
-  required?: Array<string>
-};
-
 export type Valuable = {
   name?: string,
   value?: any,
@@ -18,14 +11,10 @@ export type Valuable = {
 };
 
 export type FormProps = Valuable & {
-  onSubmit: Function,
   value?: ?Object,
   defaultValue?: ?Object,
-  validate: Function,
-  schema?: JSONSchema,
-  preValidate: Function,
-  preSubmit: Function,
-  postSubmit: Function,
+  schema: Object | Function,
+  onSubmit: Function,
   onError: Function,
   children: Object
 };
@@ -79,7 +68,6 @@ export type LayoutProps = {
 };
 
 export type Validator = {
-  setSchema: Function,
-  addCriteria: Function,
+  schema: any,
   errorsFor: Function
 };
