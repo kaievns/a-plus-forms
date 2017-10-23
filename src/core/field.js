@@ -34,7 +34,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       return {
         APFProps: this.props,
         APFState: options.nested && this,
-        APFError: options.nested && this.props.error
+        APFError:
+          options.nested && typeof this.props.error === 'object' ? this.props.error : undefined
       };
     }
 
@@ -78,12 +79,15 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     get error(): ?string {
-      if (options.nested) return null; // delegate to the sub-fields
-
       const { APFError = {} } = this.context;
       const { error: propsError, name } = this.props;
+      const error = propsError || APFError[name];
 
-      return propsError || APFError[name];
+      if (options.nested && typeof error !== 'string') {
+        return null; // delegate to the sub-fields
+      }
+
+      return error;
     }
 
     onChange = (value: any) => {

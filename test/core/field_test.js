@@ -170,5 +170,19 @@ describe('field', () => {
           '</div></div></div>'
       );
     });
+
+    it('renders string errors in itself', () => {
+      const error = 'everything is terrible';
+      const render = mount(<NestedInput error={error} />);
+
+      expect(render.html()).to.eql(
+        '<div><div><div>' +
+          '<div><div><input type="text" name="username" value=""></div></div>' +
+          '<div><div><input type="password" name="password" value=""></div></div>' +
+          '</div></div>' +
+          '<small>everything is terrible</small>' +
+          '</div>'
+      );
+    });
   });
 });
