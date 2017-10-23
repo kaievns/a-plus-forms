@@ -56,6 +56,13 @@ describe('field', () => {
       const render = mount(<Input disabled />);
       expect(render.html()).to.eql('<div><div><input disabled="" value=""></div></div>');
     });
+
+    it('renders the #error param', () => {
+      const render = mount(<Input error="everything is terrible" />);
+      expect(render.html()).to.eql(
+        '<div><div><input value=""></div><small>everything is terrible</small></div>'
+      );
+    });
   });
 
   describe('data flow', () => {

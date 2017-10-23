@@ -23,7 +23,7 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
    * an input receives all the props except the layout ones
    */
   inputProps(): Object {
-    const { props: { label, layout, ...rest } } = this.props; // eslint-disable-line
+    const { props: { label, layout, error, ...rest } } = this.props; // eslint-disable-line
     return rest;
   }
 

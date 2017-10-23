@@ -6,7 +6,7 @@ const DefaultLayout = ({ input, label, error }: LayoutProps) => (
   <div>
     {label ? <label>{label}</label> : null}
     <div>{input}</div>
-    {error ? <small>error</small> : null}
+    {error ? <small>{error}</small> : null}
   </div>
 );
 

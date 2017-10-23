@@ -6,6 +6,8 @@ import type { FormProps, InputEvent, Validator } from '../types';
 
 // just an empty field container to hold the form state
 const StateContainer = field({ layout: null, nested: true })(({ children }: Object) => children);
+const isPromisish = smth =>
+  smth && typeof smth.then === 'function' && typeof smth.catch === 'function';
 
 export default class Form extends React.Component<FormProps> {
   static contextTypes = {
@@ -55,12 +57,11 @@ export default class Form extends React.Component<FormProps> {
 
   validate(): Promise<?Object> {
     const errors = this.validator.errorsFor(this.value);
-    const isPromisish =
-      errors && typeof errors.then === 'function' && typeof errors.catch === 'function';
 
-    if (isPromisish) {
+    if (isPromisish(errors)) {
       return errors.then(this.handleErrors);
     }
+
     return { then: cb => cb(this.handleErrors(errors)) };
   }
 
