@@ -180,11 +180,42 @@ describe('<Form />', () => {
       .at(0)
       .instance().value =
       'nikolay';
+
     render.find('form').simulate('submit');
 
     expect(onSubmit).to.have.been.calledWith({
       username: 'nikolay',
       password: 'Ba(k0n!'
     });
+  });
+
+  it('supports async validators', async () => {
+    const onError = spy();
+    const onSubmit = spy();
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    class AsyncValidator {
+      async errorsFor({ username }) {
+        await sleep(100);
+
+        return username === 'nikolay' ? null : { username: 'is terrible' };
+      }
+    }
+
+    const render = mount(
+      <ValidatorProvider validator={AsyncValidator}>
+        <Form onError={onError} onSubmit={onSubmit}>
+          <TextInput name="username" value="not nikolay" />
+          <PasswordInput name="password" value="Ba(k0n!" />
+        </Form>
+      </ValidatorProvider>
+    );
+
+    render.find('form').simulate('submit');
+
+    await sleep(500);
+
+    expect(onError).to.have.been.calledWith({ username: 'is terrible' });
+    expect(onSubmit).to.not.have.been.called;
   });
 });

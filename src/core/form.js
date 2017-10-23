@@ -38,20 +38,30 @@ export default class Form extends React.Component<FormProps> {
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
 
-    if (this.isValid()) {
-      this.props.onSubmit(this.value);
-    }
+    this.validate().then(errors => {
+      if (!errors) {
+        this.props.onSubmit(this.value);
+      }
+    });
   };
 
-  isValid(): boolean {
-    const errors = this.validator.errorsFor(this.value);
-
+  handleErrors = (errors: ?Object) => {
     if (errors) {
       this.props.onError(errors, this.value);
-      return false;
     }
 
-    return true;
+    return errors;
+  };
+
+  validate(): Promise<?Object> {
+    const errors = this.validator.errorsFor(this.value);
+    const isPromisish =
+      errors && typeof errors.then === 'function' && typeof errors.catch === 'function';
+
+    if (isPromisish) {
+      return errors.then(this.handleErrors);
+    }
+    return { then: cb => cb(this.handleErrors(errors)) };
   }
 
   stateContainer: Object;
