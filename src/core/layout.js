@@ -7,6 +7,7 @@ import config from '../config';
 type HandlerProps = {
   input: Component,
   layout: Component | null | false,
+  error: string | Object | void,
   props: FieldProps
 };
 
@@ -23,7 +24,7 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
    * an input receives all the props except the layout ones
    */
   inputProps(): Object {
-    const { props: { label, layout, error, ...rest } } = this.props; // eslint-disable-line
+    const { props: { label, layout, ...rest } } = this.props; // eslint-disable-line
     return rest;
   }
 
@@ -33,8 +34,8 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
    * the class name goes into the input field by default
    */
   layoutProps(): Object {
-    const { props: { id, className, ...rest } } = this.props; // eslint-disable-line
-    return rest;
+    const { props: { id, className, ...rest }, error } = this.props; // eslint-disable-line
+    return { ...rest, error };
   }
 
   // selects the right layout

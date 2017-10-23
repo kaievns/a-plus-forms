@@ -22,7 +22,7 @@ export type FormProps = Valuable & {
 export type FieldProps = Valuable & {
   id?: string,
   label?: string,
-  error?: string,
+  error?: string | Object,
   className?: string,
   layout?: Component | null | false
 };

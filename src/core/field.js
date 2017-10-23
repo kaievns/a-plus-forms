@@ -11,12 +11,14 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     };
 
     static contextTypes = {
-      APFState: PropTypes.object
+      APFState: PropTypes.object,
+      APFError: PropTypes.object
     };
 
     static childContextTypes = {
       APFState: PropTypes.object, // nested field anchor
-      APFProps: PropTypes.object // original field props
+      APFProps: PropTypes.object, // original field props,
+      APFError: PropTypes.object // nested field errors
     };
 
     stateStrategy: ReactStateStrategy | NestedStateStrategy;
@@ -31,7 +33,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     getChildContext() {
       return {
         APFProps: this.props,
-        APFState: options.nested && this
+        APFState: options.nested && this,
+        APFError: options.nested && this.props.error
       };
     }
 
@@ -74,16 +77,25 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       }
     }
 
+    get error(): ?string {
+      if (options.nested) return null; // delegate to the sub-fields
+
+      const { APFError = {} } = this.context;
+      const { error: propsError, name } = this.props;
+
+      return propsError || APFError[name];
+    }
+
     onChange = (value: any) => {
       this.value = value;
     };
 
     render() {
-      const { defaultValue, ...props } = this.props; // eslint-disable-line
+      const { defaultValue, error, ...props } = this.props; // eslint-disable-line
 
       Object.assign(props, { value: this.value, onChange: this.onChange });
 
-      return <Layout input={Input} props={props} layout={options.layout} />;
+      return <Layout input={Input} props={props} error={this.error} layout={options.layout} />;
     }
   };
 

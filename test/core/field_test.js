@@ -106,6 +106,26 @@ describe('field', () => {
     const render = mount(<NestedInput />);
     const input = render.at(0).instance();
 
+    it('renders correctly', () => {
+      const render = mount(<NestedInput label="Login creds" />);
+
+      expect(render.html()).to.eql(
+        '<div>' +
+          '<label>Login creds</label>' +
+          '<div>' +
+          '<div>' +
+          '<div>' +
+          '<div><input type="text" name="username" value=""></div>' +
+          '</div>' +
+          '<div>' +
+          '<div><input type="password" name="password" value=""></div>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>'
+      );
+    });
+
     it('has empty values by default', () => {
       expect(input.value).to.eql({
         username: undefined,
@@ -131,6 +151,24 @@ describe('field', () => {
         username: 'nikolay',
         password: 'Ba(k0n!'
       });
+    });
+
+    it('sends errors to sub-fields', () => {
+      const error = { username: 'is terrible', password: 'is weak' };
+      const render = mount(<NestedInput error={error} />);
+
+      expect(render.html()).to.eql(
+        '<div><div><div>' +
+          '<div>' +
+          '<div><input type="text" name="username" value=""></div>' +
+          '<small>is terrible</small>' +
+          '</div>' +
+          '<div>' +
+          '<div><input type="password" name="password" value=""></div>' +
+          '<small>is weak</small>' +
+          '</div>' +
+          '</div></div></div>'
+      );
     });
   });
 });
