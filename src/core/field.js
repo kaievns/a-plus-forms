@@ -1,7 +1,7 @@
-/* eslint no-use-before-define: off */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from './layout';
+import StateManager from './state';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component =>
@@ -21,19 +21,18 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       APFError: PropTypes.object // nested field errors
     };
 
-    stateStrategy: ReactStateStrategy | NestedStateStrategy;
+    stateManager: StateManager;
 
     constructor() {
       super();
 
-      const StateStrategy = options.nested ? NestedStateStrategy : ReactStateStrategy;
-      this.stateStrategy = new StateStrategy(this);
+      this.stateManager = new StateManager(this, { nested: options.nested });
     }
 
     getChildContext() {
       return {
         APFProps: this.props,
-        APFState: options.nested && this,
+        APFState: options.nested && this.stateManager,
         APFError:
           options.nested && typeof this.props.error === 'object' ? this.props.error : undefined
       };
@@ -41,7 +40,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     componentWillMount() {
       if (this.context.APFState) {
-        this.context.APFState.stateStrategy.register(this);
+        this.context.APFState.register(this);
       }
 
       if ('value' in this.props) {
@@ -53,7 +52,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     componentWillUnmount() {
       if (this.context.APFState) {
-        this.context.APFState.stateStrategy.unregister(this);
+        this.context.APFState.unregister(this);
       }
     }
 
@@ -68,12 +67,12 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     get value(): any {
-      return this.stateStrategy.value;
+      return this.stateManager.value;
     }
 
     set value(value: any) {
-      if (this.stateStrategy.value !== value) {
-        this.stateStrategy.value = value;
+      if (this.stateManager.value !== value) {
+        this.stateManager.value = value;
         this.props.onChange(value);
       }
     }
@@ -102,69 +101,3 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       return <Layout input={Input} props={props} error={this.error} layout={options.layout} />;
     }
   };
-
-// a generic input field state strategy
-class ReactStateStrategy {
-  state: Object;
-  component: Object;
-
-  constructor(component: Object) {
-    this.component = component;
-    this.component.state = { value: undefined };
-  }
-
-  get value(): any {
-    return this.component.state.value;
-  }
-
-  set value(value: any) {
-    this.component.setState({ value });
-  }
-}
-
-// a compount input state strategy
-// NOTE: a nested field can receive initial values _before_ sub-fields
-//       start to register. which, will create a un-sync situation
-//       to solve the problem, nested field strategy saves any incoming values
-//       in the `seedValues` property and then pipes them into fields as they
-//       register
-class NestedStateStrategy {
-  fields: Array<Valuable> = [];
-  seedValues: Object = {};
-  component: Object;
-
-  constructor(component: Object) {
-    this.component = component;
-  }
-
-  register(field: Valuable) {
-    this.fields.push(field);
-
-    if (field.name && field.name in this.seedValues) {
-      field.value = this.seedValues[field.name];
-      delete this.seedValues[field.name];
-    }
-  }
-
-  unregister(field: Valuable) {
-    this.fields.splice(this.fields.indexOf(field), 1);
-  }
-
-  get value(): Object {
-    return this.fields.reduce(
-      (data, field) => Object.assign(data, field.name ? { [field.name]: field.value } : {}),
-      {}
-    );
-  }
-
-  set value(data: any) {
-    if (this.fields.length === 0) {
-      this.seedValues = { ...data }; // stashing the initial value
-    }
-
-    Object.keys(data || {}).forEach(name => {
-      const field = this.fields.find(field => field.name === name);
-      if (field) field.value = data[name];
-    });
-  }
-}
