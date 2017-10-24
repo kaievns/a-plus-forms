@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import field from './field';
 import config from '../config';
+import FormError from './error';
 import type { FormProps, InputEvent, Validator } from '../types';
 
 // just an empty field container to hold the form state
@@ -42,7 +43,17 @@ export default class Form extends React.Component<FormProps> {
 
     this.validate().then(errors => {
       if (!errors) {
-        this.props.onSubmit(this.value);
+        const result = this.props.onSubmit(this.value);
+
+        if (isPromisish(result)) {
+          result.catch(error => {
+            if (error instanceof FormError) {
+              this.handleErrors(error.errors);
+            } else {
+              throw error;
+            }
+          });
+        }
       }
     });
   };

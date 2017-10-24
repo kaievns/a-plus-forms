@@ -2,7 +2,9 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import { Form, TextInput, PasswordInput, ValidatorProvider } from '../../src';
+import { Form, Error as FormError, TextInput, PasswordInput, ValidatorProvider } from '../../src';
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 describe('<Form />', () => {
   it('renders a `form`', () => {
@@ -117,7 +119,7 @@ describe('<Form />', () => {
 
     render.find('form').simulate('submit');
 
-    expect(render.find('Field').at(1)).to.include.html('<small>must be present</small>');
+    expect(render.find(TextInput)).to.include.html('<small>must be present</small>');
   });
 
   it('allows to pass validation with valid data', () => {
@@ -206,7 +208,6 @@ describe('<Form />', () => {
   it('supports async validators', async () => {
     const onError = spy();
     const onSubmit = spy();
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     class AsyncValidator {
       async errorsFor({ username }) {
@@ -231,5 +232,25 @@ describe('<Form />', () => {
 
     expect(onError).to.have.been.calledWith({ username: 'is terrible' });
     expect(onSubmit).to.not.have.been.called;
+  });
+
+  it('renders the server side caused errors like its own', async () => {
+    const serverResponse = new FormError({ username: 'is terrible' });
+    const onSubmit = () => Promise.reject(serverResponse);
+    const onError = spy();
+
+    const render = mount(
+      <Form onError={onError} onSubmit={onSubmit}>
+        <TextInput name="username" value="not nikolay" />
+        <PasswordInput name="password" value="Ba(k0n!" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    await sleep(50);
+
+    expect(render.find(TextInput)).to.include.html('<small>is terrible</small>');
+    expect(onError).to.have.been.calledWith({ username: 'is terrible' });
   });
 });

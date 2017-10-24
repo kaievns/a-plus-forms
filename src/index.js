@@ -1,6 +1,7 @@
 export field from './core/field';
 
 export Form from './core/form';
+export Error from './core/error';
 
 export LayoutProvider from './providers/layout';
 export ValidatorProvider from './providers/validator';
