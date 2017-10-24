@@ -34,7 +34,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
         APFProps: this.props,
         APFState: options.nested && this.stateManager,
         APFError:
-          options.nested && typeof this.props.error === 'object' ? this.props.error : undefined
+          (options.nested && typeof this.props.error === 'object' && this.props.error) || undefined
       };
     }
 

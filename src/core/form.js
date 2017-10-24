@@ -21,7 +21,7 @@ export default class Form extends React.Component<FormProps> {
     schema: () => {},
     defaultValue: {}
   };
-
+  state = { errors: null };
   validator: Validator;
 
   componentWillMount() {
@@ -48,6 +48,8 @@ export default class Form extends React.Component<FormProps> {
   };
 
   handleErrors = (errors: ?Object) => {
+    this.setState({ errors });
+
     if (errors) {
       this.props.onError(errors, this.value);
     }
@@ -75,14 +77,21 @@ export default class Form extends React.Component<FormProps> {
     this.stateContainer.value = data;
   }
 
+  setStateRef = (e: Object) => {
+    this.stateContainer = e;
+  };
+
   render() {
     const { children, defaultValue, onChange } = this.props;
-    const setRef = e => {
-      this.stateContainer = e;
-    };
+    const { errors } = this.state;
 
     return (
-      <StateContainer defaultValue={defaultValue} onChange={onChange} ref={setRef}>
+      <StateContainer
+        error={errors}
+        defaultValue={defaultValue}
+        onChange={onChange}
+        ref={this.setStateRef}
+      >
         <form onSubmit={this.onSubmit} noValidate>
           {children}
         </form>

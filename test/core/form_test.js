@@ -106,6 +106,20 @@ describe('<Form />', () => {
     expect(onSubmit).to.not.have.been.called;
   });
 
+  it('renders validation errors like a mofo', () => {
+    const validate = data => !data.username && { username: 'must be present' };
+    const render = mount(
+      <Form schema={validate}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(render.find('Field').at(1)).to.include.html('<small>must be present</small>');
+  });
+
   it('allows to pass validation with valid data', () => {
     const onError = spy();
     const onSubmit = spy();
