@@ -84,7 +84,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       const error = propsError || APFError[name];
 
       if (options.nested && typeof error !== 'string') {
-        return null; // delegate to the sub-fields
+        return (error && error['']) || null; // delegate to the sub-fields
       }
 
       return error;

@@ -184,5 +184,25 @@ describe('field', () => {
           '</div>'
       );
     });
+
+    it('renders the base errors in the objects', () => {
+      const error = { '': 'everything is terrible', username: 'is terrible', password: 'is weak' };
+      const render = mount(<NestedInput error={error} />);
+
+      expect(render.html()).to.eql(
+        '<div><div><div>' +
+          '<div>' +
+          '<div><input type="text" name="username" value=""></div>' +
+          '<small>is terrible</small>' +
+          '</div>' +
+          '<div>' +
+          '<div><input type="password" name="password" value=""></div>' +
+          '<small>is weak</small>' +
+          '</div>' +
+          '</div></div>' +
+          '<small>everything is terrible</small>' +
+          '</div>'
+      );
+    });
   });
 });
