@@ -61,7 +61,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
 
     componentWillReceiveProps(props: Valuable) {
       if ('value' in props) {
-        this.value = this.props.value;
+        this.value = props.value;
       }
     }
 

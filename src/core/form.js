@@ -22,7 +22,7 @@ export default class Form extends React.Component<FormProps> {
     schema: undefined,
     defaultValue: {}
   };
-  state = { errors: null };
+  state = { errors: null, dirty: false };
   validator: ?Validator;
 
   componentWillMount() {
@@ -38,10 +38,20 @@ export default class Form extends React.Component<FormProps> {
     this.validator.schema = schema;
   }
 
+  onChange = (value: Object) => {
+    this.props.onChange(value);
+
+    if (this.state.dirty) {
+      this.validate(value);
+    }
+  };
+
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
 
     this.validate().then(errors => {
+      this.setState({ dirty: true });
+
       if (!errors) {
         const result = this.props.onSubmit(this.value);
 
@@ -58,6 +68,18 @@ export default class Form extends React.Component<FormProps> {
     });
   };
 
+  validate(value?: Object = this.value): Promise<?Object> {
+    const errors = this.validator.errorsFor(value);
+
+    if (isPromisish(errors)) {
+      return errors.then(this.handleErrors);
+    }
+
+    this.handleErrors(errors);
+
+    return { then: cb => cb(errors) };
+  }
+
   handleErrors = (errors: ?Object) => {
     this.setState({ errors });
 
@@ -67,16 +89,6 @@ export default class Form extends React.Component<FormProps> {
 
     return errors;
   };
-
-  validate(): Promise<?Object> {
-    const errors = this.validator.errorsFor(this.value);
-
-    if (isPromisish(errors)) {
-      return errors.then(this.handleErrors);
-    }
-
-    return { then: cb => cb(this.handleErrors(errors)) };
-  }
 
   stateContainer: Object;
 
@@ -93,14 +105,15 @@ export default class Form extends React.Component<FormProps> {
   };
 
   render() {
-    const { children, defaultValue, onChange } = this.props;
-    const { errors } = this.state;
+    const { children, defaultValue } = this.props;
+    const { errors, dirty } = this.state;
 
     return (
       <StateContainer
+        dirty={dirty}
         error={errors}
         defaultValue={defaultValue}
-        onChange={onChange}
+        onChange={this.onChange}
         ref={this.setStateRef}
       >
         <form onSubmit={this.onSubmit} noValidate>

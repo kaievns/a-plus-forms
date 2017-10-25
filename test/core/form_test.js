@@ -117,9 +117,20 @@ describe('<Form />', () => {
       </Form>
     );
 
-    render.find('form').simulate('submit');
+    // doesn't render the errors right away
+    expect(render.find(TextInput)).to.not.include.html('<small>must be present</small>');
 
+    // renders the errors post-submit
+    render.find('form').simulate('submit');
     expect(render.find(TextInput)).to.include.html('<small>must be present</small>');
+
+    // hides the validation once the issue is resolved
+    render
+      .find(TextInput)
+      .at(0)
+      .instance().value =
+      'nikolay';
+    expect(render.find(TextInput)).to.not.include.html('<small>must be present</small>');
   });
 
   it('allows to pass validation with valid data', () => {
@@ -171,7 +182,7 @@ describe('<Form />', () => {
     const render = mount(
       <ValidatorProvider validator={CustomValidator}>
         <Form schema={schema} onError={onError} onSubmit={onSubmit}>
-          <TextInput name="username" value="not nikolay" />
+          <TextInput name="username" defaultValue="not nikolay" />
           <PasswordInput name="password" value="Ba(k0n!" />
         </Form>
       </ValidatorProvider>
