@@ -47,9 +47,9 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       }
 
       if ('value' in this.props) {
-        this.value = this.props.value;
+        this.stateManager.value = this.props.value;
       } else if ('defaultValue' in this.props) {
-        this.value = this.props.defaultValue;
+        this.stateManager.value = this.props.defaultValue;
       }
     }
 
@@ -76,7 +76,21 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     set value(value: any) {
       if (this.stateManager.value !== value) {
         this.stateManager.value = value;
-        this.props.onChange(value);
+        this.propagateChange(value);
+      }
+    }
+
+    propagateChange(value: any) {
+      const { APFState } = this.context;
+      const { name, onChange } = this.props;
+
+      onChange(value);
+
+      if (APFState && name) {
+        const { component: parentField } = APFState.strategy;
+        const parentValue = parentField.value;
+
+        parentField.propagateChange({ ...parentValue, [name]: value });
       }
     }
 

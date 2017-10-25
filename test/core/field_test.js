@@ -165,6 +165,20 @@ describe('field', () => {
       });
     });
 
+    it('triggers onChange in for changes in the sub-fields', () => {
+      const onChange = spy();
+      const render = mount(<NestedInput onChange={onChange} />);
+
+      render.find('input[name="username"]').simulate('change', {
+        target: { value: 'nikolay' }
+      });
+
+      expect(onChange).to.have.been.calledWith({
+        username: 'nikolay',
+        password: undefined
+      });
+    });
+
     it('sends errors to sub-fields', () => {
       const error = { username: 'is terrible', password: 'is weak' };
       const render = mount(<NestedInput error={error} />);
