@@ -63,6 +63,18 @@ describe('field', () => {
         '<div><div><input value=""></div><small>everything is terrible</small></div>'
       );
     });
+
+    it('does not render the errors if the state is explicitly not dirty', () => {
+      const render = mount(<Input error="everything is terrible" dirty={false} />);
+      expect(render.html()).to.eql('<div><div><input value=""></div></div>');
+    });
+
+    it('renders the errors if the state is explicitly dirty', () => {
+      const render = mount(<Input error="everything is terrible" dirty />);
+      expect(render.html()).to.eql(
+        '<div><div><input value=""></div><small>everything is terrible</small></div>'
+      );
+    });
   });
 
   describe('data flow', () => {
@@ -201,6 +213,23 @@ describe('field', () => {
           '</div>' +
           '</div></div>' +
           '<small>everything is terrible</small>' +
+          '</div>'
+      );
+    });
+
+    it('does not render errors if the field was made explicitly not dirty', () => {
+      const error = { '': 'everything is terrible', username: 'is terrible', password: 'is weak' };
+      const render = mount(<NestedInput error={error} dirty={false} />);
+
+      expect(render.html()).to.eql(
+        '<div><div><div>' +
+          '<div>' +
+          '<div><input type="text" name="username" value=""></div>' +
+          '</div>' +
+          '<div>' +
+          '<div><input type="password" name="password" value=""></div>' +
+          '</div>' +
+          '</div></div>' +
           '</div>'
       );
     });

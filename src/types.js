@@ -24,7 +24,8 @@ export type FieldProps = Valuable & {
   label?: string,
   error?: string | Object,
   className?: string,
-  layout?: Component | null | false
+  layout?: Component | null | false,
+  dirty?: boolean
 };
 
 export type FieldOptions = {
