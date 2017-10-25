@@ -12,14 +12,14 @@ const DefaultLayout = ({ input, label, error }: LayoutProps) => (
 
 // just a dummy validator for simple function based validators
 class DefaultValidator {
-  schema: Function;
+  schema: ?Function;
 
-  constructor(schema: Function) {
+  constructor(schema: ?Function) {
     this.schema = schema;
   }
 
   errorsFor(data: Object): ?Object {
-    return this.schema(data);
+    return this.schema && this.schema(data);
   }
 }
 

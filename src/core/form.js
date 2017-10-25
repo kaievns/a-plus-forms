@@ -19,11 +19,11 @@ export default class Form extends React.Component<FormProps> {
     onSubmit: () => {},
     onChange: () => {},
     onError: () => {},
-    schema: () => {},
+    schema: undefined,
     defaultValue: {}
   };
   state = { errors: null };
-  validator: Validator;
+  validator: ?Validator;
 
   componentWillMount() {
     const { APFValidator } = this.context;
