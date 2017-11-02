@@ -22,7 +22,7 @@ export default class Form extends React.Component<FormProps> {
     schema: undefined,
     defaultValue: {}
   };
-  state = { errors: null, dirty: false };
+  state = { errors: null, dirty: false, disabled: false };
   validator: ?Validator;
 
   componentWillMount() {
@@ -54,19 +54,29 @@ export default class Form extends React.Component<FormProps> {
 
       if (!errors) {
         const result = this.props.onSubmit(this.value);
-
         if (isPromisish(result)) {
-          result.catch(error => {
-            if (error instanceof FormError) {
-              this.handleErrors(error.errors);
-            } else {
-              throw error;
-            }
-          });
+          this.waitForServerResponse(result);
         }
       }
     });
   };
+
+  async waitForServerResponse(request: Promise) {
+    this.setState({ disabled: true });
+
+    try {
+      await request;
+    } catch (error) {
+      if (error instanceof FormError) {
+        this.handleErrors(error.errors);
+      } else {
+        throw error;
+      }
+    } finally {
+      this.setState({ disabled: false });
+      this.forceUpdate();
+    }
+  }
 
   validate(value?: Object = this.value): Promise<?Object> {
     const errors = this.validator.errorsFor(value);
@@ -106,7 +116,7 @@ export default class Form extends React.Component<FormProps> {
 
   render() {
     const { children, defaultValue } = this.props;
-    const { errors, dirty } = this.state;
+    const { errors, dirty, disabled } = this.state;
 
     return (
       <StateContainer
@@ -116,7 +126,7 @@ export default class Form extends React.Component<FormProps> {
         onChange={this.onChange}
         ref={this.setStateRef}
       >
-        <form onSubmit={this.onSubmit} noValidate>
+        <form onSubmit={this.onSubmit} noValidate disabled={disabled}>
           {children}
         </form>
       </StateContainer>

@@ -264,4 +264,42 @@ describe('<Form />', () => {
     expect(render.find(TextInput)).to.include.html('<small>is terrible</small>');
     expect(onError).to.have.been.calledWith({ username: 'is terrible' });
   });
+
+  it('disables the form for the duration of the server request', async () => {
+    const onSubmit = () => sleep(20);
+
+    const render = mount(<Form onSubmit={onSubmit} />);
+
+    // not disabled initially
+    expect(render.find('form')).to.not.include.html(' disabled=""');
+
+    render.find('form').simulate('submit');
+
+    // disabled post submit
+    expect(render.find('form')).to.include.html(' disabled=""');
+
+    await sleep(50);
+
+    // re-enabled after the response is received
+    expect(render.find('form')).to.not.include.html(' disabled=""');
+  });
+
+  it('does not forget to re-enables form when things go seriously bad', async () => {
+    const onSubmit = async () => {
+      await sleep(20);
+      throw new FormError({ username: 'is terrible' });
+    };
+
+    const render = mount(<Form onSubmit={onSubmit} />);
+
+    expect(render.find('form')).to.not.include.html(' disabled=""');
+
+    render.find('form').simulate('submit');
+
+    expect(render.find('form')).to.include.html(' disabled=""');
+
+    await sleep(50);
+
+    expect(render.find('form')).to.not.include.html(' disabled=""');
+  });
 });
