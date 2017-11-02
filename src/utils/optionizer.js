@@ -91,6 +91,8 @@ export default () => (Input: Component) =>
     }
 
     pseudoToOriginalValue(value: PseudoValue): any {
+      if (!this.originalOptions) return value; // autocompleter mode
+
       const options = this.normalizedOptions();
       const option = this.state.options.reduce(
         (current, option, index) => (option.value === value ? options[index] : current),
@@ -101,6 +103,8 @@ export default () => (Input: Component) =>
     }
 
     originalToPseudoValue(value: any): PseudoValue {
+      if (!this.originalOptions) return value; // autocompleter mode
+
       const options = this.normalizedOptions();
 
       const currentOption = options.find(
