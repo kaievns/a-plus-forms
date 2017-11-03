@@ -61,21 +61,22 @@ export default class Form extends React.Component<FormProps> {
     });
   };
 
-  async waitForServerResponse(request: Promise) {
+  waitForServerResponse(request: Promise) {
     this.setState({ disabled: true });
 
-    try {
-      await request;
-    } catch (error) {
-      if (error instanceof FormError) {
-        this.handleErrors(error.errors);
-      } else {
-        throw error;
-      }
-    } finally {
-      this.setState({ disabled: false });
-      this.forceUpdate();
-    }
+    request
+      .then(() => {
+        this.setState({ disabled: false });
+      })
+      .catch(error => {
+        this.setState({ disabled: false });
+
+        if (error instanceof FormError) {
+          this.handleErrors(error.errors);
+        } else {
+          throw error;
+        }
+      });
   }
 
   validate(value?: Object = this.value): Promise<?Object> {
