@@ -8,6 +8,7 @@ export ValidatorProvider from './providers/validator';
 
 export TextInput from './inputs/text';
 export EmailInput from './inputs/email';
+export PhoneInput from './inputs/phone';
 export SearchInput from './inputs/search';
 export NumberInput from './inputs/number';
 export PasswordInput from './inputs/password';
