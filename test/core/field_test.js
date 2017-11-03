@@ -75,6 +75,16 @@ describe('field', () => {
         '<div><div><input value=""></div><small>everything is terrible</small></div>'
       );
     });
+
+    it('renders nested errors if there is no one to pick them up', () => {
+      const error = { life: 'is terrible', sun: 'is annoying', capitalism: 'sucks' };
+      const render = mount(<Input error={error} />);
+      expect(render.html()).to.eql(
+        '<div><div><input value=""></div><small>' +
+          'life is terrible, sun is annoying, and capitalism sucks' +
+          '</small></div>'
+      );
+    });
   });
 
   describe('data flow', () => {
@@ -211,8 +221,8 @@ describe('field', () => {
       );
     });
 
-    it('renders the base errors in the objects', () => {
-      const error = { '': 'everything is terrible', username: 'is terrible', password: 'is weak' };
+    it('picks up unsed errors', () => {
+      const error = { '': 'everything is terrible', username: 'is terrible', capitalism: 'sucks' };
       const render = mount(<NestedInput error={error} />);
 
       expect(render.html()).to.eql(
@@ -223,10 +233,9 @@ describe('field', () => {
           '</div>' +
           '<div>' +
           '<div><input type="password" name="password" value=""></div>' +
-          '<small>is weak</small>' +
           '</div>' +
           '</div></div>' +
-          '<small>everything is terrible</small>' +
+          '<small>everything is terrible, and capitalism sucks</small>' +
           '</div>'
       );
     });

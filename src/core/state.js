@@ -65,6 +65,7 @@ class NestedStateStrategy {
 
   register(field: Valuable) {
     this.fields.push(field);
+    this.component.forceUpdate(); // re-render in case of errors were re-picked up
 
     if (field.name && field.name in this.seedValues) {
       field.value = this.seedValues[field.name];

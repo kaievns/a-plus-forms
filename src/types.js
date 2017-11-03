@@ -59,7 +59,9 @@ export type SelectOption = {
 
 export type Element = {
   setState: Function,
-  state?: Object
+  context?: Object,
+  state?: Object,
+  props: Object
 };
 
 export type LayoutProps = {

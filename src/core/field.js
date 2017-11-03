@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from './layout';
 import StateManager from './state';
+import { extractErrorsFor } from './error';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component =>
@@ -95,15 +96,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     get error(): ?string {
-      const { APFError = {} } = this.context;
-      const { error: propsError, name } = this.props;
-      const error = propsError || APFError[name];
-
-      if (options.nested && typeof error !== 'string') {
-        return (error && error['']) || null; // delegate to the sub-fields
-      }
-
-      return error;
+      return extractErrorsFor(this, options);
     }
 
     get dirty(): boolean {
