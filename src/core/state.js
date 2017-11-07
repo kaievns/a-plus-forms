@@ -68,7 +68,7 @@ class NestedStateStrategy {
     this.component.forceUpdate(); // re-render in case of errors were re-picked up
 
     if (field.name && field.name in this.seedValues) {
-      field.value = this.seedValues[field.name];
+      field.stateManager.value = this.seedValues[field.name];
       delete this.seedValues[field.name];
     }
   }
