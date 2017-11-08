@@ -1,6 +1,6 @@
 {
   "name": "a-plus-forms",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A+ forms. Would use again",
   "files": [
     "dist"
@@ -9,10 +9,10 @@
   "scripts": {
     "test": "mocha",
     "lint": "eslint src test && flow",
-    "build": "babel src --out-dir dist/",
+    "build": "NODE_ENV=production babel src --out-dir dist/",
     "precommit": "lint-staged",
     "prepush": "npm run test",
-    "prepare": "NODE_ENV=production npm run build"
+    "prepare": "npm run build"
   },
   "lint-staged": {
     "*.js": [
