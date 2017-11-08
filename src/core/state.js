@@ -44,7 +44,9 @@ class ReactStateStrategy {
   }
 
   set value(value: any) {
-    this.component.setState({ value });
+    if (!this.component.isUnmounted) {
+      this.component.setState({ value });
+    }
   }
 }
 
@@ -65,7 +67,10 @@ class NestedStateStrategy {
 
   register(field: Valuable) {
     this.fields.push(field);
-    this.component.forceUpdate(); // re-render in case of errors were re-picked up
+
+    if (!this.component.isUnmounted) {
+      this.component.forceUpdate(); // re-render in case of errors were re-picked up
+    }
 
     if (field.name && field.name in this.seedValues) {
       field.stateManager.value = this.seedValues[field.name];
