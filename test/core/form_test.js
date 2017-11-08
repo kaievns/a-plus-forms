@@ -302,4 +302,20 @@ describe('<Form />', () => {
 
     expect(render.find('form')).to.not.include.html(' disabled=""');
   });
+
+  it('updates the form value if the defaultValue changes', () => {
+    const initalValues = { username: 'nikolay' };
+    const render = mount(
+      <Form defaultValue={initalValues}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    expect(render.find(TextInput).instance().value).to.eql('nikolay');
+
+    render.setProps({ defaultValue: { username: 'antikolay' } });
+
+    expect(render.find(TextInput).instance().value).to.eql('antikolay');
+  });
 });

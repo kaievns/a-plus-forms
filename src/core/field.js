@@ -63,6 +63,10 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     componentWillReceiveProps(props: Valuable) {
       if ('value' in props) {
         this.value = props.value;
+      } else if ('defaultValue' in props) {
+        if (JSON.stringify(props.defaultValue) !== JSON.stringify(this.props.defaultValue)) {
+          this.stateManager.value = props.defaultValue;
+        }
       }
     }
 
