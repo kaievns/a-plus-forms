@@ -58,6 +58,7 @@ export type SelectOption = {
 };
 
 export type Element = {
+  forceUpdate: Function,
   setState: Function,
   context?: Object,
   state?: Object,

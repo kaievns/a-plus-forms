@@ -105,12 +105,26 @@ describe('field', () => {
       expect(field.value).to.eql('Nikolay');
     });
 
+    it('tracks changes in the `value` prop', () => {
+      const field = mount(<Input value="Nikolay" layout={null} />);
+      field.setProps({ value: 'new value' });
+      expect(field.html()).to.eql('<input value="new value">');
+    });
+
     it('tracks the value changes', () => {
       const onChange = spy();
-      const render = mount(<Input onChange={onChange} />);
+      const render = mount(<Input onChange={onChange} layout={null} />);
       render.find('input').simulate('change', { target: { value: 'new value' } });
-      expect(onChange).to.have.been.calledWith('test: new value');
+      expect(onChange.getCalls().map(c => c.args)).to.eql([['test: new value']]);
       expect(render.at(0).instance().value).to.eql('test: new value');
+      expect(render.html()).to.eql('<input value="test: new value">');
+    });
+
+    it('does not trigger change if the value is changed to the same thing', () => {
+      const onChange = spy();
+      const render = mount(<Input onChange={onChange} defaultValue="nikolay" />);
+      render.setProps({ value: 'nikolay' });
+      expect(onChange.getCalls().map(c => c.args)).to.eql([]);
     });
 
     it('allows to set a value on an instance', () => {
@@ -183,10 +197,38 @@ describe('field', () => {
         target: { value: 'nikolay' }
       });
 
-      expect(onChange).to.have.been.calledWith({
-        username: 'nikolay',
-        password: undefined
+      expect(onChange.getCalls().map(c => c.args)).to.eql([
+        [
+          {
+            username: 'nikolay',
+            password: undefined
+          }
+        ]
+      ]);
+    });
+
+    it('propagates changes in the `value` prop', () => {
+      const onChange = spy();
+      const render = mount(<NestedInput onChange={onChange} layout={null} />);
+      render.setProps({
+        value: {
+          username: 'new username',
+          password: 'new password'
+        }
       });
+
+      expect(onChange.getCalls().map(c => c.args)).to.eql([
+        [
+          {
+            username: 'new username',
+            password: 'new password'
+          }
+        ]
+      ]);
+
+      expect(render.find(TextInput).html()).to.eql(
+        '<div><div><input type="text" name="username" value="new username"></div></div>'
+      );
     });
 
     it('sends errors to sub-fields', () => {

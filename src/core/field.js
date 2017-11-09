@@ -29,7 +29,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     constructor() {
       super();
 
-      this.stateManager = new StateManager(this, { nested: options.nested });
+      this.stateManager = new StateManager(this);
     }
 
     getChildContext() {
@@ -43,31 +43,31 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     componentWillMount() {
+      this.checkForNewValueIn(this.props);
+
       if (this.context.APFState) {
         this.context.APFState.register(this);
-      }
-
-      if ('value' in this.props) {
-        this.stateManager.value = this.props.value;
-      } else if ('defaultValue' in this.props) {
-        this.stateManager.value = this.props.defaultValue;
       }
     }
 
     componentWillUnmount() {
-      this.isUnmounted = true;
-
       if (this.context.APFState) {
         this.context.APFState.unregister(this);
       }
     }
 
     componentWillReceiveProps(props: Valuable) {
+      this.checkForNewValueIn(props);
+    }
+
+    checkForNewValueIn(props: Valuable) {
       if ('value' in props) {
-        this.value = props.value;
+        this.stateManager.setValue(props.value);
       } else if ('defaultValue' in props) {
-        if (JSON.stringify(props.defaultValue) !== JSON.stringify(this.props.defaultValue)) {
-          this.stateManager.value = props.defaultValue;
+        // something was changed or an initial call
+        if (this.props.defaultValue !== props.defaultValue || this.props === props) {
+          const triggerOnChange = this.props !== props;
+          this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
       }
     }
@@ -77,28 +77,11 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     get value(): any {
-      return this.stateManager.value;
+      return this.stateManager.getValue();
     }
 
     set value(value: any) {
-      if (this.stateManager.value !== value) {
-        this.stateManager.value = value;
-        this.propagateChange(value);
-      }
-    }
-
-    propagateChange(value: any) {
-      const { APFState } = this.context;
-      const { name, onChange } = this.props;
-
-      onChange(value);
-
-      if (APFState && name) {
-        const { component: parentField } = APFState.strategy;
-        const parentValue = parentField.value;
-
-        parentField.propagateChange({ ...parentValue, [name]: value });
-      }
+      this.stateManager.setValue(value);
     }
 
     get error(): ?string {

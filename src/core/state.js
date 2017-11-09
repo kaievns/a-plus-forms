@@ -1,102 +1,69 @@
 /* @flow */
 /* eslint no-use-before-define: off */
-import type { Valuable, Element, FieldOptions } from '../types';
+
+type Element = {
+  forceUpdate: Function,
+  context: Object,
+  props: Object,
+  name: ?string,
+  value: ?any
+};
 
 export default class StateManager {
-  strategy: NestedStateStrategy | ReactStateStrategy;
+  element: Element;
+  currentValue: any;
 
-  constructor(component: Element, { nested }: FieldOptions) {
-    this.strategy = new (nested ? NestedStateStrategy : ReactStateStrategy)(component);
+  constructor(element: Element) {
+    this.element = element;
   }
 
-  get value(): any {
-    return this.strategy.value;
-  }
-  set value(value: any) {
-    this.strategy.value = value;
-  }
+  // actual set value that allows to swtich off onChange data propagation
+  setValue(value: any, propagate: boolean = true) {
+    const { name, onChange } = this.element.props;
+    const { APFState: parent } = this.element.context;
 
-  register(field: Valuable) {
-    if (this.strategy instanceof NestedStateStrategy) {
-      this.strategy.register(field);
+    if (parent !== undefined && name !== undefined) {
+      const parentValue = parent.getValue() || {};
+      if (parentValue[name] !== value) {
+        const newValue = Object.freeze({ ...parentValue, [name]: value });
+        if (propagate) onChange(newValue);
+        parent.setValue(newValue, propagate);
+      }
+    } else if (this.currentValue !== value) {
+      this.currentValue = value;
+      if (propagate) onChange(value);
+      this.element.forceUpdate(); // re-render with the new value
     }
   }
 
-  unregister(field: Valuable) {
-    if (this.strategy instanceof NestedStateStrategy) {
-      this.strategy.unregister(field);
-    }
-  }
-}
+  getValue(): any {
+    const { name } = this.element.props;
+    const { APFState: parent } = this.element.context;
 
-// a generic input field state strategy
-class ReactStateStrategy {
-  state: Object;
-  component: Object;
-
-  constructor(component: Object) {
-    this.component = component;
-    this.component.state = { value: undefined };
-  }
-
-  get value(): any {
-    return this.component.state.value;
-  }
-
-  set value(value: any) {
-    if (!this.component.isUnmounted) {
-      this.component.setState({ value });
-    }
-  }
-}
-
-// a compount input state strategy
-// NOTE: a nested field can receive initial values _before_ sub-fields
-//       start to register. which, will create a un-sync situation
-//       to solve the problem, nested field strategy saves any incoming values
-//       in the `seedValues` property and then pipes them into fields as they
-//       register
-class NestedStateStrategy {
-  fields: Array<Valuable> = [];
-  seedValues: Object = {};
-  component: Object;
-
-  constructor(component: Object) {
-    this.component = component;
-  }
-
-  register(field: Valuable) {
-    this.fields.push(field);
-
-    if (!this.component.isUnmounted) {
-      this.component.forceUpdate(); // re-render in case of errors were re-picked up
+    if (parent !== undefined && name !== undefined) {
+      const parentValue = parent.getValue() || {};
+      return parentValue[name];
     }
 
-    if (field.name && field.name in this.seedValues) {
-      field.stateManager.value = this.seedValues[field.name];
-      delete this.seedValues[field.name];
+    return this.currentValue;
+  }
+
+  register(field: Element) {
+    const { name } = field.props;
+    const currentValue: Object = this.getValue() || {};
+
+    if (!(name in currentValue)) {
+      this.setValue({ ...currentValue, [name]: undefined }, false);
     }
   }
 
-  unregister(field: Valuable) {
-    this.fields.splice(this.fields.indexOf(field), 1);
-  }
+  unregister(field: Element) {
+    const { name } = field.props;
 
-  get value(): Object {
-    return this.fields.reduce(
-      (data, field) => Object.assign(data, field.name ? { [field.name]: field.value } : {}),
-      {}
-    );
-  }
-
-  set value(data: any) {
-    if (this.fields.length === 0) {
-      this.seedValues = { ...data }; // stashing the initial value
+    if (name !== undefined) {
+      const newValue = { ...this.getValue() };
+      delete newValue[name];
+      this.setValue(Object.freeze(newValue));
     }
-
-    Object.keys(data || {}).forEach(name => {
-      const field = this.fields.find(field => field.name === name);
-      if (field) field.value = data[name];
-    });
   }
 }
