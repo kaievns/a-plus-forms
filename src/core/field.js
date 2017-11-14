@@ -43,7 +43,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     componentWillMount() {
-      this.checkForNewValueIn(this.props);
+      this.checkForNewValueIn(this.props, true);
 
       if (this.context.APFState) {
         this.context.APFState.register(this);
@@ -57,16 +57,16 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     componentWillReceiveProps(props: Valuable) {
-      this.checkForNewValueIn(props);
+      this.checkForNewValueIn(props, false);
     }
 
-    checkForNewValueIn(props: Valuable) {
+    checkForNewValueIn(props: Valuable, isInitialCall: boolean) {
       if ('value' in props) {
         this.stateManager.setValue(props.value);
       } else if ('defaultValue' in props) {
         // something was changed or an initial call
-        if (this.props.defaultValue !== props.defaultValue || this.props === props) {
-          const triggerOnChange = this.props !== props;
+        if (isInitialCall || this.props.defaultValue !== props.defaultValue) {
+          const triggerOnChange = !isInitialCall;
           this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
       }

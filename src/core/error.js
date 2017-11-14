@@ -1,5 +1,5 @@
 /* @flow */
-import type { FieldOptions, Element, Valuable } from '../types';
+import type { FieldOptions, Element } from '../types';
 
 type Errors = Object | string;
 
@@ -15,30 +15,26 @@ export default class ValidationError extends Error {
 type FieldElement = {
   context: { APFError?: Object },
   stateManager: {
-    strategy: {
-      fields?: Array<Valuable>
-    }
+    getValue: Function
   }
 };
 
 export const extractErrorsFor = (field: Element & FieldElement, options: FieldOptions): ?string => {
   const { APFError = {} } = field.context;
   const { error: propsError, name } = field.props;
-  const error = propsError || APFError[name];
+  const error = propsError == null ? APFError[name] : propsError; // eslint-disable-line
 
-  if (error && typeof error !== 'string') {
-    // nested errors
+  if (error != null && typeof error !== 'string') { // eslint-disable-line
     let nestedErrors = error;
 
     if (options.nested) {
       nestedErrors = { ...error };
 
       // filter out the existing nested fields
-      const { fields = [] } = field.stateManager.strategy;
+      const names = Object.keys(field.stateManager.getValue() || {});
 
-      for (let i = 0; i < fields.length; i++) {
-        const { name } = fields[i];
-        if (name) delete nestedErrors[name];
+      for (let i = 0; i < names.length; i++) {
+        delete nestedErrors[names[i]];
       }
     }
 

@@ -91,6 +91,36 @@ describe('<Form />', () => {
     });
   });
 
+  it('tracks value changes via onChange', () => {
+    const onChange = spy();
+    const values = { username: 'old username', password: 'old password' };
+    const render = mount(
+      <Form defaultValue={values} onChange={onChange}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    expect(onChange.getCalls().map(c => c.args)).to.eql([]);
+
+    render
+      .find(TextInput)
+      .at(0)
+      .instance().value =
+      'nikolay';
+
+    render
+      .find(PasswordInput)
+      .at(0)
+      .instance().value =
+      'Ba(k0n!';
+
+    expect(onChange.getCalls().map(c => c.args)).to.eql([
+      [{ username: 'nikolay', password: 'old password' }],
+      [{ username: 'nikolay', password: 'Ba(k0n!' }]
+    ]);
+  });
+
   it('allows to provide a validation function', () => {
     const onError = spy();
     const onSubmit = spy();

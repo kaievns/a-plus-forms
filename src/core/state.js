@@ -1,19 +1,14 @@
 /* @flow */
 /* eslint no-use-before-define: off */
+import type { Element } from '../types';
 
-type Element = {
-  forceUpdate: Function,
-  context: Object,
-  props: Object,
-  name: ?string,
-  value: ?any
-};
+type Field = Element & { context: Object };
 
 export default class StateManager {
-  element: Element;
+  element: Field;
   currentValue: any;
 
-  constructor(element: Element) {
+  constructor(element: Field) {
     this.element = element;
   }
 
@@ -48,7 +43,7 @@ export default class StateManager {
     return this.currentValue;
   }
 
-  register(field: Element) {
+  register(field: Field) {
     const { name } = field.props;
     const currentValue: Object = this.getValue() || {};
 
@@ -57,7 +52,7 @@ export default class StateManager {
     }
   }
 
-  unregister(field: Element) {
+  unregister(field: Field) {
     const { name } = field.props;
 
     if (name !== undefined) {
