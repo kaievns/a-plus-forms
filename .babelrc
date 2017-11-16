@@ -14,7 +14,10 @@
       "plugins": [
         "transform-decorators-legacy",
         "transform-class-properties",
-        "transform-flow-strip-types"
+        "transform-flow-strip-types",
+        ["babel-plugin-transform-builtin-extend", {
+          "globals": ["Error"]
+        }]
       ]
     }
   }
