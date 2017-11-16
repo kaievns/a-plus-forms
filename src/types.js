@@ -14,8 +14,9 @@ export type FormProps = Valuable & {
   value?: ?Object,
   defaultValue?: ?Object,
   schema: Object | Function,
-  onSubmit: Function,
-  onError: Function,
+  className?: string,
+  onSubmit?: Function,
+  onError?: Function,
   children: Object
 };
 

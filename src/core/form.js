@@ -6,7 +6,15 @@ import FormError from './error';
 import type { FormProps, InputEvent, Validator } from '../types';
 
 // just an empty field container to hold the form state
-const StateContainer = field({ layout: null, nested: true })(({ children }: Object) => children);
+const StateContainer = field({ layout: null, nested: true })(({ children, error }: Object) => {
+  const output = React.Children.toArray(children);
+
+  if (error != null) { // eslint-disable-line
+    output.unshift(React.cloneElement(error, { key: 'errors' }));
+  }
+
+  return output;
+});
 const isPromisish = smth =>
   smth && typeof smth.then === 'function' && typeof smth.catch === 'function';
 
@@ -116,21 +124,22 @@ export default class Form extends React.Component<FormProps> {
   };
 
   render() {
-    const { children, defaultValue } = this.props;
+    const { children, defaultValue, className } = this.props;
     const { errors, dirty, disabled } = this.state;
 
     return (
-      <StateContainer
-        dirty={dirty}
-        error={errors}
-        defaultValue={defaultValue}
-        onChange={this.onChange}
-        ref={this.setStateRef}
-      >
-        <form onSubmit={this.onSubmit} noValidate disabled={disabled}>
+      <form onSubmit={this.onSubmit} className={className} noValidate disabled={disabled}>
+        <StateContainer
+          dirty={dirty}
+          error={errors}
+          defaultValue={defaultValue}
+          onChange={this.onChange}
+          layout={config.formLayout}
+          ref={this.setStateRef}
+        >
           {children}
-        </form>
-      </StateContainer>
+        </StateContainer>
+      </form>
     );
   }
 }

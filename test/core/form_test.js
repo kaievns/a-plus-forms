@@ -163,6 +163,31 @@ describe('<Form />', () => {
     expect(render.find(TextInput)).to.not.include.html('<small>must be present</small>');
   });
 
+  it('renders unclaimed errors in the form', () => {
+    const validate = () => ({ username: 'must be present', everything: 'is terrible' });
+    const render = mount(
+      <Form schema={validate}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(render).to.have.html(
+      '<form novalidate="">' +
+        '<small class="error">everything is terrible</small>' +
+        '<div>' +
+        '<div><input type="text" name="username" value=""></div>' +
+        '<small>must be present</small>' +
+        '</div>' +
+        '<div>' +
+        '<div><input type="password" name="password" value=""></div>' +
+        '</div>' +
+        '</form>'
+    );
+  });
+
   it('allows to pass validation with valid data', () => {
     const onError = spy();
     const onSubmit = spy();

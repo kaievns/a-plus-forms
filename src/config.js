@@ -23,7 +23,14 @@ class DefaultValidator {
   }
 }
 
+// default form layout
+const FormLayout = ({ error, input }: LayoutProps) =>
+  React.cloneElement(input, {
+    error: error && <small className="error">{error}</small>
+  });
+
 export default {
   DefaultValidator,
+  formLayout: FormLayout,
   defaultLayout: DefaultLayout
 };
