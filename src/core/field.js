@@ -61,12 +61,13 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     checkForNewValueIn(props: Valuable, isInitialCall: boolean) {
+      const triggerOnChange = !isInitialCall;
+
       if ('value' in props) {
-        this.stateManager.setValue(props.value);
+        this.stateManager.setValue(props.value, triggerOnChange);
       } else if ('defaultValue' in props) {
         // something was changed or an initial call
         if (isInitialCall || this.props.defaultValue !== props.defaultValue) {
-          const triggerOnChange = !isInitialCall;
           this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
       }
