@@ -134,7 +134,7 @@ export default class Form extends React.Component<FormProps> {
           error={errors}
           defaultValue={defaultValue}
           onChange={this.onChange}
-          layout={config.formLayout}
+          layout={config.FormLayout}
           ref={this.setStateRef}
         >
           {children}

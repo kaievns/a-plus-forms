@@ -52,7 +52,7 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
       return APFLayout; // the context layout
     }
 
-    return config.defaultLayout;
+    return config.DefaultLayout;
   }
 
   render() {
