@@ -33,30 +33,6 @@ npm install a-plus-forms
 yarn add a-plus-forms
 ```
 
-### The basic example
-
-First thing to understand about `A+ forms` is that the inputs in this system
-are abstractions. Those inputs convey the structure of the form, and, depending
-on a context, they can render different desirable results.
-
-```js
-import { Form, EmailInput, PasswordInput } from 'a-plus-forms';
-
-<Form onSubmit={signInAction}>
-  <EmailInput name="username" label="Username" />
-  <PasswordInput name="password" label="Password" />
-  <button>Sign In</button>
-</Form>
-```
-
-In this example, the `signInAction` will receive an object that looks like this:
-
-```js
-{
-  username: '...',
-  password: '...'
-}
-```
 
 ### Input Field Layouts
 
@@ -81,7 +57,7 @@ Now that you have a layout, you have options:
 ```js
 // set this layout as a default layout globally
 import { config } from 'a-plus-forms';
-config.defaultLayout = MyLayout;
+config.DefaultLayout = MyLayout;
 
 // specify the layout as a default via a layout provider
 import { LayoutProvider } from 'a-plus-forms';
@@ -109,31 +85,6 @@ is useful when you start making compound.
 <input type="text" name="something" />
 ```
 
-### A basic react/redux wiring
-
-```js
-import { connect } from 'react-redux';
-import { Form, EmailInput, PasswordInput } from 'a-plus-forms';
-import { signIn } from './actions';
-
-const dispatchToProps = dispatch => ({
-  signIn({ username, password }) {
-    return dispatch(signIn({ username, password }));
-  }
-});
-
-const SignInForm = ({ signIn }) =>
-  <Form onSubmit={signIn}>
-    <EmailInput name="username" label="Username" />
-    <PasswordInput name="password" label="Password" />
-    <button>Sign In</button>
-  </Form>;
-
-export default connect(null, dispatchToProps)(SignInForm);
-```
-
-__NOTE__: if the `signIn` action returns a `Promise` the form will automatically
-mark the form as disabled for the duration of the server request.
 
 ### Validation Story
 
