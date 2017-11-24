@@ -11,6 +11,7 @@ export default () => (TextInput: Object) =>
     componentWillReceiveProps(props: InputProps) {
       if (props.value !== this.rawValue.trim()) {
         this.rawValue = props.value == null ? '' : props.value;
+        this.forceUpdate();
       }
     }
 
@@ -21,6 +22,8 @@ export default () => (TextInput: Object) =>
       if (this.props.value !== trimmedValue) {
         this.props.onChange(trimmedValue);
       }
+
+      this.forceUpdate();
     };
 
     rawValue = '';
