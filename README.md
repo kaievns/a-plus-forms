@@ -4,271 +4,53 @@
 >
 >  -- <cite>Nobody ever</cite>
 
-Let me introduce you to the `A+ forms`, a react forms library that makes forms
-creation a civilized and enjoyable process.
+Sick of overly complex form libraries in React? The ones that promise simplicity,
+but you end up bashing your head against the wall in couple of weeks? Well, allow
+me introduce you to the `A+ forms`, a react forms library that you would use again.
 
-## Features
+Because there are better things to life than making forms work.
 
-There are two principles `A+ forms` are build on top:
+## What's The Big Idea?
 
-1) _zero learning curve_, all interfaces are 100% familiar and act as expected
-2) _just give me data_, all routine processes are taken care of, the forms just
-   send the user's input as an object via the `onSubmit` prop.
-
-If you want to more, here is more:
-
-3) `~7.5k` in size and zero deps
-4) used in production for ages and scales to complex forms nicely
-5) easy custom layouts support
-6) easy custom validators support
-7) easy custom inputs support
-8) easy compound inputs support
-9) allows to re-wrap existing inputs into new specialized ones
-
-
-## Usage & Examples
-
-```
-npm install a-plus-forms
-yarn add a-plus-forms
-```
-
-### The basic example
-
-First thing to understand about `A+ forms` is that the inputs in this system
-are abstractions. Those inputs convey the structure of the form, and, depending
-on a context, they can render different desirable results.
+Remember how nice and easy forms were when HTML was static? You'd just have a
+`form` tag, and a couple of `input` tags, and it would simply send your data
+where it supposed to go. Well, `A+ forms` gives you exactly that type of
+development experience back:
 
 ```js
-import { Form, EmailInput, PasswordInput } from 'a-plus-forms';
+import { Form, TextInput, PasswordInput } from 'a-plus-forms';
 
-<Form onSubmit={signInAction}>
-  <EmailInput name="username" label="Username" />
-  <PasswordInput name="password" label="Password" />
-  <button>Sign In</button>
-</Form>
-```
-
-In this example, the `signInAction` will receive an object that looks like this:
-
-```js
-{
-  username: '...',
-  password: '...'
-}
-```
-
-### Input Field Layouts
-
-Inputs in `A+ forms` are simply standard interfaces, to style them according
-to your needs we use the concept of layouts. Which are basically dumb components
-that consistently render all inputs in a form. For example:
-
-```js
-const MyLayout = ({ label, error, input }) =>
-  <div className="my-input">
-    <label>{label}</label>
-    <div className="input-container">{input}</div>
-    {error ? <small className="error">{error}</small> : null}
-  </div>;
-```
-
-In this case, `label` is the label one specifies in the input props. `error` is
-a validation error string, and `input` is the actual input field element.
-
-Now that you have a layout, you have options:
-
-```js
-// set this layout as a default layout globally
-import { config } from 'a-plus-forms';
-config.defaultLayout = MyLayout;
-
-// specify the layout as a default via a layout provider
-import { LayoutProvider } from 'a-plus-forms';
-<App>
-  <LayoutProvider layout={MyLayout}>
-    // content....
-  </LayoutProvider>
-</App>
-
-// render a specific form with this layout
-<Form onSubmit={handler} layout={MyLayout}>
-  // all inputs here will use that layout
-</Form>
-
-// render an individual input with this layout
-<EmailInput name="username" layout={MyLayout} />
-```
-
-You also can render any input without any layout decoration whatsoever, which
-is useful when you start making compound.
-
-```js
-<TextInput name="something" layout={null} />
-// will render simply this
-<input type="text" name="something" />
-```
-
-### A basic react/redux wiring
-
-```js
-import { connect } from 'react-redux';
-import { Form, EmailInput, PasswordInput } from 'a-plus-forms';
-import { signIn } from './actions';
-
-const dispatchToProps = dispatch => ({
-  signIn({ username, password }) {
-    return dispatch(signIn({ username, password }));
-  }
-});
-
-const SignInForm = ({ signIn }) =>
-  <Form onSubmit={signIn}>
-    <EmailInput name="username" label="Username" />
-    <PasswordInput name="password" label="Password" />
-    <button>Sign In</button>
-  </Form>;
-
-export default connect(null, dispatchToProps)(SignInForm);
-```
-
-__NOTE__: if the `signIn` action returns a `Promise` the form will automatically
-mark the form as disabled for the duration of the server request.
-
-### Validation Story
-
-`A+ forms` have several validation options. A very simple one is to just pass
-a function into the `schema` prop:
-
-```js
-const validate = (data) => {
-  if (!data.username) return { username: 'is required' };
+const signIn = ({ username, password }) => {
+  axios.post('/signin', { username, password });
 };
 
-const SignInForm = ({ signIn }) =>
-  <Form onSubmit={signIn} schema={validate}>
-    <EmailInput name="username" label="Username" />
-    <PasswordInput name="password" label="Password" />
-  </Form>;
+<Form onSubmit={signIn}>
+  <TextInput name="username" label="Username" />
+  <PasswordInput name="password" label="Password" />
+  <button type="submit">Sign In</button>
+</Form>
 ```
 
-Whenever the validation function returns data, the form will automatically
-pass the errors into the respective fields. All the pristine/dirty states are
-automatically taken care of.
+Nothing beats the good old declarative style, eh?
 
-One also can create custom re-usable validators and pass them around via a
-`ValidatorProvider` component:
+## Features? Yeah, we have 'em.
 
-```js
-import { ValidatorProvider } from 'a-plus-forms';
+* Simple, standard looking, and stable API
+* A robust and predictable layouts and styling system
+* Custom inputs support, yup with nested fields
+* Custom validation (including async validation)
+* Easy integration with the server side (including server side validation)
+* Built for 100% testability in the apps
+* Small weight, no deps
 
-class CustomValidator {
-  errorsFor(data) {
-    if (!data.username) {
-      return { username: 'is required' };
-    }
-  }
-}
+## Documentation? Youbetcha!
 
-<ValidatorProvider validator={CustomValidator}>
-  <SignInForm signIn={signIn} />
-</ValidatorProvider>
-```
-
-Async validators are also supported out of the box:
-
-```js
-class CustomValidator {
-  async errorsFor({ username }) {
-    const taken = await api.get('/username-check', { username });
-
-    if (taken) {
-      return { username: 'is already taken' };
-    }
-  }
-}
-```
-
-For a reference implementation of custom validators, please see the
-[JSON Schema validator plugin](https://github.com/MadRabbit/a-plus-forms-json-validator)
-
-### Custom Inputs
-
-Where `A+ forms` really shine is the ease of creation of new custom inputs. A
-very simple use case would look somewhat like this:
-
-```js
-import { field } from 'a-plus-forms';
-
-const MyCustomInput = ({ value, onChange }) =>
-  <input type="text" value={value} onChange={onChange} />;
-
-export default field(MyCustomInput);
-```
-
-Essentially, the `field` decorator is where the magic happens, it takes care of
-all the state, errors and layouts management for you. The only think you need
-to provide back a _controlled_ input that understands `value` and `onChange`.
-
-You can also re-use/re-wrap existing inputs to build extra functionality into
-the fields:
-
-```js
-import { field, TextInput } from 'a-plus-forms';
-
-const PhoneNumberInput = props => {
-  const { onChange, ...rest } = props;
-  const format = userInput => toPhoneNumber(userInput);
-
-  return (
-    <TextInput
-      {...rest}
-      layout={null} // <- render the input only
-      onChange={value => onChange(format(value))}
-    />
-  );
-}
-```
-
-For more examples, please see the collection of the [built in inputs](src/inputs)
-
-### Compound/Nested Inputs
-
-One can easily combine several inputs into one compound input if needed.
-
-```js
-import { field, TextInput } from 'a-plus-forms';
-
-const AddressInput = field({ nested: true })(
-  () => (
-    <div>
-      <TextInput name="country" layout={false} />
-      <TextInput name="state" layout={false} />
-      <TextInput name="city" layout={false} />
-    </div>
-  )
-);
-
-const ProfileForm = ({ onSubmit }) =>
-  <Form onSubmit={onSubmit}>
-    <AddressInput name="address" />
-  </Form>;
-```
-
-When the user submits the form, the `onSubmit` function will receive a structure
-that looks like so:
-
-```js
-{
-  address: {
-    country: '...',
-    state: '...',
-    city: '...'
-  }
-}
-```
-
-
+* [Installation & Configuration](/MadRabbit/a-plus-forms/wiki/Installation-&-Configuration)
+* [Layouts & Styling](/MadRabbit/a-plus-forms/wiki/Layouts-&-Styling)
+* [React & Redux Wiring](/MadRabbit/a-plus-forms/wiki/React-&-Redux-Wiring)
+* [Communicating With Backends](/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
+* [Validation & Errors Handling](/MadRabbit/a-plus-forms/wiki/Validation-&-Errors-Handling)
+* [Custom Inputs Guide](/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
 
 
 ## Copyright & License
