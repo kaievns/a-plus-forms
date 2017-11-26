@@ -8,8 +8,6 @@ Sick of overly complex form libraries in React? The ones that promise simplicity
 but you end up bashing your head against the wall in couple of weeks? Well, allow
 me introduce you to the `A+ forms`, a react forms library that you would use again.
 
-Because there are better things to life than making forms work.
-
 ## What's The Big Idea?
 
 Remember how nice and easy forms were when HTML was static? You'd just have a
@@ -31,11 +29,14 @@ const signIn = ({ username, password }) => {
 </Form>
 ```
 
-Nothing beats the good old declarative style, eh?
+The goal of the `A+ forms` is to be as close to the original HTML forms API and
+declarative coding style that everyone knows and loves. The idea is to give
+developers the stability of well known interfaces paired with covering the needs
+of the modern front end development practices.
 
 ## Features? Yeah, we have 'em.
 
-* Simple, standard looking, and stable API
+* Simple, standard looking, and stable API (minimal learning curve)
 * A robust and predictable layouts and styling system
 * Custom inputs support, yup with nested fields
 * Custom validation (including async validation)
@@ -51,6 +52,7 @@ Nothing beats the good old declarative style, eh?
 * [Communicating With Backends](/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
 * [Validation & Errors Handling](/MadRabbit/a-plus-forms/wiki/Validation-&-Errors-Handling)
 * [Custom Inputs Guide](/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
+* [Testing Best Practices](/MadRabbit/a-plus-forms/wiki/Testing-Best-Practices)
 
 
 ## Copyright & License
