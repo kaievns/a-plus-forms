@@ -56,17 +56,7 @@ export default class Form extends React.Component<FormProps> {
 
   onSubmit = (event: InputEvent) => {
     event.preventDefault();
-
-    this.validate().then(errors => {
-      this.setState({ dirty: true });
-
-      if (!errors) {
-        const result = this.props.onSubmit(this.value);
-        if (isPromisish(result)) {
-          this.waitForServerResponse(result);
-        }
-      }
-    });
+    this.submit();
   };
 
   waitForServerResponse(request: Promise) {
@@ -117,6 +107,19 @@ export default class Form extends React.Component<FormProps> {
 
   set value(data: Object) {
     this.stateContainer.value = data;
+  }
+
+  submit() {
+    this.validate().then(errors => {
+      this.setState({ dirty: true });
+
+      if (!errors) {
+        const result = this.props.onSubmit(this.value);
+        if (isPromisish(result)) {
+          this.waitForServerResponse(result);
+        }
+      }
+    });
   }
 
   setStateRef = (e: Object) => {

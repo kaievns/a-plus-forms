@@ -27,6 +27,26 @@ describe('<Form />', () => {
     });
   });
 
+  it('allows to submit the Form instance directly', () => {
+    const onSubmit = spy();
+    const render = mount(
+      <Form onSubmit={onSubmit}>
+        <TextInput name="username" value="nikolay" />
+        <PasswordInput name="password" value="Ba(k0n!" />
+      </Form>
+    );
+
+    render
+      .find(Form)
+      .instance()
+      .submit();
+
+    expect(onSubmit).to.have.been.calledWith({
+      username: 'nikolay',
+      password: 'Ba(k0n!'
+    });
+  });
+
   it('allows to access the form data', () => {
     const render = mount(
       <Form>
