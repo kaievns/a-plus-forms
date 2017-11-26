@@ -122,6 +122,10 @@ export default class Form extends React.Component<FormProps> {
     });
   }
 
+  reset() {
+    this.value = this.props.defaultValue || {};
+  }
+
   setStateRef = (e: Object) => {
     this.stateContainer = e;
   };

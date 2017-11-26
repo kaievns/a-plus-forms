@@ -111,6 +111,28 @@ describe('<Form />', () => {
     });
   });
 
+  it('allows to reset the form values back to the defaults', () => {
+    const defaultValues = { username: 'nikolay', password: 'secret' };
+    const render = mount(
+      <Form defaultValue={defaultValues}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    render
+      .find(PasswordInput)
+      .at(0)
+      .instance().value =
+      'Ba(k0n!';
+
+    render
+      .find(Form)
+      .instance()
+      .reset();
+    expect(render.find(Form).instance().value).to.eql(defaultValues);
+  });
+
   it('tracks value changes via onChange', () => {
     const onChange = spy();
     const values = { username: 'old username', password: 'old password' };
