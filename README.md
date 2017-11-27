@@ -54,6 +54,13 @@ of the modern front end development practices.
 * [Custom Inputs Guide](/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
 * [Testing Best Practices](/MadRabbit/a-plus-forms/wiki/Testing-Best-Practices)
 
+## Extensions? Totes!
+
+* [Boostrap bindings](https://github.com/MadRabbit/a-plus-forms-bootstrap)
+* [JSON schemas based validator](https://github.com/MadRabbit/a-plus-forms-json-validator)
+
+Tell me more! [@nemshilov](https://twitter.com/nemshilov)
+
 
 ## Copyright & License
 
