@@ -123,6 +123,7 @@ export default class Form extends React.Component<FormProps> {
   }
 
   reset() {
+    this.setState({ dirty: false });
     this.value = this.props.defaultValue || {};
   }
 
