@@ -5,9 +5,7 @@ import { field, TextInput, PasswordInput } from '../../src';
 import type { InputProps } from '../../src/types';
 
 @field()
-class Input extends React.Component {
-  props: InputProps;
-
+class Input extends React.Component<InputProps> {
   render() {
     const { onChange, value = '', ...rest } = this.props;
     return <input {...rest} value={value} onChange={e => onChange(`test: ${e.target.value}`)} />;
@@ -15,9 +13,7 @@ class Input extends React.Component {
 }
 
 @field({ nested: true })
-class NestedInput extends React.Component {
-  props: InputProps;
-
+class NestedInput extends React.Component<InputProps> {
   render() {
     return (
       <div>
@@ -297,6 +293,116 @@ describe('field', () => {
           '</div></div>' +
           '</div>'
       );
+    });
+  });
+
+  describe('array field', () => {
+    @field({ array: true })
+    class ArrayInput extends React.Component<InputProps> {
+      add(newValue) {
+        const { value = [], onChange } = this.props;
+        onChange(value.concat(newValue));
+      }
+
+      change(index, newData) {
+        const { value = [], onChange } = this.props;
+
+        onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
+      }
+
+      remove(index) {
+        const { value = [], onChange } = this.props;
+
+        onChange([...value.slice(0, index), ...value.slice(index + 1)]);
+      }
+
+      render() {
+        const { value = [] } = this.props;
+
+        return (
+          <div>
+            {value.map((value, i) => (
+              <div className="item" key={i}>
+                <TextInput value={value} onChange={v => this.change(i, v)} layout={null} />
+                <button className="remove" onClick={() => this.remove(i)}>
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button className="add" onClick={() => this.add('')}>
+              Add new one
+            </button>
+          </div>
+        );
+      }
+    }
+
+    it('renders good', () => {
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(<ArrayInput defaultValue={initialValue} layout={null} />);
+
+      expect(render)
+        .to.have.exactly(3)
+        .descendants('div.item');
+      expect(render.find(TextInput).map(i => i.instance().value)).to.eql(initialValue);
+    });
+
+    it('allows to add new items to the list', () => {
+      const onChange = spy();
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(
+        <ArrayInput defaultValue={initialValue} onChange={onChange} layout={null} />
+      );
+
+      render.find('button.add').simulate('click');
+
+      expect(render)
+        .to.have.exactly(4)
+        .descendants('div.item');
+      expect(render.find(TextInput).map(i => i.instance().value)).to.eql([...initialValue, '']);
+
+      expect(onChange).to.have.been.calledWith([...initialValue, '']);
+    });
+
+    it('allows to change existing items', () => {
+      const onChange = spy();
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(
+        <ArrayInput defaultValue={initialValue} onChange={onChange} layout={null} />
+      );
+
+      render
+        .find(TextInput)
+        .at(1)
+        .instance().value =
+        'new value';
+      render.update();
+
+      expect(render.find(TextInput).map(i => i.instance().value)).to.eql([
+        'one',
+        'new value',
+        'three'
+      ]);
+      expect(onChange).to.have.been.calledWith(['one', 'new value', 'three']);
+    });
+
+    it('allows to remove items', () => {
+      const onChange = spy();
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(
+        <ArrayInput defaultValue={initialValue} onChange={onChange} layout={null} />
+      );
+
+      render
+        .find('button.remove')
+        .at(1)
+        .simulate('click');
+
+      expect(render)
+        .to.have.exactly(2)
+        .descendants('div.item');
+      expect(render.find(TextInput).map(i => i.instance().value)).to.eql(['one', 'three']);
+      expect(onChange).to.have.been.calledWith(['one', 'three']);
     });
   });
 });
