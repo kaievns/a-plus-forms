@@ -25,6 +25,29 @@ class NestedInput extends React.Component<InputProps> {
   }
 }
 
+@field({ array: true })
+class ArrayInput extends React.Component<InputProps> {
+  render() {
+    const { value, addEntry, changeEntry, removeEntry } = this.props;
+
+    return (
+      <div>
+        {value.map((value, i) => (
+          <div className="item" key={i}>
+            <TextInput value={value} onChange={v => changeEntry(v, i)} layout={null} />
+            <button className="remove" onClick={() => removeEntry(i)}>
+              Remove
+            </button>
+          </div>
+        ))}
+        <button className="add" onClick={() => addEntry('')}>
+          Add new one
+        </button>
+      </div>
+    );
+  }
+}
+
 describe('field', () => {
   describe('rendering options', () => {
     it('renders input with decorations', () => {
@@ -309,29 +332,6 @@ describe('field', () => {
   });
 
   describe('array field', () => {
-    @field({ array: true })
-    class ArrayInput extends React.Component<InputProps> {
-      render() {
-        const { value, addEntry, changeEntry, removeEntry } = this.props;
-
-        return (
-          <div>
-            {value.map((value, i) => (
-              <div className="item" key={i}>
-                <TextInput value={value} onChange={v => changeEntry(v, i)} layout={null} />
-                <button className="remove" onClick={() => removeEntry(i)}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button className="add" onClick={() => addEntry('')}>
-              Add new one
-            </button>
-          </div>
-        );
-      }
-    }
-
     it('renders good', () => {
       const initialValue = ['one', 'two', 'three'];
       const render = mount(<ArrayInput defaultValue={initialValue} layout={null} />);

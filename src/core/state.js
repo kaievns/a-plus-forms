@@ -3,16 +3,25 @@
 import type { Element } from '../types';
 
 type Field = Element & {
+  state: Object,
   context: Object,
   isUnmounted: boolean
 };
 
 export default class StateManager {
   element: Field;
-  currentValue: any;
 
   constructor(element: Field) {
     this.element = element;
+  }
+
+  get currentValue(): any {
+    return this.element.state.value;
+  }
+
+  set currentValue(value: any) {
+    this.element.setState({ value });
+    this.element.state.value = value; // forcing the value change for tests
   }
 
   // actual set value that allows to swtich off onChange data propagation
@@ -32,7 +41,6 @@ export default class StateManager {
     } else if (this.currentValue !== value) {
       this.currentValue = value;
       if (propagate) onChange(value);
-      this.element.forceUpdate(); // re-render with the new value
     }
   }
 
