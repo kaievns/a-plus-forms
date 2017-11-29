@@ -5,7 +5,7 @@ import StateManager from './state';
 import { extractErrorsFor } from './error';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
-export default (options: FieldOptions = {}) => (Input: Component): Component =>
+export default (options: FieldOptions = {}) => (Input: Component): Component => {
   class Field extends React.Component<FieldProps> {
     static defaultProps = {
       onChange: () => {}
@@ -33,6 +33,12 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       super();
 
       this.stateManager = new StateManager(this);
+
+      if (options.array) {
+        this.addEntry = this.addEntry.bind(this);
+        this.changeEntry = this.changeEntry.bind(this);
+        this.removeEntry = this.removeEntry.bind(this);
+      }
     }
 
     getChildContext() {
@@ -103,22 +109,6 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       this.value = value;
     };
 
-    // array inputs extra methods
-    addEntry = (newItem: any) => {
-      const { value = [], onChange } = this;
-      onChange(value.concat(newItem));
-    };
-
-    changeEntry = (newData: any, index: number) => {
-      const { value = [], onChange } = this;
-      onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
-    };
-
-    removeEntry = (index: number) => {
-      const { value = [], onChange } = this;
-      onChange([...value.slice(0, index), ...value.slice(index + 1)]);
-    };
-
     render() {
       const { defaultValue, error, dirty, ...props } = this.props; // eslint-disable-line
 
@@ -141,4 +131,26 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
         />
       );
     }
-  };
+  }
+
+  if (options.array) {
+    Object.assign(Field.prototype, {
+      addEntry(newItem: any) {
+        const { value = [], onChange } = this;
+        onChange(value.concat(newItem));
+      },
+
+      changeEntry(newData: any, index: number) {
+        const { value = [], onChange } = this;
+        onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
+      },
+
+      removeEntry(index: number) {
+        const { value = [], onChange } = this;
+        onChange([...value.slice(0, index), ...value.slice(index + 1)]);
+      }
+    });
+  }
+
+  return Field;
+};
