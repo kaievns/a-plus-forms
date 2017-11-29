@@ -61,7 +61,10 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       }
     }
 
+    isUnmounted = false;
     componentWillUnmount() {
+      this.isUnmounted = true;
+
       if (this.context.APFState) {
         this.context.APFState.unregister(this);
       }

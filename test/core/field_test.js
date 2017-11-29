@@ -1,3 +1,4 @@
+/* eslint no-unused-expressions: off */
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
@@ -131,6 +132,17 @@ describe('field', () => {
       expect(field.value).to.eql('Nikolay');
       expect(onChange).to.have.been.calledWith('Nikolay');
       expect(render.html()).to.eql('<input value="Nikolay">');
+    });
+
+    it('doesnt track any changes once the input was unmounted', () => {
+      const onChange = spy();
+      const render = mount(<Input layout={null} onChange={onChange} />);
+      const field = render.at(0).instance();
+      render.unmount();
+
+      field.value = 'Nikolay';
+
+      expect(onChange).to.not.have.been.called;
     });
   });
 

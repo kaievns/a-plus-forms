@@ -2,7 +2,10 @@
 /* eslint no-use-before-define: off */
 import type { Element } from '../types';
 
-type Field = Element & { context: Object };
+type Field = Element & {
+  context: Object,
+  isUnmounted: boolean
+};
 
 export default class StateManager {
   element: Field;
@@ -14,6 +17,8 @@ export default class StateManager {
 
   // actual set value that allows to swtich off onChange data propagation
   setValue(value: any, propagate: boolean = true) {
+    if (this.element.isUnmounted) return;
+
     const { name, onChange } = this.element.props;
     const { APFState: parent } = this.element.context;
 
@@ -65,7 +70,7 @@ export default class StateManager {
   // private
 
   get isArray(): boolean {
-    const { constructor: { options } } = this.element;
+    const { constructor: { fieldOptions: options } } = this.element;
 
     return options.array === true;
   }
