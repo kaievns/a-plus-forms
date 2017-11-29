@@ -57,6 +57,12 @@ describe('layouts handling', () => {
     expect(render2.html()).to.eql('<input value="">');
   });
 
+  it('still shows errors if the layout is disabled', () => {
+    const render = mount(<Input layout={null} error="everything is terrible" />);
+
+    expect(render).to.have.descendants('small.error');
+  });
+
   it('renders the options layout as the next in kin', () => {
     const render = mount(<Input />);
     expect(render.html()).to.eql('<div><s>Layout1</s><input value=""></div>');
