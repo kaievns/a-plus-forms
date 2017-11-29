@@ -15,21 +15,13 @@ export default class StateManager {
     this.element = element;
   }
 
-  get currentValue(): any {
-    return this.element.state.value;
-  }
-
-  set currentValue(value: any) {
-    this.element.setState({ value });
-    this.element.state.value = value; // forcing the value change for tests
-  }
-
   // actual set value that allows to swtich off onChange data propagation
   setValue(value: any, propagate: boolean = true) {
     if (this.element.isUnmounted) return;
 
     const { name, onChange } = this.element.props;
     const { APFState: parent } = this.element.context;
+    const { value: currentValue } = this.element.state;
 
     if (parent !== undefined && name !== undefined) {
       const parentValue = parent.getValue() || {};
@@ -38,8 +30,9 @@ export default class StateManager {
         if (propagate) onChange(newValue);
         parent.setValue(newValue, propagate);
       }
-    } else if (this.currentValue !== value) {
-      this.currentValue = value;
+    } else if (currentValue !== value) {
+      this.element.setState({ value });
+      this.element.state.value = value; // forcing the value change for tests
       if (propagate) onChange(value);
     }
   }
@@ -47,13 +40,14 @@ export default class StateManager {
   getValue(): any {
     const { name } = this.element.props;
     const { APFState: parent } = this.element.context;
+    const { value: currentValue } = this.element.state;
 
     if (parent !== undefined && name !== undefined) {
       const parentValue = parent.getValue() || {};
       return parentValue[name];
     }
 
-    return this.currentValue;
+    return currentValue;
   }
 
   register(field: Field) {
