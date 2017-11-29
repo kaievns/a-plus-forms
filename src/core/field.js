@@ -42,7 +42,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     }
 
     getChildContext() {
-      const isCompound = options.nested; // || options.array;
+      const isCompound = options.nested || options.array;
       const hasErrors = typeof this.props.error === 'object';
 
       return {

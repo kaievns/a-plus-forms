@@ -47,7 +47,7 @@ export default class StateManager {
     const { name } = field.props;
     const currentValue: Object = this.getValue() || {};
 
-    if (!(name in currentValue)) {
+    if (name !== undefined && !(name in currentValue)) {
       this.setValue({ ...currentValue, [name]: undefined }, false);
     }
   }
