@@ -299,37 +299,20 @@ describe('field', () => {
   describe('array field', () => {
     @field({ array: true })
     class ArrayInput extends React.Component<InputProps> {
-      add(newValue) {
-        const { value = [], onChange } = this.props;
-        onChange(value.concat(newValue));
-      }
-
-      change(index, newData) {
-        const { value = [], onChange } = this.props;
-
-        onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
-      }
-
-      remove(index) {
-        const { value = [], onChange } = this.props;
-
-        onChange([...value.slice(0, index), ...value.slice(index + 1)]);
-      }
-
       render() {
-        const { value = [] } = this.props;
+        const { value, addEntry, changeEntry, removeEntry } = this.props;
 
         return (
           <div>
             {value.map((value, i) => (
               <div className="item" key={i}>
-                <TextInput value={value} onChange={v => this.change(i, v)} layout={null} />
-                <button className="remove" onClick={() => this.remove(i)}>
+                <TextInput value={value} onChange={v => changeEntry(v, i)} layout={null} />
+                <button className="remove" onClick={() => removeEntry(i)}>
                   Remove
                 </button>
               </div>
             ))}
-            <button className="add" onClick={() => this.add('')}>
+            <button className="add" onClick={() => addEntry('')}>
               Add new one
             </button>
           </div>

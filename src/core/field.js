@@ -24,6 +24,9 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       APFDirty: PropTypes.bool
     };
 
+    static InnerInput = Input;
+    static fieldOptions = options;
+
     stateManager: StateManager;
 
     constructor() {
@@ -33,12 +36,14 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
     }
 
     getChildContext() {
+      const isCompound = options.nested; // || options.array;
+      const hasErrors = typeof this.props.error === 'object';
+
       return {
         APFProps: this.props,
         APFDirty: this.props.dirty,
-        APFState: options.nested && this.stateManager,
-        APFError:
-          (options.nested && typeof this.props.error === 'object' && this.props.error) || undefined
+        APFState: isCompound && this.stateManager,
+        APFError: (isCompound && hasErrors && this.props.error) || undefined
       };
     }
 
@@ -98,10 +103,33 @@ export default (options: FieldOptions = {}) => (Input: Component): Component =>
       this.value = value;
     };
 
+    // array inputs extra methods
+    addEntry = (newItem: any) => {
+      const { value = [], onChange } = this;
+      onChange(value.concat(newItem));
+    };
+
+    changeEntry = (newData: any, index: number) => {
+      const { value = [], onChange } = this;
+      onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
+    };
+
+    removeEntry = (index: number) => {
+      const { value = [], onChange } = this;
+      onChange([...value.slice(0, index), ...value.slice(index + 1)]);
+    };
+
     render() {
       const { defaultValue, error, dirty, ...props } = this.props; // eslint-disable-line
 
       Object.assign(props, { value: this.value, onChange: this.onChange });
+
+      if (options.array === true) {
+        props.value = props.value || [];
+        props.addEntry = this.addEntry;
+        props.changeEntry = this.changeEntry;
+        props.removeEntry = this.removeEntry;
+      }
 
       return (
         <Layout

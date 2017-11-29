@@ -61,4 +61,12 @@ export default class StateManager {
       this.setValue(Object.freeze(newValue));
     }
   }
+
+  // private
+
+  get isArray(): boolean {
+    const { constructor: { options } } = this.element;
+
+    return options.array === true;
+  }
 }
