@@ -37,7 +37,6 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
 
       if (options.array) {
         this.addEntry = this.addEntry.bind(this);
-        this.changeEntry = this.changeEntry.bind(this);
         this.removeEntry = this.removeEntry.bind(this);
       }
     }
@@ -120,9 +119,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
 
       if (options.array === true) {
         props.value = props.value || [];
-        props.addEntry = this.addEntry;
-        props.changeEntry = this.changeEntry;
-        props.removeEntry = this.removeEntry;
+        props.addEntry = value => () => this.addEntry(value);
+        props.removeEntry = index => () => this.removeEntry(index);
       }
 
       return (
@@ -142,11 +140,6 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       addEntry(newItem: any) {
         const { value = [], onChange } = this;
         onChange(value.concat(newItem));
-      },
-
-      changeEntry(newData: any, index: number) {
-        const { value = [], onChange } = this;
-        onChange([...value.slice(0, index), newData, ...value.slice(index + 1)]);
       },
 
       removeEntry(index: number) {

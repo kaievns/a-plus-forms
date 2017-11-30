@@ -28,20 +28,20 @@ class NestedInput extends React.Component<InputProps> {
 @field({ array: true })
 class ArrayInput extends React.Component<InputProps> {
   render() {
-    const { value, addEntry, changeEntry, removeEntry } = this.props;
+    const { value, addEntry, removeEntry } = this.props;
 
     return (
       <div>
         {value.map((value, i) => (
           <div className="item" key={i}>
-            <TextInput value={value} onChange={v => changeEntry(v, i)} layout={null} />
-            <button className="remove" onClick={() => removeEntry(i)}>
-              Remove
+            <TextInput layout={null} />
+            <button className="remove" onClick={removeEntry(i)}>
+              Delete
             </button>
           </div>
         ))}
-        <button className="add" onClick={() => addEntry('')}>
-          Add new one
+        <button className="add" onClick={addEntry('')}>
+          Add new
         </button>
       </div>
     );
@@ -170,8 +170,13 @@ describe('field', () => {
   });
 
   describe('nested fields', () => {
-    const render = mount(<NestedInput />);
-    const input = render.at(0).instance();
+    let render;
+    let input;
+
+    before(() => {
+      render = mount(<NestedInput />);
+      input = render.at(0).instance();
+    });
 
     it('renders correctly', () => {
       const render = mount(<NestedInput label="Login creds" />);
@@ -398,6 +403,22 @@ describe('field', () => {
         .descendants('div.item');
       expect(render.find(TextInput).map(i => i.instance().value)).to.eql(['one', 'three']);
       expect(onChange).to.have.been.calledWith(['one', 'three']);
+    });
+
+    it('provides access to the items interface form the outside', () => {
+      const onChange = spy();
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(
+        <ArrayInput defaultValue={initialValue} onChange={onChange} layout={null} />
+      );
+
+      render.instance().addEntry('blargh!');
+
+      expect(onChange).to.have.been.calledWith([...initialValue, 'blargh!']);
+
+      render.instance().removeEntry(2);
+
+      expect(onChange).to.have.been.calledWith(['one', 'two', 'blargh!']);
     });
   });
 });
