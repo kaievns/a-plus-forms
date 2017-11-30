@@ -29,18 +29,20 @@ class NestedInput extends React.Component<InputProps> {
 class ArrayInput extends React.Component<InputProps> {
   render() {
     const { value, addEntry, removeEntry } = this.props;
+    const remove = index => () => removeEntry(index);
+    const add = value => () => addEntry(value);
 
     return (
       <div>
         {value.map((value, i) => (
           <div className="item" key={i}>
             <TextInput layout={null} />
-            <button className="remove" onClick={removeEntry(i)}>
+            <button className="remove" onClick={remove(i)}>
               Delete
             </button>
           </div>
         ))}
-        <button className="add" onClick={addEntry('')}>
+        <button className="add" onClick={add('')}>
           Add new
         </button>
       </div>
@@ -419,6 +421,25 @@ describe('field', () => {
       render.instance().removeEntry(2);
 
       expect(onChange).to.have.been.calledWith(['one', 'two', 'blargh!']);
+    });
+
+    it('passes errors where they need to be', () => {
+      const error = { 1: 'must not be two', 2: 'is too big' };
+      const initialValue = ['one', 'two', 'three'];
+      const render = mount(<ArrayInput defaultValue={initialValue} error={error} />);
+
+      expect(
+        render
+          .find(TextInput)
+          .at(1)
+          .find('.error')
+      ).to.include.text('must not be two');
+      expect(
+        render
+          .find(TextInput)
+          .at(2)
+          .find('.error')
+      ).to.include.text('is too big');
     });
   });
 });

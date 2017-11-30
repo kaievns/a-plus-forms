@@ -99,7 +99,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     }
 
     get error(): ?string {
-      return extractErrorsFor(this, options);
+      return extractErrorsFor(this);
     }
 
     get dirty(): boolean {
@@ -118,8 +118,8 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
 
       if (options.array === true) {
         props.value = props.value || [];
-        props.addEntry = value => () => this.addEntry(value);
-        props.removeEntry = index => () => this.removeEntry(index);
+        props.addEntry = this.addEntry;
+        props.removeEntry = this.removeEntry;
       }
 
       return (
