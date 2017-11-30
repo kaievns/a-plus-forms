@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from './layout';
 import StateManager from './state';
-import { extractErrorsFor } from './error';
+import { ErrorsManager } from './error';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component => {
@@ -28,11 +28,13 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     static fieldOptions = options;
 
     stateManager: StateManager;
+    errorsManager: ErrorsManager;
 
     constructor() {
       super();
 
       this.stateManager = new StateManager(this);
+      this.errorsManager = new ErrorsManager(this);
 
       if (options.array) {
         this.addEntry = this.addEntry.bind(this);
@@ -42,13 +44,14 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
 
     getChildContext() {
       const isCompound = options.nested || options.array;
-      const hasErrors = typeof this.props.error === 'object';
+      const error = this.errorsManager.getCurrentError();
+      const isNestedError = error && typeof error === 'object';
 
       return {
         APFProps: this.props,
         APFDirty: this.props.dirty,
         APFState: isCompound && this.stateManager,
-        APFError: (isCompound && hasErrors && this.props.error) || undefined
+        APFError: isCompound && isNestedError ? error : undefined
       };
     }
 
@@ -99,7 +102,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     }
 
     get error(): ?string {
-      return extractErrorsFor(this);
+      return this.errorsManager.getErrorMessage();
     }
 
     get dirty(): boolean {

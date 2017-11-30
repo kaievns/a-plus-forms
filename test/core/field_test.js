@@ -2,7 +2,7 @@
 import React from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
-import { field, TextInput, PasswordInput } from '../../src';
+import { field, TextInput, PasswordInput, Form } from '../../src';
 import type { InputProps } from '../../src/types';
 
 @field()
@@ -424,9 +424,15 @@ describe('field', () => {
     });
 
     it('passes errors where they need to be', () => {
-      const error = { 1: 'must not be two', 2: 'is too big' };
-      const initialValue = ['one', 'two', 'three'];
-      const render = mount(<ArrayInput defaultValue={initialValue} error={error} />);
+      const initialValue = { test: ['one', 'two', 'three'] };
+      const validate = () => ({ test: { 1: 'must not be two', 2: 'is too big' } });
+      const render = mount(
+        <Form schema={validate} defaultValue={initialValue}>
+          <ArrayInput name="test" />
+        </Form>
+      );
+
+      render.find('form').simulate('submit');
 
       expect(
         render

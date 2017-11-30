@@ -3,15 +3,16 @@ import type { Element } from '../types';
 
 type Errors = Object | string;
 type Field = Element & {
-  context: {
-    APFError?: Object,
-    APFState?: Object
-  },
+  context: Object,
   stateManager: {
     getValue: Function
   }
 };
 
+/**
+ * A dedicated exception for third party code to trigger
+ * validation errors in the `Form`
+ */
 export default class ValidationError extends Error {
   errors: Errors;
 
@@ -21,43 +22,54 @@ export default class ValidationError extends Error {
   }
 }
 
-export const extractErrorsFor = (field: Field): ?string => {
-  const { fieldOptions: options } = field.constructor;
-  const error = findCurrentError(field);
+/**
+ * Handles all the nested errors redirection madness
+ */
+export class ErrorsManager {
+  element: Field;
 
-  if (error != null && typeof error !== 'string') { // eslint-disable-line
-    let nestedErrors = error;
+  constructor(element: Field) {
+    this.element = element;
+  }
 
-    if (options.nested || options.array) {
-      nestedErrors = { ...error };
-      const currentValue = field.stateManager.getValue();
+  getCurrentError(): ?Errors {
+    const { APFError = {}, APFState } = this.element.context;
+    const { error: propsError, name } = this.element.props;
 
-      // filter out the existing nested fields
-      const names = options.nested
-        ? Object.keys(currentValue || {})
-        : (currentValue || []).map((_, index) => index.toString());
-
-      for (let i = 0; i < names.length; i++) {
-        delete nestedErrors[names[i]];
-      }
+    if (APFState && APFState.isArray) {
+      const index = APFState.getIndexFor(this.element);
+      return APFError[index.toString()];
     }
 
-    return nestedErrorToString(nestedErrors);
+    return propsError == null ? APFError[name] : propsError; // eslint-disable-line
   }
 
-  return error;
-};
+  getErrorMessage(): ?string {
+    const { fieldOptions: options } = this.element.constructor;
+    const error = this.getCurrentError();
 
-function findCurrentError(field: Field): string | Object | void {
-  const { APFError = {}, APFState } = field.context;
-  const { error: propsError, name } = field.props;
+    if (error != null && typeof error !== 'string') { // eslint-disable-line
+      let nestedErrors = error;
 
-  if (APFState && APFState.isArray) {
-    const index = APFState.getIndexFor(field);
-    return APFError[index.toString()];
+      if (options.nested || options.array) {
+        nestedErrors = { ...error };
+        const currentValue = this.element.stateManager.getValue();
+
+        // filter out the existing nested fields
+        const names = options.nested
+          ? Object.keys(currentValue || {})
+          : (currentValue || []).map((_, index) => index.toString());
+
+        for (let i = 0; i < names.length; i++) {
+          delete nestedErrors[names[i]];
+        }
+      }
+
+      return nestedErrorToString(nestedErrors);
+    }
+
+    return error;
   }
-
-  return propsError == null ? APFError[name] : propsError; // eslint-disable-line
 }
 
 function nestedErrorToString(errors: Object): string {
