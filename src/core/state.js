@@ -10,6 +10,7 @@ type Field = Element & {
 
 export default class StateManager {
   element: Field;
+  currentValue: any;
 
   constructor(element: Field) {
     this.element = element;
@@ -21,14 +22,13 @@ export default class StateManager {
 
     const { name, onChange } = this.element.props;
     const { APFState: parent } = this.element.context;
-    const { value: currentValue } = this.element.state;
 
     if (parent !== undefined && name !== undefined) {
       const parentValue = parent.getValue() || {};
       if (parentValue[name] !== value) {
         if (propagate) onChange(value);
-        const newValue = Object.freeze({ ...parentValue, [name]: value });
-        parent.setValue(newValue, propagate);
+        const newValue = { ...parentValue, [name]: value };
+        parent.setValue(Object.freeze(newValue), propagate);
       }
     } else if (parent !== undefined && parent.isArray) {
       const index = parent.getIndexFor(this.element);
@@ -36,14 +36,12 @@ export default class StateManager {
 
       if (parentValue[index] !== value) {
         if (propagate) onChange(value);
-
-        parent.setValue(
-          Object.freeze([...parentValue.slice(0, index), value, ...parentValue.slice(index + 1)])
-        );
+        const newValue = [...parentValue.slice(0, index), value, ...parentValue.slice(index + 1)];
+        parent.setValue(Object.freeze(newValue));
       }
-    } else if (currentValue !== value) {
-      this.element.setState({ value: Object.freeze(value) });
-      this.element.state.value = value; // forcing the value change for tests
+    } else if (this.currentValue !== value) {
+      this.currentValue = Object.freeze(value);
+      this.element.forceUpdate();
       if (propagate) onChange(value);
     }
   }
@@ -51,7 +49,6 @@ export default class StateManager {
   getValue(): any {
     const { name } = this.element.props;
     const { APFState: parent } = this.element.context;
-    const { value: currentValue } = this.element.state;
 
     if (parent !== undefined && name !== undefined) {
       const parentValue = parent.getValue() || {};
@@ -62,7 +59,7 @@ export default class StateManager {
       return value[index];
     }
 
-    return currentValue;
+    return this.currentValue;
   }
 
   listFields: Array<Field> = [];

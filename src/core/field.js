@@ -28,7 +28,6 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     static fieldOptions = options;
 
     stateManager: StateManager;
-    state = { value: undefined }; // eslint-disable-line
 
     constructor() {
       super();
