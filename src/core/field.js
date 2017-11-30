@@ -137,13 +137,13 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
   if (options.array) {
     Object.assign(Field.prototype, {
       addEntry(newItem: any) {
-        const { value = [], onChange } = this;
-        onChange(value.concat(newItem));
+        const { value = [] } = this;
+        this.value = value.concat(newItem);
       },
 
       removeEntry(index: number) {
-        const { value = [], onChange } = this;
-        onChange([...value.slice(0, index), ...value.slice(index + 1)]);
+        const { value = [] } = this;
+        this.value = [...value.slice(0, index), ...value.slice(index + 1)];
       }
     });
   }
