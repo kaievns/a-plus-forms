@@ -49,7 +49,6 @@
     "chai-enzyme": "v1.0.0-beta.0",
     "enzyme": "^3.1.0",
     "enzyme-adapter-react-16": "^1.0.1",
-    "eslint": "^4.9.0",
     "eslint-config-shortlyster": "^2.2.0",
     "eslint-plugin-flowtype": "^2.34.1",
     "flow-bin": "^0.59.0",
