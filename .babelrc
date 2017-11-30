@@ -9,7 +9,7 @@
   "env": {
     "production": {
       "presets": ["react", "stage-1",
-        ["env", { "browsers": ["last 1 versions"] }]
+        ["env", { "browsers": ["last 1 versions"], "modules": false }]
       ],
       "plugins": [
         "transform-decorators-legacy",
@@ -17,7 +17,8 @@
         "transform-flow-strip-types",
         ["babel-plugin-transform-builtin-extend", {
           "globals": ["Error"]
-        }]
+        }],
+        "external-helpers"
       ]
     }
   }
