@@ -46,13 +46,13 @@ of the modern front end development practices.
 
 ## Documentation? Youbetcha!
 
-* [Installation & Configuration](/MadRabbit/a-plus-forms/wiki/Installation-&-Configuration)
-* [Layouts & Styling](/MadRabbit/a-plus-forms/wiki/Layouts-&-Styling)
-* [React & Redux Wiring](/MadRabbit/a-plus-forms/wiki/React-&-Redux-Wiring)
-* [Communicating With Backends](/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
-* [Validation & Errors Handling](/MadRabbit/a-plus-forms/wiki/Validation-&-Errors-Handling)
-* [Custom Inputs Guide](/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
-* [Testing Best Practices](/MadRabbit/a-plus-forms/wiki/Testing-Best-Practices)
+* [Installation & Configuration](https://github.com/MadRabbit/a-plus-forms/wiki/Installation-&-Configuration)
+* [Layouts & Styling](https://github.com/MadRabbit/a-plus-forms/wiki/Layouts-&-Styling)
+* [React & Redux Wiring](https://github.com/MadRabbit/a-plus-forms/wiki/React-&-Redux-Wiring)
+* [Communicating With Backends](https://github.com/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
+* [Validation & Errors Handling](https://github.com/MadRabbit/a-plus-forms/wiki/Validation-&-Errors-Handling)
+* [Custom Inputs Guide](https://github.com/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
+* [Testing Best Practices](https://github.com/MadRabbit/a-plus-forms/wiki/Testing-Best-Practices)
 
 ## Extensions? Totes!
 
