@@ -52,6 +52,7 @@ of the modern front end development practices.
 * [Communicating With Backends](https://github.com/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
 * [Validation & Errors Handling](https://github.com/MadRabbit/a-plus-forms/wiki/Validation-&-Errors-Handling)
 * [Custom Inputs Guide](https://github.com/MadRabbit/a-plus-forms/wiki/Custom-Inputs-Guide)
+* [Compound / Nested Inputs Guide](https://github.com/MadRabbit/a-plus-forms/wiki/Compound-Inputs-Guide)
 * [Testing Best Practices](https://github.com/MadRabbit/a-plus-forms/wiki/Testing-Best-Practices)
 
 ## Extensions? Totes!
