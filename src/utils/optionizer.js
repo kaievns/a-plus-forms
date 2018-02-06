@@ -1,4 +1,3 @@
-/* @flow */
 /**
  * So, the select options come in all sorts of shapes and sizes
  * and the role of this module is to normalize all this madness
@@ -26,7 +25,13 @@
 import React from 'react';
 import type { InputProps, SelectOption, Component } from '../types';
 
-type LabelValueOption = SelectOption;
+type JSXElement = {
+  $$typeof: Symbol
+};
+
+type LabelValueOption = SelectOption & {
+  label: string | JSXElement
+};
 type NamedOption = { name: string, disabled?: boolean };
 type StringOption = string;
 type NumberOption = number;
@@ -48,6 +53,8 @@ type StateProps = {
   options: Array<LabelValueOption>
 };
 
+const isJSX = label => label && typeof label === 'object' && label.$$typeof !== undefined;
+
 export default () => (Input: Component) =>
   class Optionizer extends React.Component<OptionizedProps, StateProps> {
     state = { options: [] };
@@ -68,7 +75,7 @@ export default () => (Input: Component) =>
       return this.normalizedOptions(props).map((option, index) => {
         if (
           typeof option === 'object' &&
-          typeof option.label === 'string' &&
+          (typeof option.label === 'string' || isJSX(option.label)) &&
           typeof option.value === 'string'
         ) {
           return { label: option.label, value: option.value, disabled: option.disabled };

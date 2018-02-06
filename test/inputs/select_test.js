@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { Select } from '../../src';
@@ -58,6 +58,17 @@ describe('<Select />', () => {
     });
 
     expect(onChange).to.have.been.calledWith(options[1]);
+  });
+
+  it('allows jsx labels', () => {
+    const options = [
+      { label: <Fragment>cat</Fragment>, value: 'cat' },
+      { label: <Fragment>dog</Fragment>, value: 'dog' }
+    ];
+    const render = mount(<Select layout={null} options={options} />);
+    expect(render.html()).to.eql(
+      '<select><option value="cat">cat</option><option value="dog">dog</option></select>'
+    );
   });
 
   it('allows key -> value options', () => {
