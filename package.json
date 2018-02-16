@@ -6,10 +6,11 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha",
     "lint": "eslint src test && flow",
-    "build": "NODE_ENV=production rollup -c",
+    "build": "NODE_ENV=production rollup -c && cp ./src/index.d.ts ./dist/index.d.ts",
     "precommit": "lint-staged",
     "prepush": "npm run test",
     "prepare": "npm run build"
