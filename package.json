@@ -10,7 +10,8 @@
   "scripts": {
     "test": "mocha",
     "lint": "eslint src test && flow",
-    "build": "NODE_ENV=production rollup -c && cp ./src/index.d.ts ./dist/index.d.ts",
+    "build": "NODE_ENV=production rollup -c && npm run copytypes",
+    "copytypes": "cp ./src/index.d.ts ./dist/index.d.ts",
     "precommit": "lint-staged",
     "prepush": "npm run test",
     "prepare": "npm run build"
