@@ -1,108 +1,106 @@
-/* tslint:disable:max-classes-per-file */
-/* tslint:disable:ban-types */
 declare module 'a-plus-forms' {
-  export interface FormProps {
-    value?: object
-    defaultValue?: object
-    onChange?: Function
-    schema?: Object | Function
-    className?: string
-    onSubmit?: Function
-    onError?: Function
+  export type FormProps = {
+    value?: any,
+    defaultValue?: any,
+    onChange?: Function,
+    schema?: any | Function,
+    className?: string,
+    onSubmit?: Function,
+    onError?: Function,
     children: React.ReactChildren | React.ReactChild | JSX.Element | JSX.Element[]
   }
 
-  export interface InputProps {
-    id?: string
-    name?: string
-    help?: string
-    label?: string
-    value?: any
-    defaultValue?: any
-    className?: string
-    placeholder?: string
-    disabled?: boolean
-    required?: boolean
-    onChange?: Function
+  export type InputProps = {
+    id?: string,
+    name?: string,
+    help?: string,
+    label?: string,
+    value?: any,
+    defaultValue?: any,
+    className?: string,
+    placeholder?: string,
+    disabled?: boolean,
+    required?: boolean,
+    onChange?: Function,
     layout?: React.Component | Function | null | false
   }
 
-  export interface LayoutProps {
-    input: InputProps
-    label?: string
+  export type LayoutProps = {
+    input: InputProps,
+    label?: string,
     error?: string
-    className?: string
   }
 
   export type Options = any[] | object;
+  export type OptionsProps = { options?: Options };
 
-  export class Layout extends React.PureComponent<LayoutProps> {}
+  export class Layout extends React.PureComponent<LayoutProps> { }
 
-  export class GenericInput extends React.Component<InputProps> {}
+  export class Checkbox extends React.Component<InputProps> { }
+  export class EmailInput extends React.Component<InputProps> { }
+  export class HiddenInput extends React.Component<InputProps> { }
+  export class NumberInput extends React.Component<InputProps> { }
+  export class PasswordInput extends React.Component<InputProps> { }
+  export class PhoneInput extends React.Component<InputProps> { }
+  export class SearchInput extends React.Component<InputProps> { }
 
-  export class Checkbox extends GenericInput {}
-  export class EmailInput extends GenericInput {}
-  export class HiddenInput extends GenericInput {}
-  export class NumberInput extends GenericInput {}
-  export class PasswordInput extends GenericInput {}
-  export class PhoneInput extends GenericInput {}
-  export class Radios extends GenericInput {
-    props: InputProps & {
-      options?: Options
-    };
-  }
-  export class SearchInput extends GenericInput {}
-  export class Select extends GenericInput {
-    props: InputProps & {
-      options?: Options
-      multiple?: boolean
-      clearable?: boolean
-    };
-  }
-  export class Slider extends GenericInput {}
-  export class TextInput extends GenericInput {
-    props: InputProps & {
-      type?: 'text' | 'password' | 'email' | 'number'
-    };
-  }
-  export class Textarea extends GenericInput {}
+  export class Radios extends React.Component<InputProps & OptionsProps> { }
+  export class Select extends React.Component<InputProps & OptionsProps & {
+    multiple?: boolean
+    clearable?: boolean
+  }> { }
+  export class Slider extends React.Component<InputProps> { }
+  export class TextInput extends React.Component<InputProps & {
+    type?: 'text' | 'password' | 'email' | 'number'
+  }> { }
+  export class Textarea extends React.Component<InputProps> { }
 
-  
+
   export class Error {
-    constructor(errors: object)
+    constructor(errors: any)
   }
 
-  export interface ValidatorProviderProps {
+  export type ValidatorProviderProps = {
     validator: Function
   }
 
-  export interface LayoutProviderProps {
+  export type LayoutProviderProps = {
     layout: React.Component | Function
   }
 
-  export class Form extends React.Component<FormProps> {}
-  export class LayoutProvider extends React.Component<LayoutProviderProps> {}
-  export class ValidatorProvider extends React.Component<ValidatorProviderProps> {}
+  export class Form extends React.Component<FormProps> { }
+  export class LayoutProvider extends React.Component<LayoutProviderProps> { }
+  export class ValidatorProvider extends React.Component<ValidatorProviderProps> { }
 
-  export interface FieldProps {
-    layout?: React.Component | Function | null | false
-    nested?: boolean
+  export type FieldOptions = {
+    layout?: React.Component | Function | null | false,
+    nested?: boolean,
     array?: boolean
   }
 
-  export type Decorator = (original: React.ComponentType<any>) => React.ComponentType<InputProps>;
-
   export type FieldDecorator<Props> = <T extends React.ComponentType<Props>>(original: T) => React.ComponentType<InputProps & Props>;
+  export type OptionsDecorator<Props> = <T extends React.ComponentType<Props>>(original: T) => React.ComponentType<OptionsProps & Props>;
+  export type TrimmerDecorator<Props> = <T extends React.ComponentType<Props>>(original: T) => React.ComponentType<Props>;
 
   export interface Field {
-    (props?: FieldProps): FieldDecorator<{}>
-    <Props>(props?: FieldProps): FieldDecorator<Props>
+    (options?: FieldOptions): FieldDecorator<{}>
+    <Props>(options?: FieldOptions): FieldDecorator<Props>
+  }
+
+  export interface Optionizer {
+    (): OptionsDecorator<{}>
+    <Props>(): OptionsDecorator<Props>
+  }
+
+  export interface Trimmer {
+    (): TrimmerDecorator<{}>
+    <Props>(): TrimmerDecorator<Props>
   }
 
   export const field: Field;
+  export const optionizer: Optionizer;
+  export const trimmer: Trimmer;
 
   // tslint:disable-next-line
-  export interface config {}
-  export function optionizer(): Decorator;
-  export function trimmer(): Decorator;
+  export const config: any;
 }
