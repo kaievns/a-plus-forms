@@ -64,11 +64,6 @@ describe('field', () => {
       expect(render.html()).to.eql('<div><div><input id="my-input" value=""></div></div>');
     });
 
-    it('renders #className param', () => {
-      const render = mount(<Input className="my-class" />);
-      expect(render.html()).to.eql('<div><div><input class="my-class" value=""></div></div>');
-    });
-
     it('renders #placeholder param', () => {
       const render = mount(<Input placeholder="My Value" />);
       expect(render.html()).to.eql('<div><div><input placeholder="My Value" value=""></div></div>');
