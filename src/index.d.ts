@@ -31,6 +31,7 @@ declare module 'a-plus-forms' {
     input: InputProps
     label?: string
     error?: string
+    className?: string
   }
 
   export type Options = any[] | object;

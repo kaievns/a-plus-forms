@@ -5,12 +5,13 @@ import type { InputProps, Element } from '../../src/types';
 
 class Layout1 extends React.Component {
   props: {
+    className: string,
     input: Element
   };
 
   render() {
     return (
-      <div>
+      <div className={this.props.className}>
         <s>Layout1</s>
         {this.props.input}
       </div>
@@ -47,6 +48,11 @@ describe('layouts handling', () => {
   it('allows to specify another layout', () => {
     const render = mount(<Input label="Some label" layout={Layout2} />);
     expect(render.html()).to.eql('<div><s>Layout2</s><input value=""></div>');
+  });
+
+  it('applies className to the layout', () => {
+    const render = mount(<Input className="some-class" />);
+    expect(render.html()).to.eql('<div class="some-class"><s>Layout1</s><input value=""></div>');
   });
 
   it('allows to disable a layout', () => {
