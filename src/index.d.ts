@@ -1,5 +1,6 @@
 declare module 'a-plus-forms' {
   export type FormProps = {
+    ref?: any,
     value?: any,
     defaultValue?: any,
     onChange?: Function,
@@ -12,6 +13,7 @@ declare module 'a-plus-forms' {
 
   export type InputProps = {
     id?: string,
+    ref?: any,
     name?: string,
     help?: string,
     label?: string,
