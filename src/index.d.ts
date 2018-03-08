@@ -16,6 +16,7 @@ declare module 'a-plus-forms' {
     ref?: any,
     name?: string,
     help?: string,
+    error?: string | any,
     label?: string,
     value?: any,
     defaultValue?: any,
