@@ -37,7 +37,7 @@ export default class StateManager {
       if (parentValue[index] !== value) {
         if (propagate) onChange(value);
         const newValue = [...parentValue.slice(0, index), value, ...parentValue.slice(index + 1)];
-        parent.setValue(Object.freeze(newValue));
+        parent.setValue(Object.freeze(newValue), propagate);
       }
     } else if (this.currentValue !== value) {
       this.currentValue = Object.freeze(value);
