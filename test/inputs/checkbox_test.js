@@ -6,13 +6,13 @@ describe('<Checkbox />', () => {
   it('renders great with a label', () => {
     const render = mount(<Checkbox layout={null} label="Are you sure?" />);
     expect(render.html()).to.eql(
-      '<label><input type="checkbox"><span>Are you sure?</span></label>'
+      '<label><input type="checkbox" value="on"><span>Are you sure?</span></label>'
     );
   });
 
   it('renders great without a label', () => {
     const render = mount(<Checkbox layout={null} />);
-    expect(render.html()).to.eql('<input type="checkbox">');
+    expect(render.html()).to.eql('<input type="checkbox" value="on">');
     expect(render.find('input[type="checkbox"]').props()).to.include({ checked: false });
   });
 
@@ -28,13 +28,13 @@ describe('<Checkbox />', () => {
 
   it('understands the `name` prop', () => {
     const render = mount(<Checkbox layout={null} name="agreed" />);
-    expect(render.html()).to.eql('<input type="checkbox" name="agreed">');
+    expect(render.html()).to.eql('<input type="checkbox" name="agreed" value="on">');
   });
 
   it('understand the `disabled` prop', () => {
     const render = mount(<Checkbox layout={null} label="Agreed?" disabled />);
     expect(render.html()).to.eql(
-      '<label disabled=""><input type="checkbox" disabled=""><span>Agreed?</span></label>'
+      '<label disabled=""><input type="checkbox" disabled="" value="on"><span>Agreed?</span></label>'
     );
   });
 });
