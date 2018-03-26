@@ -18,6 +18,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     };
 
     static childContextTypes = {
+      APFField: PropTypes.object, // a reference to the field itself
       APFState: PropTypes.object, // nested field anchor
       APFProps: PropTypes.object, // original field props,
       APFError: PropTypes.object, // nested field errors
@@ -48,6 +49,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       const isNestedError = error && typeof error === 'object';
 
       return {
+        APFField: this,
         APFProps: this.props,
         APFDirty: this.props.dirty,
         APFState: isCompound && this.stateManager,

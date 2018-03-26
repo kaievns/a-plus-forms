@@ -31,8 +31,17 @@ const FormLayout = ({ error, input }: LayoutProps) =>
         error: <small className="error">{error}</small>
       });
 
+// in case the layout is null and one needs to render an error
+const NullLayout = ({ input, error }: NullLayoutProps) => (
+  <React.Fragment>
+    {input}
+    <small className="error">{error}</small>
+  </React.Fragment>
+);
+
 export default {
   DefaultValidator,
   DefaultLayout,
+  NullLayout,
   FormLayout
 };

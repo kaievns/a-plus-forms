@@ -62,12 +62,7 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
 
     if (!Layout) {
       if (this.props.error) {
-        return [
-          React.cloneElement(input, { key: 'input' }),
-          <small className="error" key="error">
-            {this.props.error}
-          </small>
-        ];
+        return <config.NullLayout input={input} error={this.props.error} />;
       }
 
       return input;
