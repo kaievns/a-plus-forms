@@ -84,7 +84,11 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       } else if ('defaultValue' in props) {
         // something was changed or an initial call
         if (isInitialCall) {
-          this.stateManager.setValue(this.value || props.defaultValue, triggerOnChange);
+          // if field has an initial value set (even falsy ones) use it. otherwise default
+          this.stateManager.setValue(
+            this.value !== undefined ? this.value : props.defaultValue,
+            triggerOnChange
+          );
         } else if (this.props.defaultValue !== props.defaultValue) {
           this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
