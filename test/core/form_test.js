@@ -111,6 +111,31 @@ describe('<Form />', () => {
     });
   });
 
+  it('toplevel initial values have priority over lower ones', () => {
+    const values = { username: 'nikolay', password: 'secret' };
+    const render = mount(
+      <Form defaultValue={values}>
+        <TextInput name="username" defaultValue="droo" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    expect(render.at(0).instance().value).to.eql(values);
+    expect(render.find('input[type="text"]').instance().value).to.eql('nikolay');
+  });
+
+  it('even if those values are falsy', () => {
+    const values = { username: null, password: '' };
+    const render = mount(
+      <Form defaultValue={values}>
+        <TextInput name="username" defaultValue="droo" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    expect(render.at(0).instance().value).to.eql(values);
+  });
+
   it('allows to reset the form values back to the defaults', () => {
     const defaultValues = { username: 'nikolay', password: 'secret' };
     const render = mount(
