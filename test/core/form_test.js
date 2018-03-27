@@ -121,6 +121,7 @@ describe('<Form />', () => {
     );
 
     expect(render.at(0).instance().value).to.eql(values);
+    expect(render.find('input[type="text"]').instance().value).to.eql('nikolay');
   });
 
   it('even if those values are falsy', () => {
