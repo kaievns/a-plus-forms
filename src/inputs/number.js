@@ -11,14 +11,17 @@ type NumberInputProps = InputProps & {
 @field()
 export default class NumberInput extends React.Component<NumberInputProps> {
   onChange = (value: string) => {
-    this.props.onChange(parseFloat(value));
+    const stringValue = typeof value === 'string' ? value : '';
+    const numbericalValue = stringValue.length > 0 ? parseFloat(stringValue) : null;
+    this.props.onChange(Number.isNaN(numbericalValue) ? null : numbericalValue);
   };
 
   render() {
-    const { value = 0, ...rest } = this.props;
+    const { value, ...rest } = this.props;
+    const stringValue = value == null ? undefined : `${value}`;
 
     return (
-      <Input {...rest} type="number" layout={null} value={`${value}`} onChange={this.onChange} />
+      <Input {...rest} type="number" layout={null} value={stringValue} onChange={this.onChange} />
     );
   }
 }
