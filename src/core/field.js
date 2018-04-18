@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Layout from './layout';
 import StateManager from './state';
 import { ErrorsManager } from './error';
+import isEqual from '../utils/deep-equal';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component => {
@@ -91,7 +92,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
             this.value !== undefined ? this.value : props.defaultValue,
             triggerOnChange
           );
-        } else if (this.props.defaultValue !== props.defaultValue) {
+        } else if (!isEqual(this.props.defaultValue, props.defaultValue)) {
           this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
       }
