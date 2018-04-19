@@ -11,7 +11,7 @@ export default {
     exports: 'named',
     format: 'cjs'
   },
-  external: ['react', 'prop-types'],
+  external: ['react', 'prop-types', 'fast-deep-equal'],
   plugins: [
     babel(
       Object.assign(babelConfig, {
