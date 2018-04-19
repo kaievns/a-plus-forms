@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import Layout from './layout';
 import StateManager from './state';
 import { ErrorsManager } from './error';
-import isEqual from '../utils/deep-equal';
 import type { FieldProps, FieldOptions, Component, Valuable } from '../types';
 
 export default (options: FieldOptions = {}) => (Input: Component): Component => {
