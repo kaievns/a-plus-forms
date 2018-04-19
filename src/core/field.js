@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import Layout from './layout';
 import StateManager from './state';
 import { ErrorsManager } from './error';
@@ -91,7 +92,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
             this.value !== undefined ? this.value : props.defaultValue,
             triggerOnChange
           );
-        } else if (this.props.defaultValue !== props.defaultValue) {
+        } else if (!isEqual(this.props.defaultValue, props.defaultValue)) {
           this.stateManager.setValue(props.defaultValue, triggerOnChange);
         }
       }
