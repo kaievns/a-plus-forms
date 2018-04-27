@@ -69,6 +69,16 @@ describe('layouts handling', () => {
     expect(render).to.have.descendants('small.error');
   });
 
+  it('passes layout props to null layout', () => {
+    const render = mount(<Input className="some-class" layout={null} />);
+
+    expect(render)
+      .to.have.exactly(1)
+      .descendants('NullLayout');
+
+    expect(render.find('NullLayout')).to.include.props({ className: 'some-class' });
+  });
+
   it('renders the options layout as the next in kin', () => {
     const render = mount(<Input />);
     expect(render.html()).to.eql('<div><s>Layout1</s><input value=""></div>');

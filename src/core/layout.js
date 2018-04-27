@@ -45,9 +45,9 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
     const { APFLayout } = this.context;
 
     if ('layout' in props) {
-      return props.layout || null; // individual props layout
+      return props.layout || config.NullLayout; // individual props layout
     } else if (layout !== undefined) {
-      return layout || null; // the field options layout
+      return layout || config.NullLayout; // the field options layout
     } else if (APFLayout) {
       return APFLayout; // the context layout
     }
@@ -59,14 +59,6 @@ export default class LayoutHandler extends React.Component<HandlerProps> {
     const { input: Input } = this.props;
     const input = <Input {...this.inputProps()} />;
     const Layout = this.chooseLayout();
-
-    if (!Layout) {
-      if (this.props.error) {
-        return <config.NullLayout input={input} error={this.props.error} />;
-      }
-
-      return input;
-    }
 
     return <Layout {...this.layoutProps()} input={input} />;
   }
