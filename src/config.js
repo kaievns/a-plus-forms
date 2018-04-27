@@ -35,7 +35,7 @@ const FormLayout = ({ error, input }: LayoutProps) =>
 const NullLayout = ({ input, error }: NullLayoutProps) => (
   <React.Fragment>
     {input}
-    <small className="error">{error}</small>
+    {error ? <small className="error">{error}</small> : null}
   </React.Fragment>
 );
 
