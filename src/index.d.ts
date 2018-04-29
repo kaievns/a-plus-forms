@@ -74,6 +74,7 @@ declare module 'a-plus-forms' {
   export class Form extends React.Component<FormProps> {
     submit(): void
     reset(): void
+    value: any
   }
   export class LayoutProvider extends React.Component<LayoutProviderProps> { }
   export class ValidatorProvider extends React.Component<ValidatorProviderProps> { }
