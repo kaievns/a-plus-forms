@@ -32,12 +32,23 @@ export default class Form extends React.Component<FormProps> {
   };
   state = { errors: null, dirty: false, disabled: false };
   validator: ?Validator;
+  isUnmounted = false;
+
+  setState(...args) {
+    if (!this.isUnmounted) {
+      return super.setState(...args);
+    }
+  }
 
   componentWillMount() {
     const { APFValidator } = this.context;
     const { schema } = this.props;
 
     this.validator = new (APFValidator || config.DefaultValidator)(schema);
+  }
+
+  componentWillUnmount() {
+    this.isUnmounted = false;
   }
 
   componentWillReceiveProps(props: FormProps) {
