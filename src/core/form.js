@@ -48,7 +48,7 @@ export default class Form extends React.Component<FormProps> {
   }
 
   componentWillUnmount() {
-    this.isUnmounted = false;
+    this.isUnmounted = true;
   }
 
   componentWillReceiveProps(props: FormProps) {
