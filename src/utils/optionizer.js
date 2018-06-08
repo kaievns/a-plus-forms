@@ -74,14 +74,11 @@ export default () => (Input: Component) =>
     buildPseudoOptions(props: OptionizedProps): Array<LabelValueOption> {
       return this.normalizedOptions(props).map((option, index) => {
         if (
-          typeof option === 'object' &&
+          typeof option === 'object' && option.hasOwnProperty('value') &&
           (typeof option.label === 'string' || isJSX(option.label))
         ) {
-          if (typeof option.value === 'string') {
-            return { label: option.label, value: option.value, disabled: option.disabled };
-          }
-
-          return { label: option.label, value: `v-${index}`, disabled: option.disabled };
+          const value = typeof option.value === 'string' ? option.value : `v-${index}`;
+          return { label: option.label, value, disabled: option.disabled };
         } else if (typeof option === 'object' && typeof option.name === 'string') {
           return { label: option.name, value: `v-${index}`, disabled: option.disabled };
         } else if (typeof option === 'string') {
