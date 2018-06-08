@@ -152,4 +152,20 @@ describe('<Select />', () => {
 
     expect(onChange).to.have.been.calledWith('two');
   });
+
+  it('must keep passed optional label in options object', () => {
+    const options = [
+      { label: 'string', value: 'hello' },
+      { label: 'integer', value: 0 },
+      { label: 'integer', value: 1 },
+      { label: 'function', value: () => {} },
+      { label: 'object', value: { test: 'test' } }
+    ];
+
+    const wrapper = mount(<Select options={options} />);
+
+    wrapper.find('option').forEach((optionNode, i) => {
+      expect(optionNode.text()).to.eql(options[i].label);
+    });
+  });
 });
