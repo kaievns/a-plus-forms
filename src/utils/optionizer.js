@@ -75,10 +75,13 @@ export default () => (Input: Component) =>
       return this.normalizedOptions(props).map((option, index) => {
         if (
           typeof option === 'object' &&
-          (typeof option.label === 'string' || isJSX(option.label)) &&
-          typeof option.value === 'string'
+          (typeof option.label === 'string' || isJSX(option.label))
         ) {
-          return { label: option.label, value: option.value, disabled: option.disabled };
+          if (typeof option.value === 'string') {
+            return { label: option.label, value: option.value, disabled: option.disabled };
+          }
+
+          return { label: option.label, value: `v-${index}`, disabled: option.disabled };
         } else if (typeof option === 'object' && typeof option.name === 'string') {
           return { label: option.name, value: `v-${index}`, disabled: option.disabled };
         } else if (typeof option === 'string') {
