@@ -103,4 +103,23 @@ describe('layouts handling', () => {
       '<div><label>Some label</label><div><input type="text" value=""></div></div>'
     );
   });
+
+  it('default allows rendering anything as label/error', () => {
+    const render = mount(
+      <TextInput
+        label={<strong>Really helpful</strong>}
+        error={
+          <ul>
+            <li>lots</li>
+          </ul>
+        }
+      />
+    );
+    expect(render)
+      .to.have.exactly(1)
+      .descendants('DefaultLayout');
+    expect(render.html()).to.eql(
+      '<div><label><strong>Really helpful</strong></label><div><input type="text" value=""></div><small><ul><li>lots</li></ul></small></div>'
+    );
+  });
 });

@@ -1,4 +1,5 @@
 /* @flow */
+import { isValidElement } from 'react';
 import type { Element } from '../types';
 
 type Errors = Object | string;
@@ -44,9 +45,11 @@ export class ErrorsManager {
     return propsError == null ? APFError[name] : propsError; // eslint-disable-line
   }
 
-  getErrorMessage(): ?string {
+  getErrorMessage(): ?string | Error {
     const { fieldOptions: options } = this.element.constructor;
     const error = this.getCurrentError();
+
+    if (isValidElement(error)) return error;
 
     if (error != null && typeof error !== 'string') { // eslint-disable-line
       let nestedErrors = error;

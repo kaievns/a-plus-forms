@@ -69,8 +69,8 @@ export type Element = {
 
 export type LayoutProps = {
   input: any,
-  label?: string,
-  error?: string
+  label?: any,
+  error?: any
 };
 
 export type Validator = {

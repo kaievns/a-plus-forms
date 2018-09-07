@@ -17,7 +17,7 @@ declare module 'a-plus-forms' {
     name?: string,
     help?: string,
     error?: string | any,
-    label?: string,
+    label?: string | any,
     value?: any,
     defaultValue?: any,
     className?: string,
@@ -30,8 +30,8 @@ declare module 'a-plus-forms' {
 
   export type LayoutProps = {
     input: InputProps,
-    label?: string,
-    error?: string
+    label?: string | any,
+    error?: string | any
   }
 
   export type Options = any[] | object;
