@@ -264,6 +264,30 @@ describe('field', () => {
       );
     });
 
+    it('propagates changes across inputs with values in onChange', () => {
+      const AcrossInputs = field({ nested: true })(({ onChange }) => (
+        <div>
+          <TextInput
+            name="username"
+            onChange={username => onChange({ username, password: undefined })}
+          />
+          <PasswordInput name="password" />
+        </div>
+      ));
+
+      const login = { username: 'is terrible', password: 'is weak' };
+
+      const render = mount(
+        <Form defaultValue={{ login }}>
+          <AcrossInputs name="login" />
+        </Form>
+      );
+
+      render.find(TextInput).simulate('change', 'another username');
+
+      expect(render.find(PasswordInput).instance().value).to.eql(undefined);
+    });
+
     it('sends errors to sub-fields', () => {
       const error = { username: 'is terrible', password: 'is weak' };
       const render = mount(<NestedInput error={error} />);
