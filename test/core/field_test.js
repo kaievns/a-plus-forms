@@ -264,7 +264,7 @@ describe('field', () => {
       );
     });
 
-    it('propagates changes across inputs with values in onChange', () => {
+    it.skip('propagates changes across inputs with values in onChange', () => {
       const AcrossInputs = field({ nested: true })(({ onChange }) => (
         <div>
           <TextInput

@@ -3,12 +3,16 @@ import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { Radios } from '../../src';
 
+const randomIdForRegex = /\s*(for|id)="[0-9a-f]+"/gi;
+const stripIdAndFor = html => html.replace(randomIdForRegex, '');
+
 describe('<Radios />', () => {
   const options = [{ label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
 
   it('renders correctly', () => {
     const render = mount(<Radios layout={null} options={options} />);
-    expect(render.html()).to.eql(
+
+    expect(stripIdAndFor(render.html())).to.eql(
       '<div>' +
         '<label><input type="radio" value="one"><span>One</span></label>' +
         '<label><input type="radio" value="two"><span>Two</span></label>' +
@@ -16,9 +20,21 @@ describe('<Radios />', () => {
     );
   });
 
+  it('correctly assignes random ids to input & label', () => {
+    const render = mount(<Radios layout={null} options={options} />);
+
+    const html = render.html();
+    const labelFor = html.match(/for="([0-9a-f]+)"/i);
+    const inputFor = html.match(/id="([0-9a-f]+)"/i);
+
+    expect(!!labelFor && !!inputFor).to.eql(true);
+    expect(labelFor[1]).to.eql(inputFor[1]);
+  });
+
   it('understands the `name` prop', () => {
     const render = mount(<Radios layout={null} options={options} name="size" />);
-    expect(render.html()).to.eql(
+
+    expect(stripIdAndFor(render.html())).to.eql(
       '<div>' +
         '<label><input type="radio" name="size" value="one"><span>One</span></label>' +
         '<label><input type="radio" name="size" value="two"><span>Two</span></label>' +
@@ -35,7 +51,7 @@ describe('<Radios />', () => {
     const onChange = spy();
     const options = ['one', 'two'];
     const render = mount(<Radios layout={null} options={options} onChange={onChange} />);
-    expect(render.html()).to.eql(
+    expect(stripIdAndFor(render.html())).to.eql(
       '<div>' +
         '<label><input type="radio" value="one"><span>one</span></label>' +
         '<label><input type="radio" value="two"><span>two</span></label>' +
@@ -53,7 +69,7 @@ describe('<Radios />', () => {
     const onChange = spy();
     const options = [1, 2];
     const render = mount(<Radios layout={null} options={options} onChange={onChange} />);
-    expect(render.html()).to.eql(
+    expect(stripIdAndFor(render.html())).to.eql(
       '<div>' +
         '<label><input type="radio" value="v-0"><span>1</span></label>' +
         '<label><input type="radio" value="v-1"><span>2</span></label>' +
@@ -71,7 +87,7 @@ describe('<Radios />', () => {
     const onChange = spy();
     const options = [{ id: 1, name: 'One' }, { id: 2, name: 'Two' }];
     const render = mount(<Radios layout={null} options={options} onChange={onChange} />);
-    expect(render.html()).to.eql(
+    expect(stripIdAndFor(render.html())).to.eql(
       '<div>' +
         '<label><input type="radio" value="v-0"><span>One</span></label>' +
         '<label><input type="radio" value="v-1"><span>Two</span></label>' +
