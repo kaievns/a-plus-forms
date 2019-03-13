@@ -104,6 +104,20 @@ describe('field', () => {
     });
   });
 
+  describe('default values', () => {
+    const DefaultedValue = field({ defaultValue: 'a greyt value' })(TextInput);
+
+    it('allows defaulting a value', () => {
+      const render = mount(<DefaultedValue />);
+      expect(render.at(0).instance().value).to.equal('a greyt value');
+    });
+
+    it('allows defaulting a value', () => {
+      const render = mount(<DefaultedValue defaultValue="an amazing value" />);
+      expect(render.at(0).instance().value).to.equal('an amazing value');
+    });
+  });
+
   describe('data flow', () => {
     it('allows to set the current value of the field', () => {
       const render = mount(<Input layout={null} value="Nikolay" />);
