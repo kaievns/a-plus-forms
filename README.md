@@ -47,6 +47,7 @@ of the modern front end development practices.
 ## Documentation? Youbetcha!
 
 * [Installation & Configuration](https://github.com/MadRabbit/a-plus-forms/wiki/Installation-&-Configuration)
+* [Basic Usage](https://github.com/MadRabbit/a-plus-forms/wiki/Basic-Usage)
 * [Layouts & Styling](https://github.com/MadRabbit/a-plus-forms/wiki/Layouts-&-Styling)
 * [React & Redux Wiring](https://github.com/MadRabbit/a-plus-forms/wiki/React-&-Redux-Wiring)
 * [Communicating With Backends](https://github.com/MadRabbit/a-plus-forms/wiki/Handling-Backend-Requests)
