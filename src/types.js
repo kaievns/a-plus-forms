@@ -32,7 +32,8 @@ export type FieldProps = Valuable & {
 export type FieldOptions = {
   layout?: Component | null | false,
   nested?: boolean,
-  array?: boolean
+  array?: boolean,
+  defaultValue?: any
 };
 
 export type InputProps = {
