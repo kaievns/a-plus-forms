@@ -82,7 +82,8 @@ declare module 'a-plus-forms' {
   export type FieldOptions = {
     layout?: React.Component | Function | null | false,
     nested?: boolean,
-    array?: boolean
+    array?: boolean,
+    defaultValue?: any
   }
 
   export type FieldDecorator<Props> = <T extends React.ComponentType<Props>>(original: T) => React.ComponentType<InputProps & Props>;
