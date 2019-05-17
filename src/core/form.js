@@ -143,11 +143,18 @@ export default class Form extends React.Component<FormProps> {
   };
 
   render() {
-    const { children, defaultValue, className } = this.props;
+    const { children, defaultValue, className, name, id } = this.props;
     const { errors, dirty, disabled } = this.state;
 
     return (
-      <form onSubmit={this.onSubmit} className={className} noValidate disabled={disabled}>
+      <form
+        id={id}
+        name={name}
+        onSubmit={this.onSubmit}
+        className={className}
+        noValidate
+        disabled={disabled}
+      >
         <StateContainer
           dirty={dirty}
           error={errors}

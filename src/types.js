@@ -11,6 +11,7 @@ export type Valuable = {
 };
 
 export type FormProps = Valuable & {
+  id?: String,
   value?: ?Object,
   defaultValue?: ?Object,
   schema: Object | Function,

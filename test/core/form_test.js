@@ -440,4 +440,16 @@ describe('<Form />', () => {
 
     expect(render.find(TextInput).instance().value).to.eql('antikolay');
   });
+
+  it('passses name and id to the underlying form element', () => {
+    const render = mount(
+      <Form name="that-form" id="that-form-niner">
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    expect(render.find('form')).to.include.html(' name="that-form"');
+    expect(render.find('form')).to.include.html(' id="that-form-niner"');
+  });
 });
