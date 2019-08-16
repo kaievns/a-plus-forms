@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'fast-deep-equal';
 import field from './field';
 import config from '../config';
 import FormError from './error';
@@ -30,8 +31,11 @@ export default class Form extends React.Component<FormProps> {
     schema: undefined,
     defaultValue: {}
   };
+
   state = { errors: null, dirty: false, disabled: false };
+
   validator: ?Validator;
+
   isUnmounted = false;
 
   setState(...args) {
@@ -52,9 +56,15 @@ export default class Form extends React.Component<FormProps> {
   }
 
   componentWillReceiveProps(props: FormProps) {
-    const { schema } = props;
+    const { schema: newSchema } = props;
+    const { schema: oldSchema } = this.props;
 
-    this.validator.schema = schema;
+    this.validator.schema = newSchema;
+
+    // re-validate if the schema had changed
+    if (this.state.dirty && !isEqual(newSchema, oldSchema)) {
+      this.validate();
+    }
   }
 
   onChange = (value: Object) => {

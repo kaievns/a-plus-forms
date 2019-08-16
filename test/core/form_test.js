@@ -102,8 +102,7 @@ describe('<Form />', () => {
     render
       .find(PasswordInput)
       .at(0)
-      .instance().value =
-      'Ba(k0n!';
+      .instance().value = 'Ba(k0n!';
 
     expect(render.at(0).instance().value).to.eql({
       username: 'nikolay',
@@ -148,8 +147,7 @@ describe('<Form />', () => {
     render
       .find(PasswordInput)
       .at(0)
-      .instance().value =
-      'Ba(k0n!';
+      .instance().value = 'Ba(k0n!';
 
     render
       .find(Form)
@@ -173,14 +171,12 @@ describe('<Form />', () => {
     render
       .find(TextInput)
       .at(0)
-      .instance().value =
-      'nikolay';
+      .instance().value = 'nikolay';
 
     render
       .find(PasswordInput)
       .at(0)
-      .instance().value =
-      'Ba(k0n!';
+      .instance().value = 'Ba(k0n!';
 
     expect(onChange.getCalls().map(c => c.args)).to.eql([
       [{ username: 'nikolay', password: 'old password' }],
@@ -225,8 +221,7 @@ describe('<Form />', () => {
     render
       .find(TextInput)
       .at(0)
-      .instance().value =
-      'nikolay';
+      .instance().value = 'nikolay';
     expect(render.find(TextInput)).to.not.include.html('<small>must be present</small>');
   });
 
@@ -247,6 +242,62 @@ describe('<Form />', () => {
         '<div>' +
         '<div><input type="text" name="username" value=""></div>' +
         '<small>must be present</small>' +
+        '</div>' +
+        '<div>' +
+        '<div><input type="password" name="password" value=""></div>' +
+        '</div>' +
+        '</form>'
+    );
+  });
+
+  it('triggers re-validation if the schema had changed', () => {
+    const validate1 = () => ({ username: 'must be present', password: 'is terrible' });
+    const validate2 = () => ({ username: 'had failed' });
+
+    const render = mount(
+      <Form schema={validate2}>
+        <TextInput name="username" />
+        <PasswordInput name="password" />
+      </Form>
+    );
+
+    // changing schema in prestine state
+    render.setProps({ schema: validate1 });
+
+    expect(render).to.have.html(
+      '<form novalidate="">' +
+        '<div>' +
+        '<div><input type="text" name="username" value=""></div>' +
+        '</div>' +
+        '<div>' +
+        '<div><input type="password" name="password" value=""></div>' +
+        '</div>' +
+        '</form>'
+    );
+
+    render.find('form').simulate('submit');
+
+    expect(render).to.have.html(
+      '<form novalidate="">' +
+        '<div>' +
+        '<div><input type="text" name="username" value=""></div>' +
+        '<small>must be present</small>' +
+        '</div>' +
+        '<div>' +
+        '<div><input type="password" name="password" value=""></div>' +
+        '<small>is terrible</small>' +
+        '</div>' +
+        '</form>'
+    );
+
+    // changing the schema in dirty state
+    render.setProps({ schema: validate2 });
+
+    expect(render).to.have.html(
+      '<form novalidate="">' +
+        '<div>' +
+        '<div><input type="text" name="username" value=""></div>' +
+        '<small>had failed</small>' +
         '</div>' +
         '<div>' +
         '<div><input type="password" name="password" value=""></div>' +
@@ -327,8 +378,7 @@ describe('<Form />', () => {
     render
       .find(TextInput)
       .at(0)
-      .instance().value =
-      'nikolay';
+      .instance().value = 'nikolay';
 
     render.find('form').simulate('submit');
 
