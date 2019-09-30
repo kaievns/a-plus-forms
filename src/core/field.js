@@ -27,9 +27,11 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     };
 
     static InnerInput = Input;
+
     static fieldOptions = options;
 
     stateManager: StateManager;
+
     errorsManager: ErrorsManager;
 
     constructor() {
@@ -58,7 +60,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.checkForNewValueIn(this.props, true);
 
       if (this.context.APFState) {
@@ -67,6 +69,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
     }
 
     isUnmounted = false;
+
     componentWillUnmount() {
       this.isUnmounted = true;
 
@@ -75,7 +78,7 @@ export default (options: FieldOptions = {}) => (Input: Component): Component => 
       }
     }
 
-    componentWillReceiveProps(props: Valuable) {
+    UNSAFE_componentWillReceiveProps(props: Valuable) {
       this.checkForNewValueIn(props, false);
     }
 

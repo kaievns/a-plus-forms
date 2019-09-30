@@ -58,13 +58,14 @@ const isJSX = label => label && typeof label === 'object' && label.$$typeof !== 
 export default () => (Input: Component) =>
   class Optionizer extends React.Component<OptionizedProps, StateProps> {
     state = { options: [] };
+
     originalOptions: SupportedOptions = [];
 
-    componentWillMount() {
-      this.componentWillReceiveProps(this.props);
+    UNSAFE_componentWillMount() {
+      this.UNSAFE_componentWillReceiveProps(this.props);
     }
 
-    componentWillReceiveProps(props: OptionizedProps) {
+    UNSAFE_componentWillReceiveProps(props: OptionizedProps) {
       if (props.options !== this.originalOptions) {
         this.setState({ options: this.buildPseudoOptions(props) });
         this.originalOptions = props.options;
@@ -74,14 +75,17 @@ export default () => (Input: Component) =>
     buildPseudoOptions(props: OptionizedProps): Array<LabelValueOption> {
       return this.normalizedOptions(props).map((option, index) => {
         if (
-          typeof option === 'object' && option.hasOwnProperty('value') &&
+          typeof option === 'object' &&
+          option.hasOwnProperty('value') &&
           (typeof option.label === 'string' || isJSX(option.label))
         ) {
           const value = typeof option.value === 'string' ? option.value : `v-${index}`;
           return { label: option.label, value, disabled: option.disabled };
-        } else if (typeof option === 'object' && typeof option.name === 'string') {
+        }
+        if (typeof option === 'object' && typeof option.name === 'string') {
           return { label: option.name, value: `v-${index}`, disabled: option.disabled };
-        } else if (typeof option === 'string') {
+        }
+        if (typeof option === 'string') {
           return { label: option, value: option };
         }
 

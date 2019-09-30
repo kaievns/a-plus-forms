@@ -4,11 +4,11 @@ import type { InputProps, InputEvent } from '../types';
 
 export default () => (TextInput: Object) =>
   class Trimmer extends React.Component<InputProps> {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this.rawValue = this.props.value || '';
     }
 
-    componentWillReceiveProps(props: InputProps) {
+    UNSAFE_componentWillReceiveProps(props: InputProps) {
       if (props.value !== this.rawValue.trim()) {
         this.rawValue = props.value == null ? '' : props.value;
         this.forceUpdate();

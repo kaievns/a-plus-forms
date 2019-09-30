@@ -44,7 +44,7 @@ export default class Form extends React.Component<FormProps> {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { APFValidator } = this.context;
     const { schema } = this.props;
 
@@ -55,7 +55,7 @@ export default class Form extends React.Component<FormProps> {
     this.isUnmounted = true;
   }
 
-  componentWillReceiveProps(props: FormProps) {
+  UNSAFE_componentWillReceiveProps(props: FormProps) {
     const { schema: newSchema } = props;
     const { schema: oldSchema } = this.props;
 
