@@ -31,17 +31,6 @@ describe('<Radios />', () => {
     expect(labelFor[1]).to.eql(inputFor[1]);
   });
 
-  it('understands the `name` prop', () => {
-    const render = mount(<Radios layout={null} options={options} name="size" />);
-
-    expect(stripIdAndFor(render.html())).to.eql(
-      '<div>' +
-        '<label><input type="radio" name="size" value="one"><span>One</span></label>' +
-        '<label><input type="radio" name="size" value="two"><span>Two</span></label>' +
-        '</div>'
-    );
-  });
-
   it('doesnt explode without options', () => {
     const render = mount(<Radios layout={null} />);
     expect(render.html()).to.eql('<div></div>');

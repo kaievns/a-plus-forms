@@ -31,7 +31,6 @@ export default class Radios extends React.Component<RadiosProps> {
                 {...rest}
                 id={id}
                 type="radio"
-                name={name}
                 value={value}
                 onChange={this.onChange}
                 checked={value === currentValue}
