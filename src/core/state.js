@@ -1,5 +1,6 @@
 /* @flow */
 /* eslint no-use-before-define: off */
+import isEqual from 'fast-deep-equal';
 import type { Element } from '../types';
 
 type Field = Element & {
@@ -10,6 +11,7 @@ type Field = Element & {
 
 export default class StateManager {
   element: Field;
+
   currentValue: any;
 
   constructor(element: Field) {
@@ -34,7 +36,7 @@ export default class StateManager {
       const index = parent.getIndexFor(this.element);
       const parentValue = parent.getValue() || [];
 
-      if (parentValue[index] !== value) {
+      if (!isEqual(parentValue[index], value)) {
         if (propagate) onChange(value);
         const newValue = [...parentValue.slice(0, index), value, ...parentValue.slice(index + 1)];
         parent.setValue(Object.freeze(newValue), propagate);
@@ -53,7 +55,8 @@ export default class StateManager {
     if (parent !== undefined && name !== undefined) {
       const parentValue = parent.getValue() || {};
       return parentValue[name];
-    } else if (parent !== undefined && parent.isArray) {
+    }
+    if (parent !== undefined && parent.isArray) {
       const index = parent.getIndexFor(this.element);
       const value = parent.getValue() || [];
       return value[index];
@@ -63,6 +66,7 @@ export default class StateManager {
   }
 
   listFields: Array<Field> = [];
+
   register(field: Field) {
     const { name } = field.props;
     const currentValue: Object = this.getValue() || {};
@@ -94,7 +98,9 @@ export default class StateManager {
   }
 
   get isArray(): boolean {
-    const { constructor: { fieldOptions: options } } = this.element;
+    const {
+      constructor: { fieldOptions: options }
+    } = this.element;
 
     return options.array === true;
   }
