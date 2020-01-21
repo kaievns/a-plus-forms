@@ -19,7 +19,7 @@ export default class Radios extends React.Component<RadiosProps> {
     const { value: currentValue, options = [], name, ...rest } = this.props;
 
     return (
-      <div>
+      <div data-label={name}>
         {options.map(({ label, value, disabled }, i) => {
           const id = Math.random()
             .toString(16)
