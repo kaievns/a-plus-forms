@@ -19,7 +19,7 @@ export default class Radios extends React.Component<RadiosProps> {
     const { value: currentValue, options = [], name, ...rest } = this.props;
 
     return (
-      <div>
+      <div data-label={name}>
         {options.map(({ label, value, disabled }, i) => {
           const id = Math.random()
             .toString(16)
@@ -31,7 +31,6 @@ export default class Radios extends React.Component<RadiosProps> {
                 {...rest}
                 id={id}
                 type="radio"
-                name={name}
                 value={value}
                 onChange={this.onChange}
                 checked={value === currentValue}

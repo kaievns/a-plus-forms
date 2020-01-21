@@ -35,9 +35,9 @@ describe('<Radios />', () => {
     const render = mount(<Radios layout={null} options={options} name="size" />);
 
     expect(stripIdAndFor(render.html())).to.eql(
-      '<div>' +
-        '<label><input type="radio" name="size" value="one"><span>One</span></label>' +
-        '<label><input type="radio" name="size" value="two"><span>Two</span></label>' +
+      '<div data-label="size">' +
+        '<label><input type="radio" value="one"><span>One</span></label>' +
+        '<label><input type="radio" value="two"><span>Two</span></label>' +
         '</div>'
     );
   });
